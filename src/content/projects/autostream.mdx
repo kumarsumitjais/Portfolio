@@ -1,0 +1,147 @@
+---
+title: "Autostream – Conversational AI Agent"
+oneLiner: "Stateful conversational AI agent for SaaS video-editing platform, handling queries and structured lead capture."
+role: "AI Developer"
+startDate: "2024-01-01"
+endDate: "Present"
+tags: ["LangChain", "LangGraph", "FAISS", "HuggingFace", "Python"]
+category: "NLP"
+coverImage: "/images/projects/autostream.jpg"
+heroMetric: { label: "Tech Stack", value: "RAG & LLM" }
+---
+
+## Overview
+
+The AutoStream Conversational AI Agent is a production-inspired AI assistant designed for AutoStream, a SaaS-based AI video editing platform. The project demonstrates how modern Large Language Models (LLMs), Retrieval-Augmented Generation (RAG), and stateful conversation management can be combined to build an intelligent virtual assistant capable of answering customer queries, qualifying potential leads, and collecting structured business information.
+
+Unlike traditional rule-based chatbots, the agent understands user intent, retrieves relevant information from a knowledge base using semantic search, manages multi-turn conversations, validates user inputs, and seamlessly guides high-intent users through a structured lead capture workflow.
+
+The project follows a modular, scalable architecture that closely resembles real-world conversational AI systems used by SaaS companies for customer support, sales automation, and lead generation.
+
+## Problem Statement
+
+SaaS businesses frequently receive repetitive customer inquiries regarding pricing, subscription plans, product features, and company policies. Handling these interactions manually increases operational costs and often delays customer engagement.
+
+The objective of this project was to design a conversational AI agent capable of automating these interactions while maintaining natural, context-aware conversations. Beyond answering user questions, the system identifies users with purchasing intent, qualifies them through structured conversations, validates their information, and prepares lead data for CRM integration.
+
+## Objectives
+
+The project was designed with the following goals:
+- Build an intelligent conversational assistant capable of understanding user intent.
+- Deliver context-aware responses using Retrieval-Augmented Generation (RAG).
+- Identify users interested in purchasing AutoStream services.
+- Capture lead information through a guided multi-turn conversation.
+- Validate user information before storage.
+- Prevent duplicate lead submissions.
+- Simulate CRM integration through API communication.
+- Develop a modular and extensible architecture suitable for future production deployment.
+
+## System Architecture
+
+The application follows a modular architecture where each component is responsible for a specific stage of the conversational workflow. The overall pipeline consists of:
+
+- User Query
+- Intent Classification
+- Confidence Evaluation
+- Retrieval-Augmented Generation (FAISS + HuggingFace Embeddings)
+- Context-Aware Response Generation
+- Lead Qualification
+- Stateful Information Collection
+- Data Validation
+- Duplicate Lead Detection
+- CRM Submission (Mock API)
+- Persistent Lead Storage
+
+This separation of responsibilities improves maintainability, scalability, and future extensibility.
+
+## Conversational AI Workflow
+
+The conversational agent follows a complete end-to-end interaction pipeline:
+
+### Greeting & Conversation Initialization
+The system initiates natural conversations by greeting users and maintaining conversation state throughout the interaction.
+
+### Intent Classification
+Every incoming user message is analyzed using an intent classification module. The classifier determines whether the user is requesting:
+- Pricing information
+- Subscription plans
+- Product features
+- Company policies
+- General assistance
+- Subscription intent
+- Lead qualification
+
+Each prediction includes a confidence score, allowing the system to determine whether sufficient confidence exists for direct handling or whether semantic retrieval should be used as a fallback.
+
+### Retrieval-Augmented Generation (RAG)
+Rather than relying solely on predefined responses, the agent employs a Retrieval-Augmented Generation (RAG) pipeline. The knowledge base is embedded using HuggingFace sentence embeddings and indexed using FAISS for efficient semantic similarity search.
+
+When users ask product-related questions, the agent retrieves the most relevant knowledge from the vector database before generating an accurate, context-aware response. This significantly improves response quality while reducing hallucinations commonly associated with standalone language models.
+
+### Lead Qualification
+When the system detects a high-intent user—for example, someone expressing interest in subscribing to a paid plan—it automatically transitions into a lead qualification workflow. Instead of simply answering questions, the AI begins collecting structured business information required for follow-up communication.
+
+### Stateful Conversation Management
+Unlike stateless chatbots, the agent maintains conversational context throughout multiple user interactions. The conversation state tracks which information has already been collected and determines the next required step, enabling smooth, human-like multi-turn conversations without repeatedly asking the same questions.
+
+The agent sequentially collects:
+- Full Name
+- Email Address
+- Preferred Content Platform
+- Selected Subscription Plan
+
+Conversation state remains active until the workflow is completed or explicitly restarted.
+
+### Data Validation & Duplicate Prevention
+Before storing any lead information, the system performs validation checks (email formatting, missing fields, structured inputs) to ensure data quality. To avoid redundant CRM entries, if an email address already exists within the stored lead database, the submission is rejected.
+
+### CRM Integration & Persistent Storage
+After successful validation, the collected information is submitted to a simulated CRM endpoint using a Mock API, demonstrating how the agent can integrate with external systems (Salesforce, HubSpot, Zoho CRM). Qualified lead information is also stored in a structured JSON database for persistence.
+
+## Technologies Used
+
+- **Programming Language**: Python
+- **Conversational AI Framework**: LangGraph
+- **LLM Orchestration**: LangChain
+- **Retrieval-Augmented Generation**: FAISS Vector Database, HuggingFace Embeddings
+- **Data Validation**: Custom Validation Utilities
+- **Backend Simulation**: Mock REST API
+- **Data Storage**: JSON-based Persistent Storage
+
+## Key Features
+- Stateful Conversational AI
+- Intent Classification with Confidence Scoring
+- Retrieval-Augmented Generation (RAG)
+- Semantic Search using FAISS & HuggingFace Embeddings
+- Multi-turn Conversation Management
+- Automated Lead Qualification
+- Structured Lead Capture & Email Validation
+- Duplicate Lead Prevention
+- Mock CRM API Integration
+- Conversation Restart Capability
+- Modular & Extensible Architecture
+
+## Results
+
+The project successfully demonstrates the implementation of a modern conversational AI system capable of combining natural language understanding, semantic information retrieval, structured workflow management, and backend integration within a unified architecture.
+
+The developed solution automates customer support, provides accurate responses using RAG, identifies high-intent users, conducts structured lead qualification, ensures data integrity, and simulates CRM integration.
+
+## WhatsApp Integration (Conceptual)
+
+To demonstrate production scalability, the project includes a conceptual architecture for WhatsApp integration using the WhatsApp Business API.
+Incoming user messages are received via webhooks. A backend service (Flask or FastAPI) forwards messages to the LangGraph agent, which maintains state using the user's phone number as a unique identifier. This illustrates how the conversational agent can evolve into a real-time, enterprise-grade customer support and sales assistant.
+
+## Impact & Future Enhancements
+
+The AutoStream Conversational AI Agent demonstrates how modern AI agents can move beyond simple chatbots to become intelligent business assistants. By combining semantic retrieval, intent understanding, stateful dialogue management, and automated lead qualification, the project showcases a practical approach to building scalable, production-ready conversational systems.
+
+**Future Enhancements include:**
+- Integration with production-grade LLMs (GPT-4.1, Claude, Gemini, or Llama).
+- Real CRM integration (Salesforce, HubSpot, Zoho CRM).
+- WhatsApp Business API deployment.
+- Multi-language conversation support.
+- Voice-enabled conversational interface using Speech-to-Text and Text-to-Speech.
+- Analytics dashboard for conversation insights and lead tracking.
+- Human-agent handoff for complex customer queries.
+- Deployment using Docker, Kubernetes, and cloud infrastructure.

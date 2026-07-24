@@ -1,0 +1,153 @@
+---
+title: "AQI Predictive Model Using Machine Learning"
+oneLiner: "Environmental intelligence project to forecast AQI using supervised machine learning."
+role: "Machine Learning Engineer"
+startDate: "2023-08-01"
+endDate: "2023-11-24"
+tags: ["Python", "Scikit-learn", "Pandas", "Matplotlib", "Random Forest", "Regression"]
+category: "Data Science"
+heroMetric: { label: "Prediction Accuracy", value: "94%" }
+---
+
+![Project Presentation Cover](/images/projects/air-quality/page_1.jpg)
+
+## Overview
+
+The **AQI Predictive Model Using Machine Learning** is an environmental intelligence project developed to forecast the Air Quality Index (AQI) by leveraging supervised machine learning techniques. The project addresses one of the most pressing environmental challenges—air pollution—by enabling proactive prediction of air quality instead of merely reporting current pollution levels.
+
+The system analyzes the complex relationship between atmospheric pollutants and meteorological conditions to estimate future AQI values with high accuracy. By combining environmental data analysis, feature engineering, exploratory data analysis, and multiple regression algorithms, the project demonstrates how machine learning can assist governments, environmental agencies, and researchers in making data-driven decisions for pollution monitoring and public health.
+
+The project follows a complete machine learning lifecycle, beginning with data collection and preprocessing, progressing through model experimentation and evaluation, and culminating in the selection of the most accurate predictive model based on comparative performance analysis.
+
+## Problem Statement
+
+Air pollution has become a critical environmental and public health issue across the globe. Traditional AQI monitoring systems primarily provide real-time pollution measurements, offering limited capability for anticipating future air quality conditions.
+
+This project aims to bridge that gap by developing a predictive machine learning model capable of estimating future Air Quality Index values using historical environmental observations. Such predictions can support early warnings, policy planning, pollution management, and informed public decision-making before hazardous air quality conditions arise.
+
+![Presentation Slide 2](/images/projects/air-quality/page_2.jpg)
+
+## Objectives
+
+The primary objective of this project was to build an intelligent regression-based system capable of accurately predicting AQI using environmental parameters.
+
+The project specifically focuses on:
+- Predicting Air Quality Index values using historical environmental data.
+- Understanding the relationship between air pollutants and weather conditions.
+- Comparing multiple regression algorithms to identify the most effective predictive model.
+- Improving prediction accuracy through feature analysis and model optimization.
+- Demonstrating the practical application of machine learning in environmental analytics.
+
+## Dataset
+
+The predictive model was developed using an environmental dataset consisting of both pollution measurements and meteorological observations.
+
+**Environmental Pollutants (8 Features)**
+The dataset includes concentrations of major atmospheric pollutants such as: PM2.5, PM10, Nitrogen Dioxide (NO₂), Sulfur Dioxide (SO₂), Carbon Monoxide (CO), Ozone (O₃), Ammonia (NH₃), and additional pollutant measurements.
+
+**Meteorological Features (6 Features)**
+To improve predictive capability, the model also incorporates weather-related variables including: Temperature, Humidity, Wind Speed, Atmospheric Pressure, Rainfall, and additional meteorological observations.
+
+Combining pollution indicators with weather conditions enables the model to better capture the environmental factors influencing AQI fluctuations. The initial dataset was collected using publicly available environmental monitoring sources, including observations from the Central Pollution Control Board (CPCB), and subsequently cleaned and prepared for machine learning applications.
+
+![Presentation Slide 4](/images/projects/air-quality/page_4.jpg)
+
+## Exploratory Data Analysis (EDA)
+
+Before model training, extensive exploratory data analysis was performed to understand the underlying characteristics of the dataset.
+
+The analysis involved:
+- Missing value inspection
+- Data preprocessing
+- Correlation analysis
+- Statistical exploration
+- Feature relationship visualization
+- Heatmap generation using Seaborn
+
+The correlation heatmap was particularly useful for identifying the environmental variables that had the strongest influence on AQI, allowing for better feature understanding prior to model development.
+
+## Machine Learning Approach & Model Development
+
+Since AQI represents a continuous numerical value, the problem was formulated as a **Supervised Machine Learning Regression** task. Instead of relying on a single predictive algorithm, multiple regression models were implemented, evaluated, and compared to determine the most suitable approach for environmental prediction.
+
+![Presentation Slide 6](/images/projects/air-quality/page_6.jpg)
+
+### Linear Regression
+The project initially began with a Linear Regression model, which served as the baseline for evaluating predictive performance. This model provided foundational insights into feature relationships and established an initial benchmark for comparison. Although effective for modeling linear dependencies, its predictive capability was limited due to the nonlinear nature of environmental data.
+
+### Decision Tree Regressor
+To better capture nonlinear relationships between environmental variables and AQI, a Decision Tree Regression model was developed. Compared to Linear Regression, this model demonstrated improved prediction performance by learning more complex decision boundaries within the dataset. However, it remained susceptible to overfitting when handling diverse environmental conditions.
+
+### Random Forest Regressor
+The final implementation utilized a Random Forest Regression model, which combines multiple decision trees using ensemble learning techniques.
+
+Random Forest significantly improved predictive performance by:
+- Reducing overfitting
+- Capturing nonlinear feature interactions
+- Improving model stability
+- Increasing prediction accuracy
+- Providing better generalization on unseen data
+
+Following comparative evaluation, **Random Forest emerged as the best-performing model**.
+
+## Model Performance
+
+After evaluating all implemented algorithms, Random Forest Regression achieved the highest predictive performance with an overall **94% prediction accuracy**.
+
+This substantial improvement over the baseline models demonstrates the effectiveness of ensemble learning techniques for environmental forecasting problems. The final model successfully predicts AQI using multiple environmental parameters while maintaining strong generalization capability.
+
+![Presentation Slide 8](/images/projects/air-quality/page_8.jpg)
+
+## Key Features & Technologies Used
+
+**Technologies:** Python, Scikit-learn, Pandas, NumPy, Matplotlib, Seaborn, Jupyter Notebook, Anaconda Navigator.
+
+**Key Features:**
+- End-to-end Machine Learning pipeline
+- Environmental data preprocessing & Feature engineering
+- Correlation analysis & Heatmap visualization
+- Multiple regression model comparison
+- Random Forest optimization
+- High-accuracy AQI prediction
+- Environmental analytics workflow
+
+## Challenges Faced
+
+During the development process, several technical challenges were encountered and resolved, including:
+- File encoding (Unicode) errors during dataset loading
+- Variable definition and debugging issues during implementation
+- Data preprocessing and feature preparation
+- Model comparison and algorithm selection
+
+Resolving these challenges strengthened the robustness of the overall machine learning pipeline.
+
+## Results & Impact
+
+The project successfully demonstrates the practical application of machine learning in environmental forecasting by accurately predicting Air Quality Index values from pollution and weather observations.
+
+**Key outcomes include:**
+- Developed a complete regression-based prediction pipeline.
+- Successfully compared multiple machine learning algorithms.
+- Identified Random Forest as the optimal predictive model.
+- Achieved **94% prediction accuracy**.
+- Demonstrated the importance of combining pollutant concentrations with meteorological variables for AQI prediction.
+
+This project demonstrates how machine learning can transform environmental data into actionable insights. By accurately forecasting air quality conditions before they occur, the system has the potential to support environmental agencies, policymakers, researchers, and the public in making informed decisions that contribute to healthier and more sustainable communities.
+
+![Presentation Slide 10](/images/projects/air-quality/page_10.jpg)
+
+## Recognition & Achievement
+
+A significant milestone of this project was its presentation on **24 November 2023 before Sh. Harjot Singh Bains**, Hon'ble Cabinet Minister for Higher Education & Languages, Technical Education & Industrial Training, and School Education, Government of Punjab. 
+
+Presenting the project before a senior government dignitary highlighted its academic merit and its relevance as an applied machine learning solution addressing a real-world environmental challenge.
+
+## Future Enhancements
+
+The project offers considerable opportunities for future expansion, including:
+- Real-time AQI forecasting using live environmental sensor data.
+- Integration with weather APIs for continuous prediction updates.
+- Deep Learning architectures such as LSTM for time-series forecasting.
+- Explainable AI techniques (e.g., SHAP) to interpret feature contributions.
+- Deployment as a cloud-hosted web application with interactive dashboards.
+- Geographic visualization of pollution trends using GIS technologies.

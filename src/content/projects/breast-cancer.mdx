@@ -1,0 +1,119 @@
+---
+title: "Breast Cancer Prediction Model"
+oneLiner: "Predictive model using deep learning to classify breast cancer images."
+role: "Machine Learning Researcher"
+startDate: "2024-06-01"
+endDate: "Ongoing"
+tags: ["Python", "TensorFlow", "Keras", "VGG16", "Deep Learning", "CNN"]
+category: "Computer Vision"
+heroMetric: { label: "Accuracy", value: "79%" }
+---
+
+## Overview
+
+The Breast Cancer Prediction Model is a deep learning-based medical image classification system developed to assist in the early detection of breast cancer using histopathological images. The project leverages Transfer Learning and Convolutional Neural Networks (CNNs) to automatically classify breast tissue images as Benign or Malignant, reducing reliance on manual feature extraction and demonstrating the potential of Artificial Intelligence in computer-aided diagnosis.
+
+The project was built using the BreakHis (Breast Cancer Histopathological Database), a publicly available benchmark dataset containing microscopic biopsy images captured at multiple magnification levels. By combining advanced image preprocessing, extensive data augmentation, and transfer learning, the system learns complex visual patterns associated with breast cancer and provides accurate diagnostic predictions.
+
+Multiple deep learning architectures were evaluated throughout development, with VGG16 emerging as the best-performing model, while additional experimentation with ResNet50 and DenseNet continues to further improve predictive performance.
+
+## Problem Statement
+
+Breast cancer remains one of the leading causes of cancer-related deaths among women worldwide. Early diagnosis plays a critical role in improving treatment outcomes and increasing survival rates. However, manual examination of histopathological slides is time-consuming, requires significant expertise, and is susceptible to observer variability.
+
+The objective of this project was to develop an intelligent deep learning model capable of automatically classifying breast tissue images into Benign and Malignant categories, providing a reliable decision-support tool for healthcare professionals while demonstrating the practical application of artificial intelligence in medical imaging.
+
+## Objectives
+
+The project was designed with the following objectives:
+- Develop an automated deep learning system for breast cancer classification.
+- Utilize transfer learning to improve classification performance on medical imaging data.
+- Compare multiple pretrained convolutional neural network architectures.
+- Enhance model generalization through extensive image augmentation.
+- Minimize overfitting while maximizing prediction accuracy.
+- Build a scalable foundation for future AI-assisted diagnostic systems.
+
+## Dataset
+
+The model was trained using the BreakHis (Breast Cancer Histopathological Database), a widely recognized benchmark dataset for breast cancer image classification. The dataset consists of microscopic biopsy images collected from breast tissue specimens and includes both Benign and Malignant tumor samples.
+
+**Dataset Characteristics:**
+- Histopathological breast tissue images
+- Binary classification problem (Benign vs. Malignant)
+- Images captured at four different magnification levels: 40×, 100×, 200×, 400×
+- Original dataset containing 7,667 images
+- Publicly available benchmark dataset used extensively in medical imaging research
+
+The inclusion of multiple magnification levels enables the model to learn robust visual representations across varying image scales, making it more adaptable to real-world diagnostic scenarios.
+
+## Data Preprocessing & Augmentation
+
+Medical imaging datasets are often limited in size, increasing the risk of model overfitting. To improve model robustness and generalization, extensive image preprocessing and data augmentation techniques were applied during training.
+
+The preprocessing pipeline included: image normalization (pixel value rescaling), data augmentation, and dataset preparation for transfer learning.
+
+**Data Augmentation Techniques**
+To artificially increase dataset diversity and expose the model to a wider range of visual variations, the following augmentation strategies were implemented:
+- Random Rotation (20°)
+- Width Shift & Height Shift
+- Shear Transformation
+- Zoom Augmentation
+- Horizontal Flipping
+- Nearest-neighbor filling for transformed regions
+
+These augmentations significantly expanded the effective training dataset, enabling the model to better generalize to unseen histopathological images while reducing overfitting.
+
+## Deep Learning Approach
+
+The problem was formulated as a **Binary Image Classification** task using **Transfer Learning**.
+
+Instead of training a convolutional neural network from scratch, pretrained CNN architectures were fine-tuned on the BreakHis dataset. This approach allows the model to leverage rich feature representations learned from large-scale image datasets while adapting them to the medical imaging domain.
+
+## Model Development
+
+### VGG16 (Final Production Model)
+The primary model was developed using the VGG16 architecture with Transfer Learning. VGG16 demonstrated the strongest performance across all evaluated models by effectively learning discriminative features from histopathological breast tissue images.
+
+The model was trained using: Binary Crossentropy Loss Function, Adam Optimizer, Transfer Learning, and Data Augmentation.
+
+**Model Performance & Statistics:**
+- **Accuracy:** 79% (Best-performing model among all implemented architectures)
+- **Total Parameters:** 3,898,049 (All Trainable)
+
+The VGG16 model currently serves as the finalized implementation for the project due to its superior classification performance and stable convergence during training.
+
+### ResNet50
+To evaluate the effectiveness of alternative transfer learning architectures, a ResNet50-based model was also implemented. ResNet50 introduced residual learning mechanisms that enable deeper neural networks to mitigate vanishing gradient issues. While the model demonstrated competitive performance, it did not outperform the VGG16 implementation on the current dataset.
+
+### DenseNet (Ongoing Research)
+As part of continuous project enhancement, experimentation with DenseNet is currently in progress. DenseNet's densely connected architecture has the potential to improve feature propagation, strengthen gradient flow, and further enhance classification accuracy while reducing the number of learnable parameters.
+
+## Technologies Used
+- **Programming Language**: Python
+- **Deep Learning Frameworks**: TensorFlow, Keras
+- **Data Processing**: NumPy, Pandas
+- **Visualization & Image Processing**: Matplotlib, TensorFlow ImageDataGenerator
+
+## Results
+
+The project successfully demonstrates the application of transfer learning for medical image analysis by accurately classifying breast histopathology images into benign and malignant categories.
+
+**Key outcomes include:**
+- Developed a complete deep learning pipeline for breast cancer classification.
+- Successfully implemented and compared multiple pretrained CNN architectures.
+- Identified VGG16 as the best-performing model with an accuracy of 79%.
+- Improved model robustness through extensive image augmentation techniques.
+
+## Impact & Future Enhancements
+
+The Breast Cancer Prediction Model demonstrates the transformative potential of deep learning in medical image analysis. By combining transfer learning, advanced image augmentation, and CNNs, the project showcases how AI can support healthcare professionals in the early detection of breast cancer. 
+
+While intended as a research and educational system rather than a clinical diagnostic tool, it provides a strong foundation for future AI-driven healthcare applications.
+
+**Planned enhancements include:**
+- Complete DenseNet implementation and performance evaluation.
+- Explore EfficientNet and Vision Transformer (ViT) architectures.
+- Hyperparameter optimization using automated tuning techniques.
+- Explainable AI integration using Grad-CAM to visualize model attention.
+- Multi-class classification for different breast cancer subtypes.
+- Deployment as a web-based diagnostic support system.

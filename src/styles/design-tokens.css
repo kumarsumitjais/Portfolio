@@ -1,0 +1,82 @@
+@import "tailwindcss";
+
+@theme {
+  --color-slate-950: #05070A;
+  --color-slate-900: #0A0D12;
+  --color-slate-800: #12161D;
+  --color-slate-700: #1D222B;
+  
+  --color-graphite-500: #4A5262;
+  --color-graphite-300: #8A93A3;
+  
+  --color-frost-100: #F5F7FA;
+  --color-frost-50: #FBFCFE;
+  
+  --color-ivory-100: #FAF9F6;
+  --color-charcoal-900: #101317;
+  
+  --color-electric-blue-500: #2E6BFF;
+  --color-electric-blue-400: #5C8CFF;
+  --color-cyan-400: #33D6E0;
+  --color-indigo-500: #5B4CFF;
+  
+  --color-emerald-400: #34D399;
+  --color-amber-400: #F5B84D;
+  --color-rose-400: #F26D6D;
+
+  --ease-out-standard: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-standard: cubic-bezier(0.65, 0, 0.35, 1);
+
+  --font-sans: var(--font-inter), "Inter", "Geist", "sans-serif";
+  --font-display: var(--font-inter-display), "Inter Display", "Geist", "sans-serif";
+  --font-mono: var(--font-jetbrains-mono), "JetBrains Mono", "Geist Mono", "monospace";
+  
+  --color-bg-base: var(--bg-base);
+  --color-bg-elevated: var(--bg-elevated);
+  --color-bg-card: var(--bg-card);
+  --color-border-card: var(--border-card);
+  
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+}
+
+@layer base {
+  :root {
+    /* Dark mode (default per PRD) */
+    --bg-base: var(--color-slate-950);
+    --bg-elevated: var(--color-slate-900);
+    --bg-card: var(--color-slate-800);
+    --border-card: var(--color-slate-700);
+    
+    --text-primary: var(--color-frost-50);
+    --text-secondary: var(--color-graphite-300);
+    
+    --shadow-level-1: 0 1px 2px rgba(0,0,0,.4);
+    --shadow-level-2: 0 4px 16px rgba(0,0,0,.45), 0 0 0 1px rgba(51,214,224,.04);
+    --shadow-level-3: 0 12px 32px rgba(0,0,0,.5);
+    --shadow-level-4: 0 24px 64px rgba(0,0,0,.55);
+  }
+
+  .light {
+    --bg-base: var(--color-frost-100);
+    --bg-elevated: var(--color-frost-50);
+    --bg-card: var(--color-frost-50);
+    --border-card: #E4E8EF;
+    
+    --text-primary: var(--color-charcoal-900);
+    --text-secondary: var(--color-graphite-500);
+
+    --shadow-level-1: 0 1px 2px rgba(16,19,23,.06);
+    --shadow-level-2: 0 4px 16px rgba(16,19,23,.08);
+    --shadow-level-3: 0 12px 32px rgba(16,19,23,.12);
+    --shadow-level-4: 0 24px 64px rgba(16,19,23,.16);
+  }
+
+  * {
+    @apply border-border-card;
+  }
+  
+  body {
+    @apply bg-bg-base text-text-primary font-sans antialiased selection:bg-electric-blue-500/30;
+  }
+}

@@ -1,0 +1,118 @@
+---
+title: "Hate Speech Detection Model"
+oneLiner: "NLP model to identify offensive language in tweets using CountVectorizer and Decision Trees."
+role: "Machine Learning Engineer"
+startDate: "2024-02-01"
+endDate: "2024-05-01"
+tags: ["Python", "NLP", "Scikit-learn", "NLTK"]
+category: "NLP"
+heroMetric: { label: "Accuracy", value: "93.5%" }
+---
+
+## Overview
+
+The Hate Speech Detection Model is a Natural Language Processing (NLP) project developed to automatically identify and classify harmful textual content from social media posts. The system leverages supervised machine learning techniques to distinguish between Hate Speech and Offensive Language, enabling automated moderation of user-generated content.
+
+The project demonstrates a complete NLP pipeline, beginning with raw text preprocessing and feature extraction, followed by machine learning-based classification and comprehensive performance evaluation. By combining text normalization, feature engineering, and statistical learning, the model provides an efficient solution for detecting abusive language while showcasing the practical application of AI in content moderation and digital safety.
+
+## Problem Statement
+
+The rapid growth of social media platforms has significantly increased the volume of user-generated content, making manual moderation both time-consuming and impractical. Harmful content such as hate speech and offensive language can negatively impact online communities, making automated moderation systems increasingly important.
+
+The objective of this project was to develop a machine learning model capable of accurately classifying textual content into predefined categories, assisting online platforms in identifying potentially harmful posts and supporting safer digital environments.
+
+## Objectives
+
+The project was designed with the following objectives:
+- Develop an automated NLP-based hate speech detection system.
+- Preprocess and normalize noisy social media text for machine learning.
+- Transform textual data into numerical representations using feature extraction techniques.
+- Train and evaluate a supervised machine learning classifier.
+- Accurately distinguish between hate speech and offensive language.
+- Demonstrate the application of AI for scalable content moderation.
+
+## Dataset
+
+The model was developed using the Davidson Hate Speech Dataset, a publicly available benchmark dataset containing Twitter posts labeled for abusive language detection.
+
+**Dataset Characteristics:**
+- 24,783 Twitter posts
+- Supervised multi-class text classification dataset
+- Human-annotated social media content
+- Original dataset containing tweet text and annotation labels
+
+For model development, the dataset was mapped into two primary target categories: **Hate Speech** and **Offensive Language**. The dataset represents a diverse collection of real-world social media posts, making it well-suited for evaluating automated text classification models.
+
+## Text Preprocessing
+
+Raw social media text often contains noise, special characters, hyperlinks, and inconsistent formatting. To improve model performance, an extensive preprocessing pipeline was implemented before feature extraction.
+
+The preprocessing workflow included:
+- Converting text to lowercase
+- Removing URLs, HTML tags, and bracketed content
+- Eliminating punctuation, special characters, and numerical values
+- Removing stop words using the NLTK library
+- Applying Snowball Stemming to reduce words to their root forms
+
+This preprocessing pipeline transformed noisy user-generated text into clean, standardized input suitable for machine learning.
+
+## Feature Engineering
+
+Since machine learning models require numerical input, textual data was converted into structured feature vectors using the **CountVectorizer** technique.
+
+CountVectorizer constructs a Bag-of-Words representation by transforming each document into a vector of word frequencies, allowing the classifier to learn meaningful patterns associated with hate speech and offensive language.
+
+## Machine Learning Approach & Model Development
+
+The project formulates the problem as a supervised text classification task. The processed text data was divided into training and testing subsets using a 67:33 train-test split, ensuring unbiased evaluation on unseen samples.
+
+### Decision Tree Classifier
+The final implementation was developed using a Decision Tree Classifier, trained on CountVectorizer-generated feature vectors. The model learns hierarchical decision rules based on textual features, enabling it to classify incoming messages into their respective categories through recursive partitioning of the feature space. The classifier demonstrated strong performance in distinguishing harmful content while maintaining high overall prediction accuracy.
+
+## Model Performance
+
+The trained model achieved strong classification performance on the testing dataset.
+
+**Evaluation Metrics:**
+- **Accuracy:** 93.55%
+- **Precision:** 93.71%
+- **Recall:** 93.55%
+- **F1-Score:** 93.62%
+
+**Classification Performance by Category:**
+
+| Category | Precision | Recall | F1-Score |
+| :--- | :--- | :--- | :--- |
+| **Hate Speech** | 97% | 96% | 96% |
+| **Offensive Language** | 80% | 84% | 82% |
+
+The weighted average F1-score of 94% demonstrates the model's ability to effectively classify harmful textual content while maintaining balanced predictive performance across both categories.
+
+## Technologies Used
+- **Programming Language**: Python
+- **Machine Learning**: Scikit-learn
+- **Natural Language Processing**: NLTK
+- **Feature Engineering**: CountVectorizer
+- **Data Processing**: Pandas, NumPy
+- **Data Visualization**: Matplotlib, Seaborn
+
+## Results
+
+The project successfully demonstrates the effectiveness of traditional machine learning techniques for automated text moderation.
+
+**Key outcomes include:**
+- Developed a complete end-to-end NLP classification pipeline.
+- Successfully transformed raw social media text into structured machine learning features.
+- Achieved an overall **93.55% classification accuracy**.
+- Demonstrated strong precision and recall for harmful content detection.
+
+## Impact & Future Enhancements
+
+The Hate Speech Detection Model demonstrates how NLP and Machine Learning can be applied to improve online safety by automatically identifying harmful textual content. By combining comprehensive text preprocessing, feature engineering, and supervised learning, the project provides a practical and scalable foundation for intelligent content moderation systems.
+
+**Planned improvements include:**
+- Implementing TF-IDF feature extraction for improved textual representation.
+- Comparing multiple machine learning algorithms (Logistic Regression, SVM, Random Forest, XGBoost).
+- Fine-tuning transformer-based architectures (BERT, RoBERTa, DistilBERT) for contextual language understanding.
+- Extending support to multilingual hate speech detection.
+- Deploying the model as a REST API or web-based moderation service.

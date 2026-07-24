@@ -42,9 +42,10 @@ export function Navbar() {
   }, [isMobileMenuOpen]);
 
   return (
-    <header
-      className={cn(
-        "fixed top-0 left-0 right-0 z-50 flex h-16 md:h-[72px] items-center transition-all duration-300",
+    <>
+      <header
+        className={cn(
+          "fixed top-0 left-0 right-0 z-50 flex h-16 md:h-[72px] items-center transition-all duration-300",
         isScrolled || isMobileMenuOpen
           ? "bg-bg-elevated/80 backdrop-blur-xl shadow-level-2 border-b border-border-card"
           : "bg-transparent border-b border-transparent"
@@ -56,7 +57,7 @@ export function Navbar() {
           className="text-xl font-display font-semibold tracking-tight z-50 focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:outline-none rounded-sm"
           onClick={() => setIsMobileMenuOpen(false)}
         >
-          Signal<span className="text-electric-blue-500">.</span>
+          Sumit Kr. Jaiswal<span className="text-electric-blue-500">.</span>
         </Link>
 
         {/* Desktop Nav */}
@@ -112,10 +113,11 @@ export function Navbar() {
           </button>
         </div>
       </div>
+    </header>
 
       {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (
-        <div className="fixed inset-0 top-[64px] z-40 bg-bg-base/95 backdrop-blur-xl md:hidden flex flex-col p-6 border-t border-border-card overflow-y-auto">
+        <div className="fixed inset-0 top-[64px] z-40 bg-bg-base md:hidden flex flex-col p-6 overflow-y-auto">
           <nav className="flex flex-col gap-4 pb-10">
             {NAV_LINKS.map((link) => (
               <Link
@@ -148,6 +150,6 @@ export function Navbar() {
           </nav>
         </div>
       )}
-    </header>
+    </>
   );
 }

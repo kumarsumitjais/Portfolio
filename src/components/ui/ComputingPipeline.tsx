@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform, useInView } from "framer-motion";
 import Image from "next/image";
+import { Trophy, Award } from "lucide-react";
 import { Achievement } from "@/content/achievements";
 
 function PipelineNode({ ach, index, isLast }: { ach: Achievement; index: number; isLast: boolean }) {
@@ -68,12 +69,21 @@ function PipelineNode({ ach, index, isLast }: { ach: Achievement; index: number;
       >
         <div className="bg-bg-card border border-border-card rounded-2xl overflow-hidden shadow-level-1 group hover:border-cyan-400/50 transition-colors">
           <div className="flex flex-col sm:flex-row">
-            {ach.image && (
+            {(ach.image?.includes('medal') || ach.image?.includes('certificate')) ? (
+              <div className="relative flex items-center justify-center w-full sm:w-48 aspect-video sm:aspect-square bg-bg-base border-b sm:border-b-0 sm:border-r border-border-card shrink-0 overflow-hidden group-hover:bg-electric-blue-500/5 transition-colors">
+                {ach.image.includes('medal') ? (
+                  <Trophy className="w-16 h-16 text-electric-blue-400 opacity-80 group-hover:scale-110 group-hover:opacity-100 transition-all duration-500" strokeWidth={1.5} />
+                ) : (
+                  <Award className="w-16 h-16 text-cyan-400 opacity-80 group-hover:scale-110 group-hover:opacity-100 transition-all duration-500" strokeWidth={1.5} />
+                )}
+                <div className="absolute inset-0 bg-electric-blue-500/5 mix-blend-overlay" />
+              </div>
+            ) : ach.image ? (
               <div className="relative w-full sm:w-48 aspect-video sm:aspect-square bg-bg-base border-b sm:border-b-0 sm:border-r border-border-card shrink-0 overflow-hidden">
                 <Image src={ach.image} alt={ach.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
                 <div className="absolute inset-0 bg-electric-blue-500/10 mix-blend-overlay" />
               </div>
-            )}
+            ) : null}
             <div className="p-6 flex flex-col justify-center flex-grow">
               <h3 className="text-xl font-bold text-text-primary mb-2 group-hover:text-electric-blue-400 transition-colors">
                 {ach.title}

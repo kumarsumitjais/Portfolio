@@ -9,7 +9,7 @@ export function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
           <div className="col-span-2 md:col-span-1">
             <Link href="/" className="text-xl font-display font-semibold tracking-tight inline-block mb-4 focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:outline-none rounded-sm">
-              Signal<span className="text-electric-blue-500">.</span>
+              Sumit Kr. Jaiswal<span className="text-electric-blue-500">.</span>
             </Link>
             <p className="text-text-secondary text-sm mb-6 max-w-xs">
               Behind Every Great Prediction Is an Even Better Question.
@@ -60,7 +60,7 @@ export function Footer() {
         
         <div className="flex flex-col md:flex-row items-center justify-between pt-8 border-t border-border-card/50">
           <p className="text-xs text-text-secondary mb-4 md:mb-0">
-            &copy; {new Date().getFullYear()} Signal. All rights reserved. 
+            &copy; {new Date().getFullYear()} Sumit Kr. Jaiswal. All rights reserved. 
             <span className="mx-2 opacity-50">|</span> 
             <span className="font-mono text-[10px]">build: a1b2c3d</span>
           </p>

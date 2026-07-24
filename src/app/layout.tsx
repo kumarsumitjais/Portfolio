@@ -20,7 +20,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Signal | Data Scientist & AI/ML Engineer",
+  title: "Sumit Kr. Jaiswal | Data Scientist & AI/ML Engineer",
   description: "Behind Every Great Prediction Is an Even Better Question.",
 };
 

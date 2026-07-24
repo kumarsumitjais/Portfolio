@@ -14,7 +14,7 @@ export default function AboutPage() {
           <div className="sticky top-32">
             <div className="relative w-full aspect-square max-w-[360px] mx-auto lg:mx-0 rounded-3xl overflow-hidden mb-8 border border-border-card bg-bg-elevated p-2 shadow-level-1">
               <div className="w-full h-full rounded-2xl overflow-hidden relative">
-                <Image src="/images/profile-updated.svg" alt="Sumit Kumar Jaiswal" fill className="object-cover" />
+                <Image src="/images/profile-new.jpg" alt="Sumit Kumar Jaiswal" fill className="object-cover object-top" />
               </div>
             </div>
             <h1 className="text-3xl md:text-4xl font-display font-bold text-text-primary mb-2 text-center lg:text-left">Sumit Kumar Jaiswal</h1>

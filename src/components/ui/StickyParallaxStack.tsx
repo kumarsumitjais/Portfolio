@@ -22,7 +22,7 @@ function StickyProjectCard({ project, index, total }: { project: any, index: num
 
   return (
     <div 
-      className="sticky w-full h-auto md:h-[500px] flex items-center justify-center mb-16 md:mb-24 last:mb-0"
+      className="static md:sticky w-full h-auto md:h-[500px] flex items-center justify-center mb-16 md:mb-24 last:mb-0"
       style={{ top: stickyTop }}
     >
       <motion.div 

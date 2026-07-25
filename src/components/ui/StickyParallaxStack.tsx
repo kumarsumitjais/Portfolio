@@ -16,14 +16,16 @@ function StickyProjectCard({ project, index, total }: { project: any, index: num
     offset: ["start end", "start start"]
   });
 
-  // Calculate top offset so they stack neatly like a deck of cards
-  // e.g. first card at top: 120px, second at top: 150px, etc.
-  const stickyTop = `calc(120px + ${index * 30}px)`;
+  // Cap the visual stack to a maximum of 3 cards behind the current one.
+  const stackLevel = Math.min(index, 3);
 
   return (
     <div 
-      className="sticky w-full h-[calc(100vh-140px)] max-h-[600px] md:h-[500px] flex items-center justify-center mb-16 md:mb-24 last:mb-0"
-      style={{ top: stickyTop }}
+      className="sticky w-full top-[var(--top-mobile)] md:top-[var(--top-desktop)] h-[calc(100dvh-130px)] min-h-[450px] max-h-[600px] md:h-[500px] flex items-center justify-center mb-16 md:mb-24 last:mb-0"
+      style={{ 
+        "--top-mobile": `calc(70px + ${stackLevel * 12}px)`,
+        "--top-desktop": `calc(120px + ${stackLevel * 30}px)`
+      } as React.CSSProperties}
     >
       <motion.div 
         ref={cardRef}

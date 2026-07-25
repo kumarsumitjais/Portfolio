@@ -22,19 +22,19 @@ function StickyProjectCard({ project, index, total }: { project: any, index: num
 
   return (
     <div 
-      className="sticky w-full h-[600px] md:h-[500px] flex items-center justify-center mb-24 last:mb-0"
+      className="sticky w-full h-auto md:h-[500px] flex items-center justify-center mb-16 md:mb-24 last:mb-0"
       style={{ top: stickyTop }}
     >
       <motion.div 
         ref={cardRef}
-        className="w-full h-full bg-bg-elevated border border-border-card rounded-3xl overflow-hidden shadow-level-3 relative flex flex-col md:flex-row group"
+        className="w-full h-auto md:h-full bg-bg-elevated border border-border-card rounded-3xl overflow-hidden shadow-level-3 relative flex flex-col md:flex-row group"
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
         {/* Left Side: Cinematic Image/Visual */}
-        <div className="w-full md:w-1/2 h-48 md:h-full relative overflow-hidden bg-bg-base border-b md:border-b-0 md:border-r border-border-card shrink-0">
+        <div className="w-full md:w-1/2 h-56 md:h-full relative overflow-hidden bg-bg-base border-b md:border-b-0 md:border-r border-border-card shrink-0">
           {project.meta.image ? (
             <Image 
               src={project.meta.image} 
@@ -60,7 +60,7 @@ function StickyProjectCard({ project, index, total }: { project: any, index: num
         </div>
 
         {/* Right Side: Data Sheet */}
-        <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col h-full bg-bg-elevated relative z-10">
+        <div className="w-full md:w-1/2 p-6 md:p-12 flex flex-col h-auto md:h-full bg-bg-elevated relative z-10">
           <div className="flex flex-wrap items-center gap-2 mb-6">
             <span className="px-3 py-1.5 bg-electric-blue-500/10 text-electric-blue-400 text-xs font-bold rounded border border-electric-blue-500/20">
               {project.meta.category}

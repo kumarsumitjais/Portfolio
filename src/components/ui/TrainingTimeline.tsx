@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Certification } from "@/content/certifications";
-import { Terminal, CheckCircle, ExternalLink, Calendar, Award, Code2 } from "lucide-react";
+import { Terminal, CheckCircle, ExternalLink, Award, Code2 } from "lucide-react";
 
 export function TrainingTimeline({ items }: { items: Certification[] }) {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -44,7 +44,7 @@ export function TrainingTimeline({ items }: { items: Certification[] }) {
                 <div className={`p-4 rounded-xl border transition-all duration-300 ${activeIndex === idx ? "bg-green-400/5 border-green-400/30" : "bg-black/20 border-border-card group-hover:border-border-card/80"}`}>
                   <div className="text-[10px] font-mono text-text-secondary mb-2 flex items-center gap-2">
                     <span className="text-green-400">Epoch {idx + 1}</span> 
-                    <span>//</span>
+                    <span>{"//"}</span>
                     <span>{cert.date}</span>
                   </div>
                   <h4 className={`text-sm font-bold mb-1 transition-colors ${activeIndex === idx ? "text-green-400" : "text-text-primary"}`}>{cert.name}</h4>
@@ -74,8 +74,11 @@ export function TrainingTimeline({ items }: { items: Certification[] }) {
                   </div>
                   <div>
                     <h2 className="text-2xl font-display font-bold text-text-primary">{activeCert.name}</h2>
-                    <p className="text-sm text-text-secondary mt-1 flex items-center gap-2">
-                      <span className="text-green-400">Authority:</span> {activeCert.issuer}
+                    <p className="text-sm text-text-secondary mt-1 flex flex-col gap-1">
+                      <span><span className="text-green-400">Authority:</span> {activeCert.issuer}</span>
+                      {activeCert.credentialId && (
+                        <span><span className="text-green-400">Credential ID:</span> {activeCert.credentialId}</span>
+                      )}
                     </p>
                   </div>
                 </div>

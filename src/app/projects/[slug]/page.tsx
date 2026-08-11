@@ -21,11 +21,11 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
 
   // Custom components for MDX
   const components = {
-    h2: (props: any) => <h2 className="text-2xl font-bold mt-12 mb-4 text-text-primary border-b border-border-card pb-2" {...props} />,
-    h3: (props: any) => <h3 className="text-xl font-bold mt-8 mb-4 text-text-primary" {...props} />,
-    p: (props: any) => <p className="text-text-secondary leading-relaxed mb-6" {...props} />,
-    ul: (props: any) => <ul className="list-disc pl-5 mb-6 text-text-secondary space-y-2" {...props} />,
-    strong: (props: any) => <strong className="font-bold text-text-primary" {...props} />,
+    h2: (props: React.HTMLAttributes<HTMLHeadingElement>) => <h2 className="text-2xl font-bold mt-12 mb-4 text-text-primary border-b border-border-card pb-2" {...props} />,
+    h3: (props: React.HTMLAttributes<HTMLHeadingElement>) => <h3 className="text-xl font-bold mt-8 mb-4 text-text-primary" {...props} />,
+    p: (props: React.HTMLAttributes<HTMLParagraphElement>) => <p className="text-text-secondary leading-relaxed mb-6" {...props} />,
+    ul: (props: React.HTMLAttributes<HTMLUListElement>) => <ul className="list-disc pl-5 mb-6 text-text-secondary space-y-2" {...props} />,
+    strong: (props: React.HTMLAttributes<HTMLElement>) => <strong className="font-bold text-text-primary" {...props} />,
   };
 
   return (

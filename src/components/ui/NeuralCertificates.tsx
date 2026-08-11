@@ -41,7 +41,7 @@ export function NeuralCertificates({ items }: { items: Certification[] }) {
   const renderCard = (cert: Certification, layerName: string, idx: number) => {
     const nodeId = `${layerName}-${idx}`;
     const isHovered = hoveredNode === nodeId;
-    const isRelated = hoveredNode && hoveredNode !== nodeId && Math.random() > 0.5; // Simulate synapse relationship
+    const isRelated = hoveredNode && hoveredNode !== nodeId && ((cert.name.length + idx) % 2 === 0); // Simulate synapse relationship
 
     return (
       <div

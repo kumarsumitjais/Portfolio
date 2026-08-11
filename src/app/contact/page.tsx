@@ -7,10 +7,10 @@ export default function ContactPage() {
       <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-12 bg-bg-elevated border border-border-card rounded-3xl p-8 md:p-12 shadow-level-2">
         <div>
           <h1 className="text-4xl font-display font-bold mb-6 text-text-primary">
-            Let's build something <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-blue-500 to-cyan-400">great.</span>
+            Let&apos;s build something <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-blue-500 to-cyan-400">great.</span>
           </h1>
           <p className="text-text-secondary mb-12 text-lg">
-            Whether you have a question, a project in mind, or just want to say hi, I'll try my best to get back to you!
+            Whether you have a question, a project in mind, or just want to say hi, I&apos;ll try my best to get back to you!
           </p>
 
           <div className="space-y-6">

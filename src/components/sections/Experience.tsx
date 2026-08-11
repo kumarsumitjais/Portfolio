@@ -15,7 +15,7 @@ export function ExperienceSection() {
             Experience & <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-blue-500 to-cyan-400">Involvement</span>
           </h2>
           <p className="text-text-secondary max-w-2xl mx-auto">
-            Organizations I've been a part of and the roles that have shaped my journey.
+            Organizations I&apos;ve been a part of and the roles that have shaped my journey.
           </p>
         </div>
 

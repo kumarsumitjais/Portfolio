@@ -1,20 +1,15 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 
 // A single card in the stack
-function StickyProjectCard({ project, index, total }: { project: any, index: number, total: number }) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function StickyProjectCard({ project, index }: { project: any, index: number }) {
   const cardRef = useRef<HTMLDivElement>(null);
-  
-  // Create a subtle parallax effect and scale down when scrolled past
-  const { scrollYProgress } = useScroll({
-    target: cardRef,
-    offset: ["start end", "start start"]
-  });
 
   // Cap the visual stack to a maximum of 3 cards behind the current one.
   const stackLevel = Math.min(index, 3);
@@ -97,6 +92,7 @@ function StickyProjectCard({ project, index, total }: { project: any, index: num
   );
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function StickyParallaxStack({ projects }: { projects: any[] }) {
   return (
     <div className="w-full relative pb-32">
@@ -105,7 +101,6 @@ export function StickyParallaxStack({ projects }: { projects: any[] }) {
           key={project.slug} 
           project={project} 
           index={index} 
-          total={projects.length} 
         />
       ))}
     </div>

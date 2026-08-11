@@ -10,14 +10,16 @@ export const achievements: Achievement[] = [
   {
     title: "2nd Runner-up – Ideathon cum Internal Hackathon SIH 2025",
     event: "Lamrin Tech Skills University Punjab",
-    date: "Oct 2025",
-    image: "/images/placeholder-medal.svg"
+    date: "Sept 2025",
+    image: "/images/blog/sih-hackathon/sih-team-photo-1.jpeg",
+    blogUrl: "/blog/sih-internal-hackathon-2025"
   },
   {
     title: "1st Prize – Ideathon, 54th ISTE National Annual Convention & Yuva Kaushal Utsav",
-    event: "ISTE",
-    date: "2025",
-    image: "/images/placeholder-medal.svg"
+    event: "Indian Society for Technical Education (ISTE) & Lamrin Tech Skills University Punjab",
+    date: "Feb 2025",
+    image: "/images/blog/iste-event/iste-team-photo-20260811244481.jpeg",
+    blogUrl: "/blog/iste-54th-annual-convention-ideathon-2025"
   },
   {
     title: "Runner-up – University Level Ideathon",
@@ -28,8 +30,9 @@ export const achievements: Achievement[] = [
   {
     title: "Runner-up – Web Development Competition (Byte Battle)",
     event: "PTU Jalandhar",
-    date: "2024",
-    image: "/images/placeholder-certificate.svg"
+    date: "March 2024",
+    image: "/images/blog/byte-battle/image1.jpg",
+    blogUrl: "/blog/byte-battle-hackathon-humsafar"
   },
   {
     title: "1st Prize – Hackathon, Yuva Fest",

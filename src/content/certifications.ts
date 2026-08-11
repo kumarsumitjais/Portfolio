@@ -3,6 +3,7 @@ export interface Certification {
   issuer: string;
   date: string;
   credentialUrl?: string;
+  credentialId?: string;
   skills: string[];
   image?: string;
 }
@@ -36,9 +37,10 @@ export const certifications: Certification[] = [
     name: "Data Analytics Job Simulation",
     issuer: "Deloitte Australia (Forage)",
     date: "Jun 2025",
-    credentialUrl: "#",
+    credentialUrl: "https://www.theforage.com/completion-certificates/9PBTqmSxAf6zZTseP/io9DzWKe3PTsiS6GG_9PBTqmSxAf6zZTseP_p2JfNZpuPkpbtcnkW_1750837937332_completion_certificate.pdf",
+    credentialId: "v6kLhnJLxuMzFSzJ2",
     skills: ["Data Analytics"],
-    image: "/images/placeholder-certificate.svg"
+    image: "/images/deloitte-forage-certificate.png"
   },
   {
     name: "Prompt Design in Vertex AI Skill Badge",

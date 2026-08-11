@@ -53,7 +53,7 @@ export function FeatureMatrix({ items }: { items: Certification[] }) {
               <br/>
               {activeFilter === "All" 
                 ? <><span className="text-purple-600 dark:text-purple-400">df</span>.show_all()</>
-                : <><span className="text-purple-600 dark:text-purple-400">df</span>[<span className="text-purple-600 dark:text-purple-400">df</span>[<span className="text-green-600 dark:text-green-400">'domain'</span>] == <span className="text-green-600 dark:text-green-400">'{activeFilter}'</span>]</>
+                : <><span className="text-purple-600 dark:text-purple-400">df</span>[<span className="text-purple-600 dark:text-purple-400">df</span>[<span className="text-green-600 dark:text-green-400">&apos;domain&apos;</span>] == <span className="text-green-600 dark:text-green-400">&apos;{activeFilter}&apos;</span>]</>
               }
             </span>
           </div>

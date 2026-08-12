@@ -22,7 +22,7 @@ export function getProjectBySlug(slug: string) {
 
 export function getAllProjects() {
   const slugs = getProjectSlugs();
-  const projects = slugs.map((slug) => getProjectBySlug(slug)).filter(Boolean);
+  const projects = slugs.map((slug) => getProjectBySlug(slug)).filter((p): p is NonNullable<typeof p> => p !== null);
   return projects;
 }
 
@@ -44,10 +44,10 @@ export function getBlogBySlug(slug: string) {
 
 export function getAllBlogs() {
   const slugs = getBlogSlugs();
-  const blogs = slugs.map((slug) => getBlogBySlug(slug)).filter(Boolean);
+  const blogs = slugs.map((slug) => getBlogBySlug(slug)).filter((b): b is NonNullable<typeof b> => b !== null);
   // Sort blogs by date descending
   return blogs.sort((a, b) => {
-    if (a?.meta.date && b?.meta.date) {
+    if (a.meta.date && b.meta.date) {
       return new Date(b.meta.date).getTime() - new Date(a.meta.date).getTime();
     }
     return 0;

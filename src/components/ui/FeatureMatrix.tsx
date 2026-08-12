@@ -2,8 +2,9 @@
 
 import React, { useState } from "react";
 import { Certification } from "@/content/certifications";
-import { ExternalLink, CheckCircle2, Search, Code2 } from "lucide-react";
+import { ExternalLink, CheckCircle2, Search, Code2, LineChart } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { AnalyticsModal } from "./AnalyticsModal";
 
 // Helper to assign a domain to each certificate for the DataFrame
 const getDomain = (certName: string) => {
@@ -26,6 +27,7 @@ const domainColors = {
 
 export function FeatureMatrix({ items }: { items: Certification[] }) {
   const [activeFilter, setActiveFilter] = useState<string>("All");
+  const [isAnalyticsOpen, setIsAnalyticsOpen] = useState(false);
 
   const domains = ["All", "Analytics", "GenAI", "ML"];
 
@@ -59,21 +61,34 @@ export function FeatureMatrix({ items }: { items: Certification[] }) {
           </div>
         </div>
 
-        {/* Pandas-style Filter Buttons */}
-        <div className="flex flex-wrap gap-2">
-          {domains.map((domain) => (
-            <button
-              key={domain}
-              onClick={() => setActiveFilter(domain)}
-              className={`px-3 py-1.5 rounded border transition-all text-xs
-                ${activeFilter === domain 
-                  ? "bg-electric-blue-500/10 border-electric-blue-500 text-electric-blue-600 dark:text-electric-blue-400" 
-                  : "bg-transparent border-border-card text-text-secondary hover:border-text-secondary"}
-              `}
-            >
-              {domain === "All" ? "df.show_all()" : `domain=='${domain}'`}
-            </button>
-          ))}
+        {/* Right side controls - keeping domain buttons exactly as they were */}
+        <div className="flex flex-wrap items-center justify-between md:justify-end gap-4 w-full md:w-auto">
+          {/* Pandas-style Filter Buttons */}
+          <div className="flex flex-wrap gap-2">
+            {domains.map((domain) => (
+              <button
+                key={domain}
+                onClick={() => setActiveFilter(domain)}
+                className={`px-3 py-1.5 rounded border transition-all text-xs
+                  ${activeFilter === domain 
+                    ? "bg-electric-blue-500/10 border-electric-blue-500 text-electric-blue-600 dark:text-electric-blue-400" 
+                    : "bg-transparent border-border-card text-text-secondary hover:border-text-secondary"}
+                `}
+              >
+                {domain === "All" ? "df.show_all()" : `domain=='${domain}'`}
+              </button>
+            ))}
+          </div>
+          
+          {/* Analytics Button - Pushed to the extreme right */}
+          <button
+            onClick={() => setIsAnalyticsOpen(true)}
+            className="px-4 py-1.5 rounded-md border border-border-card text-text-secondary hover:text-electric-blue-400 hover:border-electric-blue-400 transition-all flex items-center gap-2 bg-gray-100 dark:bg-black/30 shrink-0 ml-auto md:ml-4"
+            title="View Skill Analytics"
+          >
+            <LineChart className="w-4 h-4" />
+            <span className="text-xs font-semibold">View Analytics</span>
+          </button>
         </div>
       </div>
 
@@ -268,6 +283,9 @@ export function FeatureMatrix({ items }: { items: Certification[] }) {
           background: rgba(0, 195, 255, 0.4);
         }
       `}} />
+      
+      {/* Analytics Modal */}
+      <AnalyticsModal isOpen={isAnalyticsOpen} onClose={() => setIsAnalyticsOpen(false)} />
     </div>
   );
 }

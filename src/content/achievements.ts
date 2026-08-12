@@ -37,14 +37,16 @@ export const achievements: Achievement[] = [
   {
     title: "1st Prize – Hackathon, Yuva Fest",
     event: "Lamrin Tech Skills University",
-    date: "2023",
-    image: "/images/placeholder-medal.svg"
+    date: "Oct 2023",
+    image: "/images/blog/yuva-fest/yuva-fest-photo-20260812124039.jpeg",
+    blogUrl: "/blog/yuva-fest-kodeathon-ewaste-rahi"
   },
   {
     title: "Participation – National Level Hackathon, IBM ICE",
     event: "KARE, Madurai",
-    date: "2023",
-    image: "/images/placeholder-certificate.svg"
+    date: "Dec 29-30, 2023",
+    image: "/images/blog/madurai-hackathon/madurai-photo-20260812123952.jpeg",
+    blogUrl: "/blog/madurai-hackathon-aqi-project"
   },
   {
     title: "1st Prize – Skit, Inquilab Festival",

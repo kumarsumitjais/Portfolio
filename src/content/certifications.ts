@@ -11,11 +11,11 @@ export interface Certification {
 export const certifications: Certification[] = [
   {
     name: "AI-ML with Data Science Workshop",
-    issuer: "IIT Ropar",
-    date: "Feb 2024",
-    credentialUrl: "#",
+    issuer: "IIT Ropar (Edufabrica)",
+    date: "Feb 16-17, 2024",
+    credentialUrl: "https://www.linkedin.com/posts/sumit-kr-jaiswal-4979132ba_ai-machinelearning-datascience-activity-7249468182313283584-wK6O",
     skills: ["AI/ML", "Data Science"],
-    image: "/images/placeholder-certificate.svg"
+    image: "/images/certificate-aiml-data-science.png"
   },
   {
     name: "Career Essentials in Data Analysis",

@@ -6,6 +6,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 
 import { CustomCursor } from "@/components/ui/CustomCursor";
+import { SahayikaAssistant } from "@/components/ui/SahayikaAssistant";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -46,6 +47,7 @@ export default function RootLayout({
           <Navbar />
           {children}
           <Footer />
+          <SahayikaAssistant />
         </ThemeProvider>
       </body>
     </html>

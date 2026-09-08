@@ -235,7 +235,7 @@ export async function POST(req: NextRequest) {
     // Initialize inside the handler to ensure env variables are read at runtime
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
     const model = genAI.getGenerativeModel({
-      model: "gemini-1.5-flash",
+      model: "gemini-3.5-flash-lite",
       systemInstruction: SYSTEM_INSTRUCTION,
     });
 

@@ -216,20 +216,6 @@ of the portfolio or reaching out to Sumit directly at
 jaiswal.sumit0789@gmail.com.
 `;
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
-
-// The model constant is safe at module level.
-// It holds no session state — it is just configuration.
-// It does NOT need to be recreated per request.
-const model = genAI.getGenerativeModel({
-  model: "gemini-3.5-flash-lite",
-  systemInstruction: SYSTEM_INSTRUCTION,
-});
-
-// IMPORTANT: There are NO other global variables in this file.
-// No chatSession global. No visitorContext global. Nothing else.
-// This file is completely stateless between requests.
-
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -246,10 +232,14 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Initialize inside the handler to ensure env variables are read at runtime
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+    const model = genAI.getGenerativeModel({
+      model: "gemini-1.5-flash",
+      systemInstruction: SYSTEM_INSTRUCTION,
+    });
+
     // Create a temporary chat session for THIS request only.
-    // It is reconstructed from the full history sent by the frontend.
-    // This session is local to this function call and is destroyed
-    // when the function returns. This is correct and intentional.
     const chat = model.startChat({
       history: Array.isArray(history) ? history : [],
       generationConfig: {

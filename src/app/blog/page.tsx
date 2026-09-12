@@ -1,6 +1,22 @@
 import { getAllBlogs } from "@/lib/content/mdx";
 import Link from "next/link";
 import { ArrowRight, Calendar, Tag } from "lucide-react";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Blog",
+  description:
+    "Technical blog by Sumit Kumar Jaiswal on machine learning, LLMs, " +
+    "Python, and AI engineering. Deep dives, tutorials, and case studies.",
+  alternates: { canonical: "https://www.sumitkumarjaiswal.in/blog" },
+  openGraph: {
+    title: "ML & AI Blog | Sumit Kumar Jaiswal",
+    description:
+      "Tutorials, deep dives, and case studies on machine learning, " +
+      "LLM agents, and Python data science.",
+    url: "https://www.sumitkumarjaiswal.in/blog",
+  },
+};
 
 export default function BlogPage() {
   const blogs = getAllBlogs();

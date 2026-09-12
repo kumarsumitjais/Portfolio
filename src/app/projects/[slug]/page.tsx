@@ -3,12 +3,35 @@ import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { ProjectJsonLd } from "@/components/JsonLd";
+
+import type { Metadata } from "next";
 
 export async function generateStaticParams() {
   const projects = getAllProjects();
   return projects.filter((p): p is NonNullable<typeof p> => p !== null).map((p) => ({
     slug: p.slug,
   }));
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const project = getProjectBySlug(slug);
+  
+  if (!project) {
+    return { title: "Project Not Found" };
+  }
+
+  return {
+    title: project.title,
+    description: project.summary,
+    alternates: { canonical: `https://www.sumitkumarjaiswal.in/projects/${slug}` },
+    openGraph: {
+      title: `${project.title} | Sumit Kr. Jaiswal`,
+      description: project.summary,
+      url: `https://www.sumitkumarjaiswal.in/projects/${slug}`,
+    },
+  };
 }
 
 export default async function ProjectPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -29,7 +52,15 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
   };
 
   return (
-    <main className="container mx-auto px-5 md:px-20 py-32 min-h-screen">
+    <>
+      <ProjectJsonLd
+        name={project.title}
+        description={project.summary}
+        url={`https://www.sumitkumarjaiswal.in/projects/${slug}`}
+        datePublished={project.date}
+        technologies={project.tags}
+      />
+      <main className="container mx-auto px-5 md:px-20 py-32 min-h-screen">
       <Link href="/projects" className="inline-flex items-center text-sm font-medium text-text-secondary hover:text-electric-blue-500 mb-8 transition-colors">
         <ArrowLeft className="w-4 h-4 mr-2" /> Back to Projects
       </Link>
@@ -91,5 +122,6 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
         </aside>
       </div>
     </main>
+    </>
   );
 }

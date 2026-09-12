@@ -1,5 +1,21 @@
 import { getAllProjects } from "@/lib/content/mdx";
 import { StickyParallaxStack } from "@/components/ui/StickyParallaxStack";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Projects",
+  description:
+    "Explore Sumit Kumar Jaiswal's portfolio of ML projects: AQI prediction, " +
+    "LLM conversational agents, breast cancer classification, and more.",
+  alternates: { canonical: "https://www.sumitkumarjaiswal.in/projects" },
+  openGraph: {
+    title: "ML & AI Projects | Sumit Kumar Jaiswal",
+    description:
+      "12+ production ML models including computer vision, LLM agents, and " +
+      "predictive analytics. Built with Python, TensorFlow, and LangChain.",
+    url: "https://www.sumitkumarjaiswal.in/projects",
+  },
+};
 
 export default function ProjectsPage() {
   const projects = getAllProjects().filter((p): p is NonNullable<typeof p> => p !== null);

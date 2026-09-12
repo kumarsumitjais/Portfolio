@@ -1,5 +1,21 @@
 import { Mail, MapPin } from "lucide-react";
 import { FaLinkedin, FaGithub } from "react-icons/fa";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Contact",
+  description:
+    "Get in touch with Sumit Kumar Jaiswal for freelance data science projects, " +
+    "AI/ML consulting, or full-time opportunities.",
+  alternates: { canonical: "https://www.sumitkumarjaiswal.in/contact" },
+  openGraph: {
+    title: "Contact Sumit Kumar Jaiswal | Hire a Data Scientist",
+    description:
+      "Available for freelance projects, AI/ML consulting, and full-time roles. " +
+      "Let's build something great.",
+    url: "https://www.sumitkumarjaiswal.in/contact",
+  },
+};
 
 export default function ContactPage() {
   return (

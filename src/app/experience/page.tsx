@@ -1,5 +1,20 @@
 import { experiences } from "@/content/experience";
 import { ArrowRight } from "lucide-react";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Experience",
+  description:
+    "Work experience and involvement of Sumit Kumar Jaiswal — roles in " +
+    "AI/ML engineering, content, and university organizations.",
+  alternates: { canonical: "https://www.sumitkumarjaiswal.in/experience" },
+  openGraph: {
+    title: "Experience | Sumit Kumar Jaiswal",
+    description:
+      "Professional journey of a Data Scientist & AI/ML Engineer from India.",
+    url: "https://www.sumitkumarjaiswal.in/experience",
+  },
+};
 
 export default function ExperiencePage() {
   return (

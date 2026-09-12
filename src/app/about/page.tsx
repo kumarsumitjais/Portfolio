@@ -5,6 +5,23 @@ import Image from "next/image";
 import { OrbitalInfographic } from "@/components/ui/OrbitalInfographic";
 import { ComputingPipeline } from "@/components/ui/ComputingPipeline";
 import { FeatureMatrix } from "@/components/ui/FeatureMatrix";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "About",
+  description:
+    "Sumit Kumar Jaiswal is a Data Scientist & AI/ML Engineer from India. " +
+    "Passionate about turning raw data into production-grade ML intelligence.",
+  alternates: { canonical: "https://www.sumitkumarjaiswal.in/about" },
+  openGraph: {
+    title: "About Sumit Kumar Jaiswal | Data Scientist",
+    description:
+      "Learn about Sumit Kumar Jaiswal — background, education, and the mission " +
+      "to build intelligent systems that scale.",
+    url: "https://www.sumitkumarjaiswal.in/about",
+  },
+};
+
 export default function AboutPage() {
   return (
     <main className="container mx-auto px-5 md:px-20 py-32 min-h-screen">

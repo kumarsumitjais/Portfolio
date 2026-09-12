@@ -154,7 +154,7 @@ function buildContextNote(context: VisitorContext): string {
       `Visitor's name is: ${context.name}. ` +
       `Use their name naturally once or twice in your reply.\n`;
   } else {
-    note += `Visitor Name: UNKNOWN (You must gently ask for their name in this turn if you haven't yet).\n`;
+    note += `Visitor Name: Not explicitly captured by system. Check the chat history to see if they mentioned their name naturally in a sentence (e.g., "James here", or "I'm checking this out, name is Sarah"). If they DID mention a name, USE IT and DO NOT ask again. If they have NOT provided a name at all, you must gently ask for it in this turn.\n`;
   }
 
   if (context.intent) {

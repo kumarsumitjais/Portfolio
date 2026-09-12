@@ -23,12 +23,12 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   }
 
   return {
-    title: project.title,
-    description: project.summary,
+    title: project.meta.title,
+    description: project.meta.summary,
     alternates: { canonical: `https://www.sumitkumarjaiswal.in/projects/${slug}` },
     openGraph: {
-      title: `${project.title} | Sumit Kr. Jaiswal`,
-      description: project.summary,
+      title: `${project.meta.title} | Sumit Kr. Jaiswal`,
+      description: project.meta.summary,
       url: `https://www.sumitkumarjaiswal.in/projects/${slug}`,
     },
   };
@@ -54,11 +54,11 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
   return (
     <>
       <ProjectJsonLd
-        name={project.title}
-        description={project.summary}
+        name={project.meta.title as string}
+        description={project.meta.summary as string}
         url={`https://www.sumitkumarjaiswal.in/projects/${slug}`}
-        datePublished={project.date}
-        technologies={project.tags}
+        datePublished={project.meta.date as string}
+        technologies={project.meta.tags as string[]}
       />
       <main className="container mx-auto px-5 md:px-20 py-32 min-h-screen">
       <Link href="/projects" className="inline-flex items-center text-sm font-medium text-text-secondary hover:text-electric-blue-500 mb-8 transition-colors">

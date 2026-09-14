@@ -32,8 +32,8 @@ export const skills: Record<string, SkillCategory> = {
   },
   machineLearning: {
     title: "Machine Learning",
-    proficiency: 77,
-    items: ["EDA", "Feature Engineering", "Classification", "Regression", "Model Evaluation", "Sentiment Analysis", "Feature Selection", "Clustering (Basics)"]
+    proficiency: 85,
+    items: ["Deep Learning", "NLP", "Computer Vision", "OCR", "Transformers", "EDA", "Feature Engineering", "Classification", "Regression", "Model Evaluation", "Sentiment Analysis", "Feature Selection", "Clustering (Basics)"]
   },
   dataAnalysis: {
     title: "Data Analysis",

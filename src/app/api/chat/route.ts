@@ -104,7 +104,7 @@ LinkedIn: linkedin.com/in/sumit-kr-jaiswal-4979132ba
 
 EDUCATION
 B.Tech CSE (Data Science) — Lamrin Tech Skills University, Punjab
-2023 to 2027. CGPA: 8.5+ out of 10. Currently in third year.
+2023 to 2027. CGPA: 8.5+ out of 10. Currently in final year.
 Schooled at Manas Convent School, Mughalsarai.
 CBSE 10th (2021-22) and 12th PCM (2022-23).
 

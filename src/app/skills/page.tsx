@@ -1,4 +1,5 @@
 import { SkillsSection } from "@/components/sections/Skills";
+import { SkillEvidence } from "@/components/sections/SkillEvidence";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -19,7 +20,7 @@ export const metadata: Metadata = {
 export default function SkillsPage() {
   return (
     <main className="pt-0 pb-05 min-h-screen">
-      <SkillsSection />
+      <SkillsSection chart={<SkillEvidence />} />
     </main>
   );
 }

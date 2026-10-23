@@ -1,34 +1,16 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { ReactNode } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { skills } from "@/content/skills";
 
 import Link from "next/link";
-import { SkillsRadar } from "@/components/ui/SkillsRadar";
 
-export function SkillsSection({ teaser = false }: { teaser?: boolean }) {
-  const [activeFilter, setActiveFilter] = useState<string>("All");
-  const [isScanning, setIsScanning] = useState<boolean>(true);
-  
-  useEffect(() => {
-    if (teaser) {
-      setIsScanning(false);
-      return;
-    }
-    setIsScanning(true);
-    // End scanning after 2.5 seconds on filter change
-    const timer = setTimeout(() => {
-      setIsScanning(false);
-    }, 2500);
-    return () => clearTimeout(timer);
-  }, [activeFilter, teaser]);
-  
+// `chart` is rendered between the heading and the cards (the Skills page passes
+// its own visual; the home page teaser shows none, since the hero has the network).
+export function SkillsSection({ teaser = false, chart }: { teaser?: boolean; chart?: ReactNode }) {
   const allDisplayedSkills = teaser ? Object.entries(skills).slice(0, 4) : Object.entries(skills);
   
-  const filteredSkills = activeFilter === "All" 
-    ? allDisplayedSkills 
-    : allDisplayedSkills.filter(([key, category]) => category.title === activeFilter);
 
   return (
     <section className={`${teaser ? 'py-24 bg-bg-elevated border-t border-border-card' : 'pb-24'}`} id="skills">
@@ -42,15 +24,11 @@ export function SkillsSection({ teaser = false }: { teaser?: boolean }) {
           </p>
         </div>
         
-        {!teaser && (
-          <div className="mb-16">
-            <SkillsRadar />
-          </div>
-        )}
+        {chart && <div className="mb-16">{chart}</div>}
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 min-h-[400px]">
           <AnimatePresence mode="popLayout">
-            {!isScanning && filteredSkills.map(([key, category], idx) => {
+            {allDisplayedSkills.map(([key, category], idx) => {
               const displayedItems = teaser ? category.items.slice(0, 3) : category.items;
             const remainingCount = category.items.length - displayedItems.length;
             

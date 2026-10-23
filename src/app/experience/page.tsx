@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 
 export default function ExperiencePage() {
   return (
-    <main className="container mx-auto px-5 md:px-20 py-32 min-h-screen">
+    <main className="container mx-auto px-5 md:px-20 pt-8 pb-20 md:py-32 min-h-screen">
       <h1 className="text-4xl md:text-5xl font-display font-bold mb-6 text-text-primary">
         Experience
       </h1>

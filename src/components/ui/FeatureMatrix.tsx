@@ -92,8 +92,45 @@ export function FeatureMatrix({ items }: { items: Certification[] }) {
         </div>
       </div>
 
+      {/* Phones/tablets: one card per row of the DataFrame (the 7-column table needs ~900px). */}
+      <ul className="lg:hidden divide-y divide-border-card/50">
+        {filteredItems.map((cert, idx) => (
+          <li key={cert.name + idx} className="p-4 flex flex-col gap-3">
+            {cert.image && (
+              <div className="rounded-xl overflow-hidden border border-border-card bg-gray-100 dark:bg-black/40 p-2 flex justify-center">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={cert.image} alt={cert.name} loading="lazy" className="max-w-full h-auto max-h-44 object-contain rounded-lg" />
+              </div>
+            )}
+            <div className="flex items-start gap-3">
+              <span className="text-text-secondary bg-gray-50 dark:bg-[#161b22] px-2 py-0.5 rounded border border-border-card text-xs shrink-0">{idx}</span>
+              <div className="min-w-0">
+                <p className="text-text-primary font-sans font-semibold text-sm leading-snug">{cert.name}</p>
+                <p className="text-xs text-text-secondary mt-1">{cert.issuer} · {cert.date}</p>
+              </div>
+            </div>
+            <div className="flex flex-wrap items-center gap-2">
+              <span className={`px-2 py-0.5 rounded-md border text-xs ${domainColors[cert.domain as keyof typeof domainColors]}`}>{cert.domain}</span>
+              <span className="flex items-center gap-1 text-xs text-green-600 dark:text-green-400">
+                <CheckCircle2 className="w-3.5 h-3.5" /> Verified
+              </span>
+              {cert.credentialUrl && cert.credentialUrl !== "#" && (
+                <a
+                  href={cert.credentialUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="ml-auto inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600/10 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400 text-xs font-medium"
+                >
+                  View Badge <ExternalLink className="w-3 h-3" />
+                </a>
+              )}
+            </div>
+          </li>
+        ))}
+      </ul>
+
       {/* DataFrame Table */}
-      <div className="overflow-x-auto custom-scrollbar">
+      <div className="hidden lg:block overflow-x-auto custom-scrollbar">
         <table className="w-full text-left border-collapse min-w-[900px]">
           <thead>
             <tr className="bg-gray-50 dark:bg-[#161b22] border-b border-border-card text-text-secondary transition-colors">

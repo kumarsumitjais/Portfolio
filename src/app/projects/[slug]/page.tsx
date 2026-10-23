@@ -65,7 +65,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
         datePublished={project.meta.startDate as string}
         technologies={project.meta.tags as string[]}
       />
-      <main className="container mx-auto px-5 md:px-20 py-32 min-h-screen">
+      <main className="container mx-auto px-5 md:px-20 pt-8 pb-20 md:py-32 min-h-screen">
       <Link href="/projects" className="inline-flex items-center text-sm font-medium text-text-secondary hover:text-electric-blue-500 mb-8 transition-colors">
         <ArrowLeft className="w-4 h-4 mr-2" /> Back to Projects
       </Link>

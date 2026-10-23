@@ -21,7 +21,7 @@ export default function ProjectsPage() {
   const projects = getAllProjects().filter((p): p is NonNullable<typeof p> => p !== null);
 
   return (
-    <main className="container mx-auto px-5 md:px-20 py-32 min-h-screen">
+    <main className="container mx-auto px-5 md:px-20 pt-8 pb-20 md:py-32 min-h-screen">
       <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-6 text-text-primary">
         Projects & Models
       </h1>

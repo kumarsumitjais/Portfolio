@@ -1,6 +1,6 @@
 import { SkillsSection } from "@/components/sections/Skills";
 import { SkillMap } from "@/components/sections/SkillMap";
-import { buildSkillMap, MAP_W, MAP_H } from "@/lib/content/skillMap";
+import { buildSkillMap, DESKTOP_LAYOUT, TABLET_LAYOUT, MOBILE_LAYOUT } from "@/lib/content/skillMap";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -21,7 +21,15 @@ export const metadata: Metadata = {
 export default function SkillsPage() {
   return (
     <main className="pt-0 pb-05 min-h-screen">
-      <SkillsSection chart={<SkillMap bubbles={buildSkillMap()} width={MAP_W} height={MAP_H} />} />
+      <SkillsSection
+        chart={
+          <SkillMap
+            desktop={{ layout: DESKTOP_LAYOUT, bubbles: buildSkillMap(DESKTOP_LAYOUT) }}
+            tablet={{ layout: TABLET_LAYOUT, bubbles: buildSkillMap(TABLET_LAYOUT) }}
+            mobile={{ layout: MOBILE_LAYOUT, bubbles: buildSkillMap(MOBILE_LAYOUT) }}
+          />
+        }
+      />
     </main>
   );
 }

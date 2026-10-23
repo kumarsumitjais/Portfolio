@@ -56,14 +56,14 @@ export function Navbar() {
       <div className="container mx-auto px-5 md:px-20 flex items-center justify-between h-full">
         <Link 
           href="/" 
-          className="text-xl font-display font-semibold tracking-tight z-50 focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:outline-none rounded-sm"
+          className="text-lg sm:text-xl whitespace-nowrap font-display font-semibold tracking-tight z-50 focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:outline-none rounded-sm"
           onClick={() => setIsMobileMenuOpen(false)}
         >
           Sumit Kr. Jaiswal<span className="text-electric-blue-500">.</span>
         </Link>
 
         {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-1">
+        <nav className="hidden lg:flex items-center gap-1">
           {NAV_LINKS.map((link) => {
             const isActive = pathname === link.href || pathname.startsWith(`${link.href}/`);
             return (
@@ -85,7 +85,7 @@ export function Navbar() {
           })}
         </nav>
 
-        <div className="hidden md:flex items-center gap-4">
+        <div className="hidden lg:flex items-center gap-4">
           <button
             onClick={openPalette}
             className="flex items-center gap-2 px-2.5 py-1.5 text-xs font-mono text-text-secondary border border-border-card rounded-lg hover:text-text-primary hover:border-electric-blue-500/50 transition-colors focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:outline-none"
@@ -112,7 +112,7 @@ export function Navbar() {
         </div>
 
         {/* Mobile Toggle */}
-        <div className="md:hidden flex items-center gap-4 z-50">
+        <div className="lg:hidden flex items-center gap-1 sm:gap-3 z-50">
           <button
             onClick={openPalette}
             className="p-2 text-text-secondary hover:text-text-primary focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:outline-none rounded-md"
@@ -134,7 +134,7 @@ export function Navbar() {
 
       {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (
-        <div className="fixed inset-0 top-[64px] z-40 bg-bg-base md:hidden flex flex-col p-6 overflow-y-auto">
+        <div className="fixed inset-0 top-16 md:top-[72px] z-40 bg-bg-base lg:hidden flex flex-col p-6 overflow-y-auto">
           <nav className="flex flex-col gap-4 pb-10">
             {NAV_LINKS.map((link) => (
               <Link

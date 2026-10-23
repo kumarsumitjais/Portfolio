@@ -214,10 +214,10 @@ function Palette({ projects, onClose }: { projects: PaletteProject[]; onClose: (
                 i === active ? "bg-electric-blue-500/10 text-text-primary" : "text-text-secondary"
               }`}
             >
-              <span className="truncate">{item.label}</span>
-              <span className="flex items-center gap-2 text-xs text-text-secondary shrink-0">
-                {item.hint}
-                {i === active && <CornerDownLeft className="w-3 h-3" />}
+              <span className="shrink-0 max-w-[65%] truncate">{item.label}</span>
+              <span className="flex items-center gap-2 min-w-0 text-xs text-text-secondary">
+                <span className="truncate">{item.hint}</span>
+                {i === active && <CornerDownLeft className="w-3 h-3 shrink-0" />}
               </span>
             </li>
           ))}

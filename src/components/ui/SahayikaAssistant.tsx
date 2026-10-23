@@ -477,18 +477,19 @@ export function SahayikaAssistant() {
       <AnimatePresence>
         {!isOpen && (
           <motion.button
+            aria-label="Chat with Sahayika, Sumit's AI assistant"
             initial={{ opacity: 0, y: 20, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.9 }}
             transition={{ duration: 0.3 }}
             onClick={() => setIsOpen(true)}
             className={cn(
-              "fixed bottom-6 right-6 z-50 flex items-center gap-3 px-5 py-3 rounded-full shadow-2xl",
+              "fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 flex items-center gap-3 p-3.5 sm:px-5 sm:py-3 rounded-full shadow-2xl",
               "bg-gradient-to-r from-teal-500 to-emerald-400 hover:from-teal-400 hover:to-emerald-300",
               "border border-white/20 hover:shadow-teal-500/30 transition-shadow"
             )}
           >
-            <span className="text-sm font-medium text-white whitespace-nowrap tracking-wide drop-shadow-md">Need help from Sahayika?</span>
+            <span className="hidden sm:inline text-sm font-medium text-white whitespace-nowrap tracking-wide drop-shadow-md">Need help from Sahayika?</span>
             <Sparkles className="w-5 h-5 text-white animate-pulse" />
           </motion.button>
         )}
@@ -502,7 +503,7 @@ export function SahayikaAssistant() {
             exit={{ opacity: 0, y: 40, scale: 0.95 }}
             transition={{ duration: 0.3, type: "spring", bounce: 0.3 }}
             className={cn(
-              "fixed bottom-6 right-6 z-50 w-[90%] sm:w-[400px] h-[600px] max-h-[85vh]",
+              "fixed z-50 inset-x-2 bottom-2 h-[85dvh] sm:inset-x-auto sm:bottom-6 sm:right-6 sm:w-[400px] sm:h-[600px] sm:max-h-[85vh]",
               "bg-white/10 dark:bg-black/60 backdrop-blur-2xl border border-white/20 dark:border-white/10 rounded-2xl shadow-2xl",
               "flex flex-col overflow-hidden ring-1 ring-black/5"
             )}

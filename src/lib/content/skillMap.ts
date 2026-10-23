@@ -21,8 +21,16 @@ export interface Bubble {
   r: number;
 }
 
-export const MAP_W = 900;
-export const MAP_H = 520;
+export interface MapLayout {
+  width: number;
+  height: number;
+  vertical: boolean; // phones: PC1 runs top-to-bottom so the map fits a tall screen
+  pad: number;
+  scale: number; // bubble size multiplier
+}
+export const DESKTOP_LAYOUT: MapLayout = { width: 900, height: 520, vertical: false, pad: 90, scale: 1 };
+export const TABLET_LAYOUT: MapLayout = { width: 680, height: 600, vertical: false, pad: 70, scale: 0.95 };
+export const MOBILE_LAYOUT: MapLayout = { width: 400, height: 760, vertical: true, pad: 50, scale: 0.95 };
 
 // Top-k eigenvectors of a symmetric matrix by power iteration with deflation.
 function topEigenvectors(C: number[][], k: number) {
@@ -44,7 +52,7 @@ function topEigenvectors(C: number[][], k: number) {
   return out;
 }
 
-export function buildSkillMap(): Bubble[] {
+export function buildSkillMap({ width: MAP_W, height: MAP_H, vertical, pad, scale }: MapLayout): Bubble[] {
   const projects = getAllProjects().map((p) => ({
     slug: p.slug,
     title: p.meta.title as string,
@@ -79,10 +87,9 @@ export function buildSkillMap(): Bubble[] {
     r.reduce((s, x, j) => s + x * pc2[j], 0),
   ]);
 
-  const xs = coords.map((c) => c[0]);
-  const ys = coords.map((c) => c[1]);
+  const xs = coords.map((c) => (vertical ? c[1] : c[0]));
+  const ys = coords.map((c) => (vertical ? c[0] : c[1]));
   const [minX, maxX, minY, maxY] = [Math.min(...xs), Math.max(...xs), Math.min(...ys), Math.max(...ys)];
-  const pad = 90;
   const bubbles: Bubble[] = rows.map((r, i) => {
     const count = r.vec.reduce((s, x) => s + x, 0);
     // Wrap two-word names onto two lines so labels stay narrow.
@@ -92,11 +99,11 @@ export function buildSkillMap(): Bubble[] {
       names: r.names,
       lines,
       projects: projects.filter((_, j) => r.vec[j]).map(({ slug, title, category }) => ({ slug, title, category })),
-      x: pad + ((coords[i][0] - minX) / (maxX - minX || 1)) * (MAP_W - 2 * pad),
-      y: pad + ((coords[i][1] - minY) / (maxY - minY || 1)) * (MAP_H - 2 * pad),
+      x: pad + ((xs[i] - minX) / (maxX - minX || 1)) * (MAP_W - 2 * pad),
+      y: pad + ((ys[i] - minY) / (maxY - minY || 1)) * (MAP_H - 2 * pad),
       // Big enough for its usage count and for its label lines to fit inside.
       // Size follows usage; grows only as much as needed to fit the label.
-      r: Math.max(16 + count * 9, longest * 3.3 + 8, lines.length * 6.5 + 12),
+      r: scale * Math.max(16 + count * 9, longest * 3.3 + 8, lines.length * 6.5 + 12),
     };
   });
 

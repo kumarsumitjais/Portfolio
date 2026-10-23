@@ -14,7 +14,7 @@ export default function Home() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden min-h-[720px] flex items-center">
+      <section className="relative pt-10 pb-16 md:pt-32 md:pb-24 lg:pt-28 lg:pb-24 xl:pt-40 xl:pb-32 overflow-hidden md:min-h-[720px] flex items-center">
         {/* Abstract background gradient (aurora) */}
         <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
           <div className="absolute -top-[30%] -left-[10%] w-[70%] h-[70%] rounded-full bg-electric-blue-500/10 blur-[120px] mix-blend-screen" />
@@ -29,7 +29,7 @@ export default function Home() {
               AI / ML Engineer &middot; Data Scientist
             </div>
             
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-display font-bold tracking-tight leading-[1.05] mb-6 text-text-primary">
+            <h1 className="text-[2.6rem] sm:text-5xl md:text-6xl xl:text-7xl font-display font-bold tracking-tight leading-[1.05] mb-6 text-text-primary">
               Behind Every Great Prediction Is an <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-blue-500 to-cyan-400">Even Better Question.</span>
             </h1>
             
@@ -56,7 +56,7 @@ export default function Home() {
           </div>
           
           {/* Right Column: the site's signature visual, a live skills neural network */}
-          <div className="col-span-1 lg:col-span-5 hidden lg:block relative w-full">
+          <div className="col-span-1 lg:col-span-5 hidden md:block relative w-full max-w-2xl mx-auto lg:max-w-none">
             <SkillsRadar compact />
           </div>
           

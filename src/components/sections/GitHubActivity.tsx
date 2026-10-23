@@ -106,8 +106,9 @@ export async function GitHubActivity() {
               <p className="font-mono text-sm text-text-secondary mb-4">
                 <span className="text-text-primary font-bold">{contrib.total}</span> contributions in the last year
               </p>
-              <div className="overflow-x-auto pb-2">
-                <div className="grid grid-rows-7 grid-flow-col gap-[3px] w-max" role="img" aria-label={`${contrib.total} GitHub contributions in the last year`}>
+              {/* rtl scroller starts at the right end, so narrow screens show the most recent weeks */}
+              <div className="overflow-x-auto pb-2 [direction:rtl]">
+                <div className="grid grid-rows-7 grid-flow-col gap-[3px] w-max [direction:ltr]" role="img" aria-label={`${contrib.total} GitHub contributions in the last year`}>
                   {cells.map((d, i) =>
                     d ? (
                       <div

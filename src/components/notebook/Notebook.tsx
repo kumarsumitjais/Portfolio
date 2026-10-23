@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 
 // Jupyter-style cells for MDX case studies. Cells fade in as you scroll;
@@ -32,14 +32,38 @@ function highlight(code: string) {
   return out;
 }
 
+// Fades content in once it has been scrolled to. Checks position on scroll
+// rather than relying only on IntersectionObserver, which can miss elements
+// skipped by a fast fling or a restored scroll position.
 function Reveal({ children, onShow }: { children: ReactNode; onShow?: () => void }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [shown, setShown] = useState(false);
+
+  useEffect(() => {
+    if (shown) return;
+    const check = () => {
+      const r = ref.current?.getBoundingClientRect();
+      if (r && r.top < window.innerHeight * 0.92) {
+        setShown(true);
+        onShow?.();
+      }
+    };
+    const frame = requestAnimationFrame(check);
+    window.addEventListener("scroll", check, { passive: true });
+    window.addEventListener("resize", check);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", check);
+      window.removeEventListener("resize", check);
+    };
+  }, [shown, onShow]);
+
   return (
     <motion.div
+      ref={ref}
       initial={{ opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
+      animate={shown ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
       transition={{ duration: 0.45, ease: "easeOut" }}
-      onViewportEnter={onShow}
       className="group relative"
     >
       {children}
@@ -97,9 +121,10 @@ export function Cell({
   }, [state]);
 
   const label = state === "running" ? "*" : state === "done" ? n : " ";
+  const run = useCallback(() => setState((s) => (s === "idle" ? "running" : s)), []);
 
   return (
-    <Reveal onShow={() => state === "idle" && setState("running")}>
+    <Reveal onShow={run}>
       <div className="flex gap-2 md:gap-3">
         <div className="hidden md:block w-[3.75rem] shrink-0 pt-2.5 text-right font-mono text-xs text-electric-blue-500">
           In [{label}]:
@@ -121,7 +146,7 @@ export function Cell({
               {error ? "" : `Out[${n}]:`}
             </div>
             <div
-              className={`flex-1 min-w-0 overflow-x-auto font-mono text-[13px] leading-relaxed ${
+              className={`flex-1 min-w-0 overflow-x-auto font-mono text-[13px] leading-relaxed [&_td]:whitespace-nowrap [&_th]:whitespace-nowrap ${
                 error ? "rounded-lg bg-red-500/10 border border-red-500/20 px-4 py-2.5 text-red-500 dark:text-red-300 whitespace-pre-wrap" : "text-text-secondary"
               }`}
             >

@@ -2,6 +2,7 @@
 
 import React, { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTheme } from "next-themes";
 import { X, TrendingUp, Target, BrainCircuit } from "lucide-react";
 import {
   XAxis,
@@ -32,6 +33,12 @@ const masteryData = [
 ];
 
 export function AnalyticsModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
+  // Chart text/grid colours per theme (SVG attributes can't read CSS variables).
+  const light = useTheme().resolvedTheme === "light";
+  const axisColor = light ? "#4A5262" : "#8A93A3";
+  const gridColor = light ? "#C9D0DB" : "#333";
+  const trackColor = light ? "#E4E8EF" : "#2a2a2a";
+  const legendText = (value: string) => <span style={{ color: axisColor }}>{value}</span>;
   // Prevent scrolling on body when modal is open
   useEffect(() => {
     if (isOpen) {
@@ -44,11 +51,19 @@ export function AnalyticsModal({ isOpen, onClose }: { isOpen: boolean; onClose: 
     };
   }, [isOpen]);
 
+  // Close on Escape
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6" role="dialog" aria-modal="true" aria-label="Skill analytics">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -67,7 +82,7 @@ export function AnalyticsModal({ isOpen, onClose }: { isOpen: boolean; onClose: 
           <div className="sticky top-0 z-10 flex items-center justify-between p-4 border-b border-border-card bg-white/80 dark:bg-[#0d1117]/80 backdrop-blur-md">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-electric-blue-500/10 rounded-lg border border-electric-blue-500/20">
-                <BrainCircuit className="w-5 h-5 text-electric-blue-500" />
+                <BrainCircuit className="w-5 h-5 text-electric-blue-500 dark:text-electric-blue-400" />
               </div>
               <div>
                 <h3 className="font-sans font-bold text-lg text-text-primary">Skill Analytics</h3>
@@ -76,6 +91,7 @@ export function AnalyticsModal({ isOpen, onClose }: { isOpen: boolean; onClose: 
             </div>
             <button
               onClick={onClose}
+              aria-label="Close analytics"
               className="p-2 text-text-secondary hover:text-text-primary hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
             >
               <X className="w-5 h-5" />
@@ -106,14 +122,14 @@ export function AnalyticsModal({ isOpen, onClose }: { isOpen: boolean; onClose: 
                         <stop offset="95%" stopColor="#22c55e" stopOpacity={0}/>
                       </linearGradient>
                     </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#333" opacity={0.2} vertical={false} />
-                    <XAxis dataKey="year" tick={{ fill: '#888', fontSize: 12, fontFamily: 'monospace' }} axisLine={false} tickLine={false} />
-                    <YAxis tick={{ fill: '#888', fontSize: 12, fontFamily: 'monospace' }} axisLine={false} tickLine={false} />
+                    <CartesianGrid strokeDasharray="3 3" stroke={gridColor} opacity={light ? 1 : 0.2} vertical={false} />
+                    <XAxis dataKey="year" tick={{ fill: axisColor, fontSize: 12, fontFamily: 'monospace' }} axisLine={false} tickLine={false} />
+                    <YAxis tick={{ fill: axisColor, fontSize: 12, fontFamily: 'monospace' }} axisLine={false} tickLine={false} />
                     <Tooltip 
                       contentStyle={{ backgroundColor: 'rgba(13, 17, 23, 0.9)', borderColor: 'rgba(255,255,255,0.1)', borderRadius: '8px', fontFamily: 'monospace', fontSize: '12px' }}
                       itemStyle={{ color: '#fff' }}
                     />
-                    <Legend wrapperStyle={{ fontSize: '12px', fontFamily: 'monospace' }} />
+                    <Legend formatter={legendText} wrapperStyle={{ fontSize: '12px', fontFamily: 'monospace' }} />
                     <Area type="monotone" dataKey="Analytics" stroke="#3b82f6" fillOpacity={1} fill="url(#colorAnalytics)" strokeWidth={2} />
                     <Area type="monotone" dataKey="GenAI" stroke="#a855f7" fillOpacity={1} fill="url(#colorGenAI)" strokeWidth={2} />
                     <Area type="monotone" dataKey="ML" stroke="#22c55e" fillOpacity={1} fill="url(#colorML)" strokeWidth={2} />
@@ -125,21 +141,21 @@ export function AnalyticsModal({ isOpen, onClose }: { isOpen: boolean; onClose: 
             {/* Chart 2: Current Mastery vs Pro Level */}
             <div className="bg-gray-50 dark:bg-[#161b22] border border-border-card p-4 sm:p-6 rounded-xl">
               <div className="flex items-center gap-2 mb-6">
-                <Target className="w-4 h-4 text-electric-blue-500" />
+                <Target className="w-4 h-4 text-electric-blue-500 dark:text-electric-blue-400" />
                 <h4 className="font-mono text-sm text-text-primary">Current Mastery vs Pro Level (Target: 100)</h4>
               </div>
               <div className="h-[250px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={masteryData} layout="vertical" margin={{ top: 0, right: 10, left: 10, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#333" opacity={0.2} horizontal={false} />
+                    <CartesianGrid strokeDasharray="3 3" stroke={gridColor} opacity={light ? 1 : 0.2} horizontal={false} />
                     <XAxis type="number" domain={[0, 100]} hide />
-                    <YAxis dataKey="domain" type="category" tick={{ fill: '#888', fontSize: 12, fontFamily: 'monospace' }} axisLine={false} tickLine={false} width={100} />
+                    <YAxis dataKey="domain" type="category" tick={{ fill: axisColor, fontSize: 12, fontFamily: 'monospace' }} axisLine={false} tickLine={false} width={100} />
                     <Tooltip 
-                      cursor={{ fill: 'rgba(255,255,255,0.05)' }}
+                      cursor={{ fill: light ? 'rgba(16,19,23,0.05)' : 'rgba(255,255,255,0.05)' }}
                       contentStyle={{ backgroundColor: 'rgba(13, 17, 23, 0.9)', borderColor: 'rgba(255,255,255,0.1)', borderRadius: '8px', fontFamily: 'monospace', fontSize: '12px' }}
                     />
-                    <Legend wrapperStyle={{ fontSize: '12px', fontFamily: 'monospace' }} />
-                    <Bar dataKey="ProLevel" fill="#2a2a2a" radius={[0, 4, 4, 0]} barSize={20} />
+                    <Legend formatter={legendText} wrapperStyle={{ fontSize: '12px', fontFamily: 'monospace' }} />
+                    <Bar dataKey="ProLevel" fill={trackColor} radius={[0, 4, 4, 0]} barSize={20} />
                     <Bar dataKey="Current" fill="#00C3FF" radius={[0, 4, 4, 0]} barSize={20} />
                   </BarChart>
                 </ResponsiveContainer>

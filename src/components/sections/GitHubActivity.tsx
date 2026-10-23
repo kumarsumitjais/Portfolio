@@ -94,7 +94,7 @@ export async function GitHubActivity() {
             href={`https://github.com/${USER}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-sm font-medium text-electric-blue-500 hover:text-electric-blue-400"
+            className="inline-flex items-center gap-2 text-sm font-medium text-electric-blue-500 dark:text-electric-blue-400 hover:text-electric-blue-400"
           >
             <FaGithub className="w-4 h-4" /> @{USER}
           </a>

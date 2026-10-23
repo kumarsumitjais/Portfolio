@@ -76,7 +76,7 @@ export default function Home() {
                   A selection of my recent data science models and intelligent systems.
                 </p>
               </div>
-              <Link href="/projects" className="inline-flex items-center text-sm font-medium text-electric-blue-500 hover:text-electric-blue-400 mt-4 md:mt-0 transition-colors">
+              <Link href="/projects" className="inline-flex items-center text-sm font-medium text-electric-blue-500 dark:text-electric-blue-400 hover:text-electric-blue-400 mt-4 md:mt-0 transition-colors">
                 View all projects <ArrowRight className="w-4 h-4 ml-1" />
               </Link>
             </div>

@@ -58,20 +58,20 @@ function PipelineTrace({ trace, sourceCount }: { trace: NonNullable<DisplayMessa
     { label: "Answer", detail: sourceCount ? `${sourceCount} cited` : "no citations" },
   ];
   return (
-    <div className="mt-3 pt-3 border-t border-black/10 dark:border-white/10 font-mono text-[10px] leading-tight">
-      <div className="flex items-stretch gap-1">
-        {steps.map((s, i) => (
-          <div key={s.label} className="flex items-center gap-1 flex-1 min-w-0">
-            <div className="flex-1 min-w-0 rounded-md bg-teal-500/10 border border-teal-500/20 px-1.5 py-1">
-              <div className="font-semibold text-teal-700 dark:text-teal-300 truncate">{s.label}</div>
-              <div className="text-gray-600 dark:text-gray-400 truncate" title={s.detail}>{s.detail}</div>
-            </div>
-            {i < steps.length - 1 && <span className="text-teal-500" aria-hidden>→</span>}
-          </div>
+    <div className="mt-3 pt-3 border-t border-black/10 dark:border-white/10 font-mono text-[11px] leading-snug">
+      <ol className="space-y-1">
+        {steps.map((step, i) => (
+          <li key={step.label} className="flex items-baseline gap-2">
+            <span className="shrink-0 w-4 h-4 rounded-full bg-teal-500/15 text-teal-700 dark:text-teal-300 text-[10px] flex items-center justify-center">
+              {i + 1}
+            </span>
+            <span className="shrink-0 font-semibold text-teal-700 dark:text-teal-300">{step.label}</span>
+            <span className="min-w-0 truncate text-gray-600 dark:text-gray-400" title={step.detail}>{step.detail}</span>
+          </li>
         ))}
-      </div>
+      </ol>
       {trace.retrieved.length > 0 && (
-        <p className="mt-1.5 text-gray-500 dark:text-gray-400 truncate" title={trace.retrieved.join(", ")}>
+        <p className="mt-1.5 text-gray-600 dark:text-gray-400 truncate" title={trace.retrieved.join(", ")}>
           retrieved: {[...new Set(trace.retrieved)].join(", ")}
         </p>
       )}
@@ -504,7 +504,7 @@ export function SahayikaAssistant() {
             transition={{ duration: 0.3, type: "spring", bounce: 0.3 }}
             className={cn(
               "fixed z-50 inset-x-2 bottom-2 h-[85dvh] sm:inset-x-auto sm:bottom-6 sm:right-6 sm:w-[400px] sm:h-[600px] sm:max-h-[85vh]",
-              "bg-white/10 dark:bg-black/60 backdrop-blur-2xl border border-white/20 dark:border-white/10 rounded-2xl shadow-2xl",
+              "bg-bg-elevated/95 backdrop-blur-2xl border border-border-card rounded-2xl shadow-2xl",
               "flex flex-col overflow-hidden ring-1 ring-black/5"
             )}
           >
@@ -547,6 +547,7 @@ export function SahayikaAssistant() {
                 </button>
                 <button
                   onClick={() => setIsOpen(false)}
+                  aria-label="Close chat"
                   className="p-2 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors rounded-full hover:bg-black/5 dark:hover:bg-white/10"
                 >
                   <X size={20} />
@@ -675,6 +676,7 @@ export function SahayikaAssistant() {
                     }
                   }}
                   placeholder="Ask me about Sumit..."
+                  aria-label="Message Sahayika"
                   className="w-full bg-white/60 dark:bg-black/40 backdrop-blur-sm border border-white/40 dark:border-white/10 rounded-full pl-5 pr-24 py-3.5 text-sm text-gray-800 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-transparent transition-all shadow-inner"
                 />
                 <div className="absolute right-2 flex items-center space-x-1">
@@ -693,6 +695,7 @@ export function SahayikaAssistant() {
                   </button>
                   <button
                     id="send-btn"
+                    aria-label="Send message"
                     onClick={() => sendMessage()}
                     disabled={!input.trim() || isTyping}
                     className="p-2 bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-600 hover:to-emerald-600 text-white rounded-full transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg"

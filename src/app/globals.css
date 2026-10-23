@@ -96,6 +96,13 @@
     --text-primary: var(--color-frost-50);
     --text-secondary: var(--color-graphite-300);
     
+    /* Data-viz colours: hardcoded hues are shaded towards black in light mode */
+    --viz-shade: 0%;
+    --viz-line: rgba(255, 255, 255, 0.1);
+    /* small coloured labels: tinted towards white on dark, black on light */
+    --viz-tone: white;
+    --viz-tone-amt: 35%;
+
     --shadow-level-1: 0 1px 2px rgba(0,0,0,.4);
     --shadow-level-2: 0 4px 16px rgba(0,0,0,.45), 0 0 0 1px rgba(51,214,224,.04);
     --shadow-level-3: 0 12px 32px rgba(0,0,0,.5);
@@ -137,6 +144,16 @@
   }
 
   .light {
+    /* Accents tuned for dark backgrounds are too pale on white; these darker
+       shades keep text at WCAG AA (4.5:1) on white and on 10% tints. */
+    --color-electric-blue-500: #1F55D6;
+    --color-electric-blue-400: #2A5DD8;
+    --color-cyan-400: #0E7490;
+    --viz-shade: 38%;
+    --viz-line: rgba(16, 19, 23, 0.12);
+    --viz-tone: black;
+    --viz-tone-amt: 38%;
+
     --bg-base: var(--color-frost-100);
     --bg-elevated: var(--color-frost-50);
     --bg-card: var(--color-frost-50);

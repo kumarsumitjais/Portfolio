@@ -4,7 +4,11 @@ import React, { useState } from "react";
 import { Certification } from "@/content/certifications";
 import { ExternalLink, CheckCircle2, Search, Code2, LineChart } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { AnalyticsModal } from "./AnalyticsModal";
+import dynamic from "next/dynamic";
+
+// The charts (recharts) are heavy; only load them when the modal is opened.
+const AnalyticsModal = dynamic(() => import("./AnalyticsModal").then((m) => m.AnalyticsModal), { ssr: false });
+import Image from "next/image";
 
 // Helper to assign a domain to each certificate for the DataFrame
 const getDomain = (certName: string) => {
@@ -20,9 +24,9 @@ const getDomain = (certName: string) => {
 
 // Domain color mapping for heatmap effect
 const domainColors = {
-  "GenAI": "bg-purple-500/10 text-purple-400 border-purple-500/30",
-  "ML": "bg-green-500/10 text-green-400 border-green-500/30",
-  "Analytics": "bg-blue-500/10 text-blue-400 border-blue-500/30",
+  "GenAI": "bg-purple-500/10 text-purple-700 dark:text-purple-400 border-purple-500/30",
+  "ML": "bg-green-500/10 text-green-800 dark:text-green-400 border-green-500/30",
+  "Analytics": "bg-blue-500/10 text-blue-700 dark:text-blue-400 border-blue-500/30",
 };
 
 export function FeatureMatrix({ items }: { items: Certification[] }) {
@@ -51,11 +55,11 @@ export function FeatureMatrix({ items }: { items: Certification[] }) {
           <div className="w-full bg-white dark:bg-[#0d1117] border border-border-card rounded-md p-2 flex items-center gap-2 overflow-x-auto custom-scrollbar">
             <Code2 className="w-4 h-4 text-text-secondary shrink-0" />
             <span className="text-text-primary whitespace-nowrap">
-              <span className="text-purple-600 dark:text-purple-400">df</span> = portfolio.get_credentials()
+              <span className="text-purple-700 dark:text-purple-400">df</span> = portfolio.get_credentials()
               <br/>
               {activeFilter === "All" 
-                ? <><span className="text-purple-600 dark:text-purple-400">df</span>.show_all()</>
-                : <><span className="text-purple-600 dark:text-purple-400">df</span>[<span className="text-purple-600 dark:text-purple-400">df</span>[<span className="text-green-600 dark:text-green-400">&apos;domain&apos;</span>] == <span className="text-green-600 dark:text-green-400">&apos;{activeFilter}&apos;</span>]</>
+                ? <><span className="text-purple-700 dark:text-purple-400">df</span>.show_all()</>
+                : <><span className="text-purple-700 dark:text-purple-400">df</span>[<span className="text-purple-700 dark:text-purple-400">df</span>[<span className="text-green-700 dark:text-green-400">&apos;domain&apos;</span>] == <span className="text-green-700 dark:text-green-400">&apos;{activeFilter}&apos;</span>]</>
               }
             </span>
           </div>
@@ -98,8 +102,7 @@ export function FeatureMatrix({ items }: { items: Certification[] }) {
           <li key={cert.name + idx} className="p-4 flex flex-col gap-3">
             {cert.image && (
               <div className="rounded-xl overflow-hidden border border-border-card bg-gray-100 dark:bg-black/40 p-2 flex justify-center">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={cert.image} alt={cert.name} loading="lazy" className="max-w-full h-auto max-h-44 object-contain rounded-lg" />
+                <Image src={cert.image} alt={cert.name} width={1200} height={850} sizes="(max-width: 1024px) 90vw, 600px" className="w-auto max-w-full h-auto max-h-44 object-contain rounded-lg" />
               </div>
             )}
             <div className="flex items-start gap-3">
@@ -111,7 +114,7 @@ export function FeatureMatrix({ items }: { items: Certification[] }) {
             </div>
             <div className="flex flex-wrap items-center gap-2">
               <span className={`px-2 py-0.5 rounded-md border text-xs ${domainColors[cert.domain as keyof typeof domainColors]}`}>{cert.domain}</span>
-              <span className="flex items-center gap-1 text-xs text-green-600 dark:text-green-400">
+              <span className="flex items-center gap-1 text-xs text-green-700 dark:text-green-400">
                 <CheckCircle2 className="w-3.5 h-3.5" /> Verified
               </span>
               {cert.credentialUrl && cert.credentialUrl !== "#" && (
@@ -163,8 +166,7 @@ export function FeatureMatrix({ items }: { items: Certification[] }) {
                         <div className="flex flex-col gap-4 sm:gap-6">
                           {/* Image above, left-aligned */}
                           <div className="w-full max-w-xs md:max-w-md lg:max-w-xl rounded-xl overflow-hidden border border-border-card bg-gray-100 dark:bg-black/40 flex items-center justify-center p-2 shadow-sm transition-all duration-300 self-start">
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img src={cert.image} alt={cert.name} className="max-w-full h-auto max-h-32 sm:max-h-40 md:max-h-48 object-contain rounded-lg opacity-90 group-hover:opacity-100 transition-opacity" />
+                            <Image src={cert.image} alt={cert.name} width={1200} height={850} sizes="600px" className="w-auto max-w-full h-auto max-h-32 sm:max-h-40 md:max-h-48 object-contain rounded-lg opacity-90 group-hover:opacity-100 transition-opacity" />
                           </div>
                           
                           {/* Details below (matching columns style visually) */}
@@ -186,10 +188,10 @@ export function FeatureMatrix({ items }: { items: Certification[] }) {
                               
                               <div className="text-text-secondary text-sm whitespace-nowrap">
                                 {cert.issuer}
-                                <span className="text-xs opacity-50 ml-2">({cert.date})</span>
+                                <span className="text-xs ml-2">({cert.date})</span>
                               </div>
                               
-                              <div className="flex items-center gap-1.5 text-green-600 dark:text-green-400 whitespace-nowrap">
+                              <div className="flex items-center gap-1.5 text-green-700 dark:text-green-400 whitespace-nowrap">
                                 <CheckCircle2 className="w-4 h-4" />
                                 <span className="text-xs font-medium">Verified</span>
                               </div>
@@ -232,13 +234,13 @@ export function FeatureMatrix({ items }: { items: Certification[] }) {
 
                     {/* Image Asset (NaN) */}
                     <td className="py-4 px-4">
-                      <span className="text-text-secondary opacity-50 text-xs">NaN</span>
+                      <span className="text-text-secondary text-xs">NaN</span>
                     </td>
                     
                     {/* Credential Name */}
                     <td className="py-4 px-4 text-text-primary font-sans font-medium">
                       {cert.name}
-                      <div className="text-xs font-mono text-text-secondary mt-1 opacity-70">
+                      <div className="text-xs font-mono text-text-secondary mt-1">
                         {cert.skills.slice(0, 3).join(", ")}{cert.skills.length > 3 ? "..." : ""}
                       </div>
                     </td>
@@ -253,12 +255,12 @@ export function FeatureMatrix({ items }: { items: Certification[] }) {
                     {/* Issuer */}
                     <td className="py-4 px-4 text-text-secondary">
                       {cert.issuer}
-                      <div className="text-xs opacity-50 mt-1">{cert.date}</div>
+                      <div className="text-xs mt-1">{cert.date}</div>
                     </td>
                     
                     {/* Verification Status */}
                     <td className="py-4 px-4">
-                      <div className="flex items-center gap-1.5 text-green-600 dark:text-green-400">
+                      <div className="flex items-center gap-1.5 text-green-700 dark:text-green-400">
                         <CheckCircle2 className="w-4 h-4" />
                         <span>1.00</span>
                       </div>
@@ -277,7 +279,7 @@ export function FeatureMatrix({ items }: { items: Certification[] }) {
                           View
                         </a>
                       ) : (
-                        <span className="text-text-secondary opacity-50 text-xs">NaN</span>
+                        <span className="text-text-secondary text-xs">NaN</span>
                       )}
                     </td>
                   </motion.tr>
@@ -322,7 +324,7 @@ export function FeatureMatrix({ items }: { items: Certification[] }) {
       `}} />
       
       {/* Analytics Modal */}
-      <AnalyticsModal isOpen={isAnalyticsOpen} onClose={() => setIsAnalyticsOpen(false)} />
+      {isAnalyticsOpen && <AnalyticsModal isOpen onClose={() => setIsAnalyticsOpen(false)} />}
     </div>
   );
 }

@@ -78,7 +78,7 @@ export default function BlogPage() {
                     )}
                   </div>
 
-                  <div className="hidden md:flex flex-shrink-0 items-center justify-center w-12 h-12 rounded-full bg-electric-blue-500/10 text-electric-blue-500 group-hover:bg-electric-blue-500 group-hover:text-black transition-all">
+                  <div className="hidden md:flex flex-shrink-0 items-center justify-center w-12 h-12 rounded-full bg-electric-blue-500/10 text-electric-blue-500 dark:text-electric-blue-400 group-hover:bg-electric-blue-500 group-hover:text-black transition-all">
                     <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                   </div>
                   

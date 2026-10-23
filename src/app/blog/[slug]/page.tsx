@@ -3,12 +3,33 @@ import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import Link from "next/link";
 import { ArrowLeft, Calendar, Tag } from "lucide-react";
+import type { Metadata } from "next";
+import { BlogPostingJsonLd } from "@/components/JsonLd";
 
 export async function generateStaticParams() {
   const blogs = getAllBlogs();
   return blogs.filter((p): p is NonNullable<typeof p> => p !== null).map((p) => ({
     slug: p.slug,
   }));
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const blog = getBlogBySlug(slug);
+  if (!blog) return { title: "Post Not Found" };
+  const url = `https://www.sumitkumarjaiswal.in/blog/${slug}`;
+  return {
+    title: blog.meta.title,
+    description: blog.meta.oneLiner,
+    alternates: { canonical: url },
+    openGraph: {
+      type: "article",
+      title: `${blog.meta.title} | Sumit Kr. Jaiswal`,
+      description: blog.meta.oneLiner,
+      url,
+      publishedTime: blog.meta.date,
+    },
+  };
 }
 
 export default async function BlogPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -31,9 +52,16 @@ export default async function BlogPage({ params }: { params: Promise<{ slug: str
   };
 
   return (
+    <>
+    <BlogPostingJsonLd
+      title={blog.meta.title}
+      description={blog.meta.oneLiner ?? ""}
+      url={`https://www.sumitkumarjaiswal.in/blog/${slug}`}
+      datePublished={blog.meta.date}
+    />
     <main className="container mx-auto px-5 md:px-20 pt-8 pb-20 md:py-32 min-h-screen">
       <div className="max-w-3xl mx-auto">
-        <Link href="/blog" className="inline-flex items-center text-sm font-medium text-text-secondary hover:text-electric-blue-500 mb-8 transition-colors">
+        <Link href="/blog" className="inline-flex items-center text-sm font-medium text-text-secondary hover:text-electric-blue-500 dark:hover:text-electric-blue-400 mb-8 transition-colors">
           <ArrowLeft className="w-4 h-4 mr-2" /> Back to Blog
         </Link>
         
@@ -75,5 +103,6 @@ export default async function BlogPage({ params }: { params: Promise<{ slug: str
         </article>
       </div>
     </main>
+    </>
   );
 }

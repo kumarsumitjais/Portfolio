@@ -83,7 +83,7 @@ export function SkillMap({ desktop, tablet, mobile }: { desktop: Map; tablet: Ma
                   {n}
                 </text>
               ))}
-              <text y={b.r - 9} textAnchor="middle" className="font-mono pointer-events-none" fill={color} fontSize="9.5">
+              <text y={b.r - 9} textAnchor="middle" className="font-mono pointer-events-none" style={{ fill: `color-mix(in srgb, ${color}, var(--viz-tone) var(--viz-tone-amt))` }} fontSize="9.5">
                 ×{b.projects.length}
               </text>
             </g>

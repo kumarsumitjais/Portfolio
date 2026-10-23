@@ -4,6 +4,9 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const LX = [55, 197, 340, 482, 625];
+
+// Layer colours are tuned for dark mode; --viz-shade darkens them in light mode.
+const shade = (color: string) => `color-mix(in srgb, ${color}, black var(--viz-shade))`;
 const CY = 255, VS = 55, NR = 20;
 
 const LAYERS = [
@@ -209,10 +212,10 @@ export function SkillsRadar({ compact = false }: { compact?: boolean } = {}) {
           <g id="label-layer">
             {LAYERS.map((layer, li) => (
               <React.Fragment key={layer.name}>
-                <text x={LX[li]} y="18" textAnchor="middle" fill={layer.color} fontSize="11" fontWeight="500" fontFamily="monospace">
+                <text x={LX[li]} y="18" textAnchor="middle" style={{ fill: shade(layer.color) }} fontSize="11" fontWeight="500" fontFamily="monospace">
                   {layer.name}
                 </text>
-                <text x={LX[li]} y="31" textAnchor="middle" fill="#8b949e" fontSize="9" fontWeight="400" fontFamily="monospace">
+                <text x={LX[li]} y="31" textAnchor="middle" fill="var(--text-secondary)" fontSize="9" fontWeight="400" fontFamily="monospace">
                   {layer.sub}
                 </text>
               </React.Fragment>
@@ -226,7 +229,7 @@ export function SkillsRadar({ compact = false }: { compact?: boolean } = {}) {
               const isRelated = hoveredNode && (c.f.id === hoveredNode.id || c.t.id === hoveredNode.id);
               const isHovered = hoveredNode !== null;
               
-              const strokeColor = isRelated ? (c.f.id === hoveredNode.id ? c.f.color : c.t.color) : 'rgba(255,255,255,0.1)';
+              const strokeColor = isRelated ? (c.f.id === hoveredNode.id ? c.f.color : c.t.color) : 'var(--viz-line)';
               const strokeWidth = isRelated ? 1.5 : 0.5;
               const opacity = isHovered ? (isRelated ? 0.85 : 0.06) : 0.35;
               
@@ -271,14 +274,14 @@ export function SkillsRadar({ compact = false }: { compact?: boolean } = {}) {
                   onMouseEnter={() => setHoveredNode(node)}
                   onMouseLeave={() => setHoveredNode(null)}
                 >
-                  <circle cx={node.x} cy={node.y} r={NR} fill="#0d1117" stroke={node.color} strokeWidth="1.5" />
+                  <circle cx={node.x} cy={node.y} r={NR} fill="var(--bg-card)" style={{ stroke: shade(node.color) }} strokeWidth="1.5" />
                   <circle cx={node.x} cy={node.y} r={(node.prof/100)*NR*0.65} fill={node.color} opacity={fillOpacity} style={{ transition: 'opacity 0.3s' }} />
                   <text 
                     x={node.x} 
                     y={node.y} 
                     textAnchor="middle" 
                     dominantBaseline="central" 
-                    fill={node.color} 
+                    style={{ fill: shade(node.color) }} 
                     fontSize={node.abbr.length <= 2 ? 11 : 9} 
                     fontWeight="500" 
                     fontFamily="monospace" 

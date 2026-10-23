@@ -90,7 +90,7 @@ export function ExperienceSection() {
                         <ul className={`space-y-3 text-text-secondary ${experiences[activeTab].roles.length > 1 ? 'ml-8' : ''}`}>
                           {role.bullets.map((bullet, k) => (
                             <li key={k} className="flex items-start">
-                              <span className="mr-3 text-cyan-400 mt-1 opacity-80 flex-shrink-0">▹</span>
+                              <span className="mr-3 text-cyan-400 mt-1 opacity-80 flex-shrink-0" aria-hidden="true">▹</span>
                               <span className="text-base leading-relaxed">{bullet}</span>
                             </li>
                           ))}

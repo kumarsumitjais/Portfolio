@@ -31,10 +31,10 @@ export default function ExperiencePage() {
           <div key={i} className="flex flex-col md:flex-row gap-6 md:gap-12">
             <div className="md:w-1/3 flex-shrink-0">
               <div className="sticky top-32">
-                <h3 className="text-2xl font-bold text-text-primary mb-1">
+                <h2 className="text-2xl font-bold text-text-primary mb-1">
                   {exp.title ? `${exp.title}` : exp.company}
-                </h3>
-                {exp.title && <h4 className="text-lg text-text-secondary">{exp.company}</h4>}
+                </h2>
+                {exp.title && <p className="text-lg text-text-secondary">{exp.company}</p>}
               </div>
             </div>
             
@@ -51,7 +51,7 @@ export default function ExperiencePage() {
                         {exp.roles.length > 1 && (
                           <div className="w-4 h-4 rounded-full border-2 border-electric-blue-500 bg-bg-elevated z-10 flex-shrink-0" />
                         )}
-                        <h4 className="text-xl font-bold text-text-primary">{role.title}</h4>
+                        <h3 className="text-xl font-bold text-text-primary">{role.title}</h3>
                       </div>
                       <span className={`text-sm font-mono text-electric-blue-400 bg-electric-blue-500/10 px-3 py-1.5 rounded-full w-fit inline-block border border-electric-blue-500/20 ${exp.roles.length > 1 ? 'ml-7' : ''}`}>
                         {role.start} &mdash; {role.end}
@@ -61,7 +61,7 @@ export default function ExperiencePage() {
                     <ul className={`space-y-3 text-text-secondary ${exp.roles.length > 1 ? 'ml-7' : ''}`}>
                       {role.bullets.map((bullet, k) => (
                         <li key={k} className="flex items-start">
-                          <span className="mr-3 text-cyan-400 mt-1 opacity-80 flex-shrink-0">▹</span>
+                          <span className="mr-3 text-cyan-400 mt-1 opacity-80 flex-shrink-0" aria-hidden="true">▹</span>
                           <span className="leading-relaxed">{bullet}</span>
                         </li>
                       ))}

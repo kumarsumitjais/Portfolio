@@ -19,11 +19,11 @@ function highlight(code: string) {
     const cls = comment
       ? "text-text-secondary italic"
       : str
-        ? "text-amber-500 dark:text-amber-300"
+        ? "text-amber-700 dark:text-amber-300"
         : num
-          ? "text-cyan-600 dark:text-cyan-300"
+          ? "text-cyan-700 dark:text-cyan-300"
           : word && KEYWORDS.test(word)
-            ? "text-emerald-600 dark:text-emerald-400 font-semibold"
+            ? "text-emerald-700 dark:text-emerald-400 font-semibold"
             : null;
     out.push(cls ? <span key={i} className={cls}>{text}</span> : text);
     last = i + text.length;
@@ -126,11 +126,11 @@ export function Cell({
   return (
     <Reveal onShow={run}>
       <div className="flex gap-2 md:gap-3">
-        <div className="hidden md:block w-[3.75rem] shrink-0 pt-2.5 text-right font-mono text-xs text-electric-blue-500">
+        <div className="hidden md:block w-[3.75rem] shrink-0 pt-2.5 text-right font-mono text-xs text-electric-blue-500 dark:text-electric-blue-400">
           In [{label}]:
         </div>
         <pre className="flex-1 min-w-0 overflow-x-auto rounded-lg border border-border-card bg-bg-base px-4 py-2.5 font-mono text-[13px] leading-relaxed text-text-primary">
-          <span className="md:hidden text-electric-blue-500 select-none">[{label}] </span>
+          <span className="md:hidden text-electric-blue-500 dark:text-electric-blue-400 select-none">[{label}] </span>
           {highlight(code.trim())}
         </pre>
       </div>
@@ -142,12 +142,12 @@ export function Cell({
           className="overflow-hidden"
         >
           <div className="flex gap-2 md:gap-3 mt-2">
-            <div className={`hidden md:block w-[3.75rem] shrink-0 pt-1 text-right font-mono text-xs ${error ? "text-red-400" : "text-orange-400"}`}>
+            <div className={`hidden md:block w-[3.75rem] shrink-0 pt-1 text-right font-mono text-xs ${error ? "text-red-700 dark:text-red-400" : "text-orange-700 dark:text-orange-400"}`}>
               {error ? "" : `Out[${n}]:`}
             </div>
             <div
               className={`flex-1 min-w-0 overflow-x-auto font-mono text-[13px] leading-relaxed [&_td]:whitespace-nowrap [&_th]:whitespace-nowrap ${
-                error ? "rounded-lg bg-red-500/10 border border-red-500/20 px-4 py-2.5 text-red-500 dark:text-red-300 whitespace-pre-wrap" : "text-text-secondary"
+                error ? "rounded-lg bg-red-500/10 border border-red-500/20 px-4 py-2.5 text-red-700 dark:text-red-300 whitespace-pre-wrap" : "text-text-secondary"
               }`}
             >
               {children}

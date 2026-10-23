@@ -30,7 +30,7 @@ export default function ContactPage() {
           </p>
 
           <div className="space-y-6">
-            <div className="flex items-center gap-4 text-text-secondary hover:text-electric-blue-500 transition-colors">
+            <div className="flex items-center gap-4 text-text-secondary hover:text-electric-blue-500 dark:hover:text-electric-blue-400 transition-colors">
               <div className="w-12 h-12 shrink-0 bg-bg-card border border-border-card rounded-full flex items-center justify-center text-electric-blue-400">
                 <Mail className="w-5 h-5" />
               </div>
@@ -46,10 +46,10 @@ export default function ContactPage() {
           </div>
 
           <div className="flex gap-4 mt-8 md:mt-12">
-            <a href="https://github.com/kumarsumitjais" target="_blank" rel="noopener noreferrer" className="w-12 h-12 bg-bg-card border border-border-card rounded-full flex items-center justify-center text-text-secondary hover:text-electric-blue-500 transition-colors hover:border-electric-blue-500/50">
+            <a href="https://github.com/kumarsumitjais" target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="w-12 h-12 bg-bg-card border border-border-card rounded-full flex items-center justify-center text-text-secondary hover:text-electric-blue-500 dark:hover:text-electric-blue-400 transition-colors hover:border-electric-blue-500/50">
               <FaGithub className="w-5 h-5" />
             </a>
-            <a href="https://linkedin.com/in/sumit-kr-jaiswal-4979132ba" target="_blank" rel="noopener noreferrer" className="w-12 h-12 bg-bg-card border border-border-card rounded-full flex items-center justify-center text-text-secondary hover:text-electric-blue-500 transition-colors hover:border-electric-blue-500/50">
+            <a href="https://linkedin.com/in/sumit-kr-jaiswal-4979132ba" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="w-12 h-12 bg-bg-card border border-border-card rounded-full flex items-center justify-center text-text-secondary hover:text-electric-blue-500 dark:hover:text-electric-blue-400 transition-colors hover:border-electric-blue-500/50">
               <FaLinkedin className="w-5 h-5" />
             </a>
           </div>
@@ -57,7 +57,7 @@ export default function ContactPage() {
 
         <div className="bg-bg-card border border-border-card rounded-2xl p-5 sm:p-6 md:p-8 relative overflow-hidden flex flex-col justify-center">
           <div className="absolute inset-0 bg-gradient-to-br from-electric-blue-500/5 to-transparent pointer-events-none" />
-          <h3 className="text-xl font-bold text-text-primary mb-6">Send a quick message</h3>
+          <h2 className="text-xl font-bold text-text-primary mb-6">Send a quick message</h2>
           <form className="space-y-4 relative z-10" action="mailto:jaiswal.sumit0789@gmail.com" method="GET" encType="text/plain">
             <div>
               <label className="block text-sm font-medium text-text-secondary mb-1">Name / Subject</label>

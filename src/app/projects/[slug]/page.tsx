@@ -66,7 +66,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
         technologies={project.meta.tags as string[]}
       />
       <main className="container mx-auto px-5 md:px-20 pt-8 pb-20 md:py-32 min-h-screen">
-      <Link href="/projects" className="inline-flex items-center text-sm font-medium text-text-secondary hover:text-electric-blue-500 mb-8 transition-colors">
+      <Link href="/projects" className="inline-flex items-center text-sm font-medium text-text-secondary hover:text-electric-blue-500 dark:hover:text-electric-blue-400 mb-8 transition-colors">
         <ArrowLeft className="w-4 h-4 mr-2" /> Back to Projects
       </Link>
       
@@ -102,7 +102,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           {project.meta.heroMetric && (
             <div>
               <p className="text-text-secondary mb-1 uppercase tracking-wider text-xs font-bold">{project.meta.heroMetric.label}</p>
-              <p className="font-bold text-electric-blue-500">{project.meta.heroMetric.value}</p>
+              <p className="font-bold text-electric-blue-500 dark:text-electric-blue-400">{project.meta.heroMetric.value}</p>
             </div>
           )}
         </div>
@@ -125,9 +125,9 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           <div className="sticky top-32 p-6 bg-bg-elevated border border-border-card rounded-2xl">
             <h3 className="font-bold text-text-primary mb-4 text-sm uppercase tracking-wider">In this case study</h3>
             <ul className="space-y-3 text-sm text-text-secondary">
-              <li className="hover:text-electric-blue-500 transition-colors cursor-pointer">Problem</li>
-              <li className="hover:text-electric-blue-500 transition-colors cursor-pointer">Architecture</li>
-              <li className="hover:text-electric-blue-500 transition-colors cursor-pointer">Key Features</li>
+              <li className="hover:text-electric-blue-500 dark:hover:text-electric-blue-400 transition-colors cursor-pointer">Problem</li>
+              <li className="hover:text-electric-blue-500 dark:hover:text-electric-blue-400 transition-colors cursor-pointer">Architecture</li>
+              <li className="hover:text-electric-blue-500 dark:hover:text-electric-blue-400 transition-colors cursor-pointer">Key Features</li>
             </ul>
           </div>
         </aside>

@@ -188,7 +188,7 @@ function Palette({ projects, onClose }: { projects: PaletteProject[]; onClose: (
         onMouseDown={(e) => e.stopPropagation()}
       >
         <div className="flex items-center gap-3 border-b border-border-card px-4">
-          <Terminal className="w-4 h-4 text-electric-blue-500 shrink-0" />
+          <Terminal className="w-4 h-4 text-electric-blue-500 dark:text-electric-blue-400 shrink-0" />
           <input
             value={query}
             onChange={(e) => { setQuery(e.target.value); setActive(0); }}
@@ -224,7 +224,7 @@ function Palette({ projects, onClose }: { projects: PaletteProject[]; onClose: (
         </ul>
 
         {log.length > 0 && (
-          <pre className="max-h-56 overflow-y-auto border-t border-border-card bg-bg-base px-4 py-3 text-xs leading-relaxed text-emerald-500 whitespace-pre-wrap">
+          <pre className="max-h-56 overflow-y-auto border-t border-border-card bg-bg-base px-4 py-3 text-xs leading-relaxed text-emerald-700 dark:text-emerald-400 whitespace-pre-wrap">
             {log.join("\n")}
           </pre>
         )}

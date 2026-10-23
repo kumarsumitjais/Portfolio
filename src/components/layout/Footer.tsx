@@ -9,7 +9,7 @@ export function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
           <div className="col-span-2 md:col-span-1">
             <Link href="/" className="text-xl font-display font-semibold tracking-tight inline-block mb-4 focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:outline-none rounded-sm">
-              Sumit Kr. Jaiswal<span className="text-electric-blue-500">.</span>
+              Sumit Kr. Jaiswal<span className="text-electric-blue-500 dark:text-electric-blue-400">.</span>
             </Link>
             <p className="text-text-secondary text-sm mb-6 max-w-xs">
               Behind Every Great Prediction Is an Even Better Question.
@@ -24,33 +24,33 @@ export function Footer() {
           </div>
           
           <div>
-            <h3 className="font-semibold text-text-primary mb-4">Explore</h3>
+            <h2 className="font-semibold text-text-primary mb-4">Explore</h2>
             <ul className="space-y-3">
-              <li><Link href="/about" className="text-sm text-text-secondary hover:text-electric-blue-500 transition-colors focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:outline-none rounded-sm inline-block">About</Link></li>
-              <li><Link href="/skills" className="text-sm text-text-secondary hover:text-electric-blue-500 transition-colors focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:outline-none rounded-sm inline-block">Skills</Link></li>
-              <li><Link href="/blog" className="text-sm text-text-secondary hover:text-electric-blue-500 transition-colors focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:outline-none rounded-sm inline-block">Blog</Link></li>
+              <li><Link href="/about" className="text-sm text-text-secondary hover:text-electric-blue-500 dark:hover:text-electric-blue-400 transition-colors focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:outline-none rounded-sm inline-block">About</Link></li>
+              <li><Link href="/skills" className="text-sm text-text-secondary hover:text-electric-blue-500 dark:hover:text-electric-blue-400 transition-colors focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:outline-none rounded-sm inline-block">Skills</Link></li>
+              <li><Link href="/blog" className="text-sm text-text-secondary hover:text-electric-blue-500 dark:hover:text-electric-blue-400 transition-colors focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:outline-none rounded-sm inline-block">Blog</Link></li>
             </ul>
           </div>
           
           <div>
-            <h3 className="font-semibold text-text-primary mb-4">Work</h3>
+            <h2 className="font-semibold text-text-primary mb-4">Work</h2>
             <ul className="space-y-3">
-              <li><Link href="/projects" className="text-sm text-text-secondary hover:text-electric-blue-500 transition-colors focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:outline-none rounded-sm inline-block">Projects</Link></li>
-              <li><Link href="/research" className="text-sm text-text-secondary hover:text-electric-blue-500 transition-colors focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:outline-none rounded-sm inline-block">Research</Link></li>
-              <li><Link href="/experience" className="text-sm text-text-secondary hover:text-electric-blue-500 transition-colors focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:outline-none rounded-sm inline-block">Experience</Link></li>
+              <li><Link href="/projects" className="text-sm text-text-secondary hover:text-electric-blue-500 dark:hover:text-electric-blue-400 transition-colors focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:outline-none rounded-sm inline-block">Projects</Link></li>
+              <li><Link href="/research" className="text-sm text-text-secondary hover:text-electric-blue-500 dark:hover:text-electric-blue-400 transition-colors focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:outline-none rounded-sm inline-block">Research</Link></li>
+              <li><Link href="/experience" className="text-sm text-text-secondary hover:text-electric-blue-500 dark:hover:text-electric-blue-400 transition-colors focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:outline-none rounded-sm inline-block">Experience</Link></li>
             </ul>
           </div>
           
           <div>
-            <h3 className="font-semibold text-text-primary mb-4">Connect</h3>
+            <h2 className="font-semibold text-text-primary mb-4">Connect</h2>
             <ul className="space-y-3">
-              <li><Link href="/contact" className="text-sm text-text-secondary hover:text-electric-blue-500 transition-colors focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:outline-none rounded-sm inline-block">Contact</Link></li>
-              <li><a href="/resume.pdf" target="_blank" rel="noopener noreferrer" className="text-sm text-text-secondary hover:text-electric-blue-500 transition-colors focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:outline-none rounded-sm inline-block">Resume</a></li>
+              <li><Link href="/contact" className="text-sm text-text-secondary hover:text-electric-blue-500 dark:hover:text-electric-blue-400 transition-colors focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:outline-none rounded-sm inline-block">Contact</Link></li>
+              <li><a href="/resume.pdf" target="_blank" rel="noopener noreferrer" className="text-sm text-text-secondary hover:text-electric-blue-500 dark:hover:text-electric-blue-400 transition-colors focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:outline-none rounded-sm inline-block">Resume</a></li>
               <li className="flex items-center gap-4 pt-2">
-                <a href="https://github.com/kumarsumitjais" target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="text-text-secondary hover:text-electric-blue-500 transition-colors focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:outline-none rounded-sm">
+                <a href="https://github.com/kumarsumitjais" target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="text-text-secondary hover:text-electric-blue-500 dark:hover:text-electric-blue-400 transition-colors focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:outline-none rounded-sm">
                   <FaGithub className="w-5 h-5" />
                 </a>
-                <a href="https://linkedin.com/in/sumit-kr-jaiswal-4979132ba" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="text-text-secondary hover:text-electric-blue-500 transition-colors focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:outline-none rounded-sm">
+                <a href="https://linkedin.com/in/sumit-kr-jaiswal-4979132ba" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="text-text-secondary hover:text-electric-blue-500 dark:hover:text-electric-blue-400 transition-colors focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:outline-none rounded-sm">
                   <FaLinkedin className="w-5 h-5" />
                 </a>
               </li>
@@ -61,7 +61,7 @@ export function Footer() {
         <div className="flex flex-col md:flex-row items-center justify-between pt-8 border-t border-border-card/50">
           <p className="text-xs text-text-secondary mb-4 md:mb-0">
             &copy; {new Date().getFullYear()} Sumit Kr. Jaiswal. All rights reserved. 
-            <span className="mx-2 opacity-50">|</span> 
+            <span className="mx-2 opacity-50" aria-hidden="true">|</span> 
             <span className="font-mono text-[10px]">build: a1b2c3d</span>
           </p>
           

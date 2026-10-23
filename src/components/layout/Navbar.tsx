@@ -59,7 +59,7 @@ export function Navbar() {
           className="text-lg sm:text-xl whitespace-nowrap font-display font-semibold tracking-tight z-50 focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:outline-none rounded-sm"
           onClick={() => setIsMobileMenuOpen(false)}
         >
-          Sumit Kr. Jaiswal<span className="text-electric-blue-500">.</span>
+          Sumit Kr. Jaiswal<span className="text-electric-blue-500 dark:text-electric-blue-400">.</span>
         </Link>
 
         {/* Desktop Nav */}
@@ -143,7 +143,7 @@ export function Navbar() {
                 onClick={() => setIsMobileMenuOpen(false)}
                 className={cn(
                   "text-xl font-medium py-3 border-b border-border-card/50 transition-colors focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:outline-none rounded-sm",
-                  pathname === link.href ? "text-electric-blue-500" : "text-text-secondary hover:text-text-primary"
+                  pathname === link.href ? "text-electric-blue-500 dark:text-electric-blue-400" : "text-text-secondary hover:text-text-primary"
                 )}
               >
                 {link.name}

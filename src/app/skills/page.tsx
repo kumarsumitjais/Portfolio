@@ -1,5 +1,6 @@
 import { SkillsSection } from "@/components/sections/Skills";
-import { SkillEvidence } from "@/components/sections/SkillEvidence";
+import { SkillMap } from "@/components/sections/SkillMap";
+import { buildSkillMap, MAP_W, MAP_H } from "@/lib/content/skillMap";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -20,7 +21,7 @@ export const metadata: Metadata = {
 export default function SkillsPage() {
   return (
     <main className="pt-0 pb-05 min-h-screen">
-      <SkillsSection chart={<SkillEvidence />} />
+      <SkillsSection chart={<SkillMap bubbles={buildSkillMap()} width={MAP_W} height={MAP_H} />} />
     </main>
   );
 }

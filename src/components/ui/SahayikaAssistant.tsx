@@ -260,6 +260,9 @@ export function SahayikaAssistant() {
 
   // visitorContext persists for the full browser session in React state.
   // This is the fix for the serverless global variable bug.
+  // One id per visit, so rows from the same conversation can be grouped in the sheet.
+  const [sessionId] = useState(() => crypto.randomUUID().slice(0, 8));
+
   const [visitorContext, setVisitorContext] = useState<VisitorContext>({
     name: null,
     intent: null,
@@ -387,24 +390,11 @@ export function SahayikaAssistant() {
     const updatedContext = detectIntent(userMessage, visitorContext);
     setVisitorContext(updatedContext);
 
-    // Track lead on backend asynchronously if first intent or name is found
-    if (updatedContext.name !== visitorContext.name || updatedContext.intent !== visitorContext.intent) {
-       // Aggregate all user messages so far to give complete context
-       const previousUserMessages = displayMessages
-         .filter(m => m.role === "user")
-         .map(m => m.text);
-       const fullContext = [...previousUserMessages, userMessage].join(" | ");
-
-       fetch("/api/lead", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-          name: updatedContext.name || "Unknown", 
-          intent: updatedContext.intent || "Unknown",
-          message: fullContext 
-        }),
-      }).catch(console.error);
-    }
+    // Every message is logged as a lead (server-side, with retries).
+    const transcript = [
+      ...displayMessages.filter(m => m.role === "user").map(m => m.text),
+      userMessage,
+    ].join(" | ");
 
     // Step 2: Build hidden context note using updated context.
     const contextNote = buildContextNote(updatedContext);
@@ -432,6 +422,12 @@ export function SahayikaAssistant() {
           history: history,
           message: finalMessage,
           query: userMessage,
+          lead: {
+            sessionId,
+            name: updatedContext.name,
+            intent: updatedContext.intent,
+            transcript,
+          },
         }),
       });
 

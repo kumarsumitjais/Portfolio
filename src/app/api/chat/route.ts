@@ -1,5 +1,6 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse, after } from "next/server";
+import { sendLead } from "@/lib/lead";
 import { retrieve, type Source } from "@/lib/content/search";
 
 const SYSTEM_INSTRUCTION = `
@@ -261,12 +262,28 @@ export async function POST(req: NextRequest) {
     // history: array of all previous Gemini turns
     // message: the new user message with context note prepended
     // query: the visitor's raw text, used for retrieval
-    const { history, message, query } = body;
+    // lead: visitor info + transcript, logged for every message
+    const { history, message, query, lead } = body;
 
     if (!message || typeof message !== "string") {
       return NextResponse.json(
         { reply: "I did not receive a valid message." },
         { status: 400 }
+      );
+    }
+
+    // Log this message to the leads sheet after the response is sent
+    // (runs even if Gemini fails below), so no conversation is skipped.
+    if (lead && typeof lead === "object") {
+      const str = (v: unknown, fallback = "") => (typeof v === "string" && v.trim() ? v.slice(0, 5000) : fallback);
+      after(() =>
+        sendLead({
+          sessionId: str(lead.sessionId, "unknown"),
+          name: str(lead.name, "Unknown"),
+          intent: str(lead.intent, "Unknown"),
+          message: str(lead.transcript, str(query)),
+          latest: str(query),
+        })
       );
     }
 

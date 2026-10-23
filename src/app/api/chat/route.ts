@@ -161,10 +161,15 @@ Predicts mortality based on tobacco usage patterns.
 Uses Random Forest, Decision Tree, and Logistic Regression.
 Includes thorough feature engineering and visual correlation analysis.
 
-Portfolio Website
-Built from scratch with HTML, CSS, and JavaScript.
-Responsive, clean UI/UX. Hosted on Netlify.
-The visitor is currently inside it.
+Portfolio Website (sumitkumarjaiswal.in) — the visitor is inside it right now
+Rebuilt in 2026 with Next.js 16, TypeScript, Tailwind CSS and MDX
+(the first 2023 version was plain HTML, CSS and JavaScript).
+Features: you (Sahayika, a RAG assistant that searches the site and cites
+pages), a Ctrl+K command palette that can train a small model in the
+browser, a Jupyter-notebook style AQI case study, a live GitHub panel.
+SEO: per-page metadata and canonical URLs, JSON-LD structured data,
+auto-generated Open Graph share images, dynamic sitemap, robots.txt,
+Google Search Console verification. Lighthouse SEO score: 100.
 
 ACHIEVEMENTS — mention when relevant, never all at once
 1st Prize — Hackathon, Yuva Fest, LTSU (2023)

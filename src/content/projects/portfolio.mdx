@@ -1,16 +1,61 @@
 ---
-title: "Portfolio Website"
-oneLiner: "Personal portfolio website showcasing projects, skills, and achievements."
-role: "Frontend Developer"
-startDate: "2023-05-01"
-endDate: "2023-06-01"
-tags: ["HTML", "CSS", "JavaScript"]
+title: "Portfolio Website & AI Assistant"
+oneLiner: "This site: a Next.js + TypeScript portfolio with a cited RAG assistant, a Ctrl+K command palette and full technical SEO for sumitkumarjaiswal.in."
+role: "Full-Stack Developer"
+startDate: "2026-07-25"
+endDate: "Present"
+tags: ["Next.js", "TypeScript", "Tailwind CSS", "MDX", "Gemini", "RAG", "SEO"]
 category: "FullStack"
-heroMetric: { label: "Status", value: "Live" }
+heroMetric: { label: "Lighthouse SEO", value: "100" }
 ---
 
 ## Overview
-Designed and developed a personal portfolio website showcasing projects, skills, and achievements.
 
-## UI/UX
-Implemented responsive UI/UX using HTML, CSS, and JavaScript for smooth navigation and interactions.
+You are looking at it. **sumitkumarjaiswal.in** is my personal portfolio, rebuilt from scratch as a modern web application. It is not a static template: the content is written in MDX, the pages are statically generated for speed, and an AI assistant built into every page answers questions about my work and cites the pages its answers come from.
+
+The first version (2023) was a hand-written HTML, CSS and JavaScript site. This rebuild turns it into a production-grade TypeScript application, designed to be fast, searchable and to show what I build, not just list it.
+
+## Tech Stack
+
+- **Framework:** Next.js 16 (App Router, React Server Components, static generation)
+- **Language:** TypeScript
+- **Styling & motion:** Tailwind CSS v4, Framer Motion
+- **Content:** MDX files for projects and blog posts, parsed with gray-matter and rendered with next-mdx-remote
+- **AI:** Google Gemini via the `@google/generative-ai` SDK
+- **Lead capture:** Google Sheets webhook
+
+## Sahayika: a cited RAG assistant
+
+Sahayika (Hindi/Sanskrit for "helper") is the assistant in the bottom-right corner. Each question goes through a small **retrieval-augmented generation (RAG)** pipeline:
+
+- **Search:** a TF-IDF retriever written in TypeScript indexes about 190 chunks of this site's projects, blog posts, experience, certifications and skills, and finds the most relevant excerpts.
+- **Ground:** the top excerpts are passed to Gemini alongside the question, so answers come from real site content instead of guesses.
+- **Cite:** the model reports which excerpts it used, and each answer links to those pages.
+- **"How I work" mode** shows the pipeline for every answer: question → site search → Gemini → answer, with real timings.
+
+Sahayika also supports voice input and spoken replies, starter questions, and recognises whether a visitor is a recruiter, student or collaborator so it can tailor its answers.
+
+## Interactive Features
+
+- **Ctrl+K command palette:** `>train` trains a logistic-regression model with gradient descent right in the browser and streams its loss and accuracy; `>projects nlp` filters projects; `>ask` sends a question to Sahayika.
+- **Notebook-style case study:** the AQI project reads like a Jupyter notebook, with numbered cells that "run" as you scroll.
+- **Skills neural network:** an animated SVG network where skills flow from input to output layers.
+- **Live GitHub panel:** contribution heatmap and latest commits pulled from the GitHub API, refreshed hourly.
+
+## SEO Optimization
+
+The site is built to be found. Technical SEO for **sumitkumarjaiswal.in** includes:
+
+- **Metadata on every page:** unique titles via a title template, descriptions, keywords and canonical URLs to avoid duplicate-content issues.
+- **Structured data (JSON-LD):** `Person` and `WebSite` schema site-wide, and `SoftwareApplication` schema on each project, so search engines understand who I am and what I build.
+- **Open Graph & Twitter cards:** large preview images when links are shared on LinkedIn, WhatsApp, X or Slack. Share images are **generated automatically** with Next.js `ImageResponse`, including a card for every project that shows its headline result.
+- **Dynamic sitemap.xml:** built from the content files, so every new project or blog post is listed automatically.
+- **robots.txt:** allows crawling of the site while keeping API routes out of the index.
+- **Google Search Console:** domain ownership verified.
+- **Performance & accessibility:** statically generated pages, optimised images, lazy-loaded chat code and reduced-motion support. Lighthouse (production build, desktop): Performance 98–100, Accessibility 100, Best Practices 100, SEO 100.
+
+## Results
+
+- A fast, searchable portfolio with a perfect Lighthouse SEO score
+- An AI assistant that grounds its answers in real content and shows its sources
+- A content system where adding a project means adding one MDX file: pages, sitemap entries and share images are generated automatically

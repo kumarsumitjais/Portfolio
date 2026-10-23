@@ -4,23 +4,11 @@
 // ============================================================
 
 import { MetadataRoute } from "next";
+import { getAllProjects, getAllBlogs } from "@/lib/content/mdx";
 
-// ── Add your real project slugs here ──────────────────────────
-// These must match the folder names in src/app/projects/[slug]/
-const PROJECT_SLUGS = [
-  "air-quality",
-  "autostream",
-  "breast-cancer",
-  // add more as you build them
-];
-
-// ── Add your real blog post slugs here ───────────────────────
-// These must match the folder names in src/app/blog/[slug]/
-const BLOG_SLUGS: string[] = [
-  // "how-i-built-aqi-model",
-  // "rag-vs-fine-tuning",
-  // add as you publish posts
-];
+// Slugs come from the MDX content files, so new projects and posts are listed automatically.
+const PROJECT_SLUGS = getAllProjects().map((p) => p.slug);
+const BLOG_SLUGS = getAllBlogs().map((b) => b.slug);
 
 const BASE_URL = "https://www.sumitkumarjaiswal.in";
 

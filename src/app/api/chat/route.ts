@@ -1,5 +1,6 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { NextRequest, NextResponse } from "next/server";
+import { retrieve, type Source } from "@/lib/content/search";
 
 const SYSTEM_INSTRUCTION = `
 You are Sahayika — the AI assistant embedded in Sumit Kr. Jaiswal's 
@@ -233,14 +234,29 @@ of the portfolio or reaching out to Sumit directly at
 jaiswal.sumit0789@gmail.com.
 `;
 
+const MODEL = "gemini-3.5-flash-lite";
+
+const CITATION_RULES = `
+━━━━━━━━━━━━━━━━
+SITE CONTENT & CITATIONS
+━━━━━━━━━━━━━━━━
+Some messages include a [RETRIEVED SITE CONTENT] block with numbered
+excerpts from pages on this website. Prefer those facts over memory.
+After your reply, on its own final line, write exactly
+SOURCES: followed by the numbers of the excerpts you actually used,
+comma separated (for example "SOURCES: 1,3"), or "SOURCES: none".
+Never mention the excerpts, "retrieved content", their numbers or this line
+anywhere else. To the visitor, you simply know this.
+`;
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
-    // Expect exactly these two fields from the frontend:
     // history: array of all previous Gemini turns
     // message: the new user message with context note prepended
-    const { history, message } = body;
+    // query: the visitor's raw text, used for retrieval
+    const { history, message, query } = body;
 
     if (!message || typeof message !== "string") {
       return NextResponse.json(
@@ -249,27 +265,62 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Step 1: search the site's own content for this question.
+    const t0 = Date.now();
+    const { hits, searched } = retrieve(typeof query === "string" ? query : message);
+    const retrievalMs = Date.now() - t0;
+
+    const grounded = hits.length
+      ? `${message}\n\n[RETRIEVED SITE CONTENT]\n${hits
+          .map((h, i) => `[${i + 1}] ${h.title} (${h.href})\n${h.text}`)
+          .join("\n\n")}\n[END RETRIEVED SITE CONTENT]`
+      : message;
+
     // Initialize inside the handler to ensure env variables are read at runtime
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
     const model = genAI.getGenerativeModel({
-      model: "gemini-3.5-flash-lite",
-      systemInstruction: SYSTEM_INSTRUCTION,
+      model: MODEL,
+      systemInstruction: SYSTEM_INSTRUCTION + CITATION_RULES,
     });
 
     // Create a temporary chat session for THIS request only.
     const chat = model.startChat({
       history: Array.isArray(history) ? history : [],
       generationConfig: {
-        maxOutputTokens: 300,
+        maxOutputTokens: 350,
         temperature: 0.85,
       },
     });
 
-    // Send the message and get Sahayika's reply
-    const result = await chat.sendMessage(message);
-    const reply = result.response.text();
+    // Step 2: generate.
+    const t1 = Date.now();
+    const result = await chat.sendMessage(grounded);
+    const generationMs = Date.now() - t1;
+    const raw = result.response.text();
 
-    return NextResponse.json({ reply });
+    // Step 3: pull the SOURCES line off the reply and map it back to pages.
+    const match = raw.match(/\n?\s*SOURCES:\s*([^\n]*)\s*$/i);
+    const reply = (match ? raw.slice(0, match.index) : raw).trim();
+    const used = match
+      ? [...new Set((match[1].match(/\d+/g) ?? []).map(Number))].filter((n) => n >= 1 && n <= hits.length)
+      : []; // no SOURCES line means the model didn't rely on the excerpts
+    const sources: Source[] = [];
+    for (const n of used) {
+      const { title, href } = hits[n - 1];
+      if (!sources.some((s) => s.href === href && s.title === title)) sources.push({ title, href });
+    }
+
+    return NextResponse.json({
+      reply,
+      sources,
+      trace: {
+        searched,
+        retrieved: hits.map((h) => h.title),
+        retrievalMs,
+        generationMs,
+        model: MODEL,
+      },
+    });
 
   } catch (error) {
     console.error("Sahayika API error:", error);

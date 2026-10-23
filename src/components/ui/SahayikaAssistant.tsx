@@ -1,9 +1,13 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Mic, Send, X, Sparkles, Volume2, VolumeX } from "lucide-react";
+import Link from "next/link";
+import { Mic, Send, X, Sparkles, Volume2, VolumeX, Workflow, FileText } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import ReactMarkdown from "react-markdown";
+import dynamic from "next/dynamic";
+
+// Loaded on first reply so the markdown parser stays out of the initial page bundle.
+const ReactMarkdown = dynamic(() => import("react-markdown"));
 import { cn } from "@/lib/utils";
 
 // ─── Type Definitions ──────────────────────────────────────────────────────
@@ -25,6 +29,54 @@ interface VisitorContext {
 interface DisplayMessage {
   role: "user" | "model";
   text: string;
+  sources?: { title: string; href: string }[];
+  trace?: {
+    searched: number;
+    retrieved: string[];
+    retrievalMs: number;
+    generationMs: number;
+    model: string;
+  };
+}
+
+const STARTER_QUESTIONS = [
+  "How does Autostream's RAG pipeline work?",
+  "What bugs did Sumit hit building the AQI model?",
+  "Which of Sumit's models scored highest?",
+  "What hackathons has Sumit won?",
+];
+
+// The "how I work" view: question → search → Gemini → answer.
+function PipelineTrace({ trace, sourceCount }: { trace: NonNullable<DisplayMessage["trace"]>; sourceCount: number }) {
+  const steps = [
+    { label: "Question", detail: "your message" },
+    {
+      label: "Search site",
+      detail: `${trace.retrieved.length}/${trace.searched} chunks · ${trace.retrievalMs}ms`,
+    },
+    { label: "Gemini", detail: `${trace.model} · ${(trace.generationMs / 1000).toFixed(1)}s` },
+    { label: "Answer", detail: sourceCount ? `${sourceCount} cited` : "no citations" },
+  ];
+  return (
+    <div className="mt-3 pt-3 border-t border-black/10 dark:border-white/10 font-mono text-[10px] leading-tight">
+      <div className="flex items-stretch gap-1">
+        {steps.map((s, i) => (
+          <div key={s.label} className="flex items-center gap-1 flex-1 min-w-0">
+            <div className="flex-1 min-w-0 rounded-md bg-teal-500/10 border border-teal-500/20 px-1.5 py-1">
+              <div className="font-semibold text-teal-700 dark:text-teal-300 truncate">{s.label}</div>
+              <div className="text-gray-600 dark:text-gray-400 truncate" title={s.detail}>{s.detail}</div>
+            </div>
+            {i < steps.length - 1 && <span className="text-teal-500" aria-hidden>→</span>}
+          </div>
+        ))}
+      </div>
+      {trace.retrieved.length > 0 && (
+        <p className="mt-1.5 text-gray-500 dark:text-gray-400 truncate" title={trace.retrieved.join(", ")}>
+          retrieved: {[...new Set(trace.retrieved)].join(", ")}
+        </p>
+      )}
+    </div>
+  );
 }
 
 // ─── Intent Detection (runs on frontend, updates visitorContext) ───────────
@@ -223,6 +275,7 @@ export function SahayikaAssistant() {
   const [isTyping, setIsTyping] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [voiceEnabled, setVoiceEnabled] = useState(true);
+  const [showPipeline, setShowPipeline] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const recognitionRef = useRef<any>(null);
 
@@ -304,8 +357,28 @@ export function SahayikaAssistant() {
     window.speechSynthesis.speak(utterance);
   };
 
-  async function sendMessage() {
-    const userMessage = input.trim();
+  // Let other components (e.g. the command palette) open the chat,
+  // optionally with a question to send right away.
+  const pendingQuestion = useRef<string | null>(null);
+  useEffect(() => {
+    const open = (e: Event) => {
+      const q = (e as CustomEvent<{ question?: string }>).detail?.question?.trim();
+      setIsOpen(true);
+      if (q) pendingQuestion.current = q;
+    };
+    window.addEventListener("sahayika:open", open);
+    return () => window.removeEventListener("sahayika:open", open);
+  }, []);
+  useEffect(() => {
+    if (isOpen && pendingQuestion.current && !isTyping) {
+      const q = pendingQuestion.current;
+      pendingQuestion.current = null;
+      sendMessage(q);
+    }
+  });
+
+  async function sendMessage(text?: string) {
+    const userMessage = (text ?? input).trim();
     if (!userMessage || isTyping) return;
     setInput("");
 
@@ -358,6 +431,7 @@ export function SahayikaAssistant() {
         body: JSON.stringify({
           history: history,
           message: finalMessage,
+          query: userMessage,
         }),
       });
 
@@ -380,7 +454,7 @@ export function SahayikaAssistant() {
       // Step 8: Show Sahayika's reply in the UI.
       setDisplayMessages(prev => [
         ...prev,
-        { role: "model", text: reply },
+        { role: "model", text: reply, sources: data.sources, trace: data.trace },
       ]);
       
       // Speak the reply
@@ -455,6 +529,19 @@ export function SahayikaAssistant() {
               </div>
               <div className="flex items-center space-x-2">
                 <button
+                  onClick={() => setShowPipeline(!showPipeline)}
+                  aria-pressed={showPipeline}
+                  className={cn(
+                    "p-2 rounded-full transition-colors",
+                    showPipeline
+                      ? "text-teal-600 dark:text-teal-300 bg-teal-500/15"
+                      : "text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+                  )}
+                  title="How I work"
+                >
+                  <Workflow size={18} />
+                </button>
+                <button
                   onClick={() => setVoiceEnabled(!voiceEnabled)}
                   className="p-2 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors"
                   title={voiceEnabled ? "Mute voice" : "Enable voice"}
@@ -472,6 +559,15 @@ export function SahayikaAssistant() {
 
             {/* Messages */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4 scroll-smooth bg-gradient-to-b from-transparent to-white/5 dark:to-black/20">
+              {showPipeline && (
+                <div className="rounded-xl border border-teal-500/30 bg-teal-500/5 p-3 text-xs text-gray-700 dark:text-gray-300 leading-relaxed">
+                  <p className="font-semibold text-teal-700 dark:text-teal-300 mb-1">How I work</p>
+                  I&apos;m a small retrieval-augmented (RAG) assistant. For each question I
+                  search this website&apos;s projects, blog posts and profile pages, hand the best
+                  matching excerpts to Google Gemini, and answer from them, then cite the pages I used.
+                  Each reply below shows that pipeline.
+                </div>
+              )}
               <AnimatePresence initial={false}>
                 {displayMessages.map((msg, i) => (
                   <motion.div
@@ -509,6 +605,23 @@ export function SahayikaAssistant() {
                           >
                             {msg.text}
                           </ReactMarkdown>
+                          {msg.sources && msg.sources.length > 0 && (
+                            <div className="not-prose mt-3 flex flex-wrap gap-1.5">
+                              {msg.sources.map((s) => (
+                                <Link
+                                  key={s.href + s.title}
+                                  href={s.href}
+                                  className="inline-flex items-center gap-1 max-w-full rounded-full border border-teal-500/30 bg-teal-500/10 px-2 py-0.5 text-[11px] text-teal-700 dark:text-teal-300 hover:bg-teal-500/20 transition-colors"
+                                >
+                                  <FileText className="w-3 h-3 shrink-0" />
+                                  <span className="truncate">{s.title}</span>
+                                </Link>
+                              ))}
+                            </div>
+                          )}
+                          {showPipeline && msg.trace && (
+                            <PipelineTrace trace={msg.trace} sourceCount={msg.sources?.length ?? 0} />
+                          )}
                         </div>
                       ) : (
                         <p className="whitespace-pre-wrap text-sm">{msg.text}</p>
@@ -534,6 +647,20 @@ export function SahayikaAssistant() {
                   </motion.div>
                 )}
               </AnimatePresence>
+              {!isTyping && !displayMessages.some((m) => m.role === "user") && (
+                <div className="flex flex-col items-start gap-2 pt-1">
+                  <p className="text-[11px] uppercase tracking-wider text-gray-500 dark:text-gray-400">Try asking</p>
+                  {STARTER_QUESTIONS.map((q) => (
+                    <button
+                      key={q}
+                      onClick={() => sendMessage(q)}
+                      className="text-left text-sm rounded-xl border border-teal-500/30 bg-white/50 dark:bg-white/5 px-3 py-2 text-gray-800 dark:text-gray-100 hover:border-teal-500 hover:bg-teal-500/10 transition-colors"
+                    >
+                      {q}
+                    </button>
+                  ))}
+                </div>
+              )}
               <div ref={messagesEndRef} />
             </div>
 
@@ -569,7 +696,7 @@ export function SahayikaAssistant() {
                   </button>
                   <button
                     id="send-btn"
-                    onClick={sendMessage}
+                    onClick={() => sendMessage()}
                     disabled={!input.trim() || isTyping}
                     className="p-2 bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-600 hover:to-emerald-600 text-white rounded-full transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg"
                   >

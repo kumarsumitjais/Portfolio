@@ -4,6 +4,7 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { ProjectJsonLd } from "@/components/JsonLd";
+import { Notebook, Cell, Md } from "@/components/notebook/Notebook";
 
 import type { Metadata } from "next";
 
@@ -24,11 +25,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
   return {
     title: project.meta.title,
-    description: project.meta.summary,
+    description: project.meta.oneLiner,
     alternates: { canonical: `https://www.sumitkumarjaiswal.in/projects/${slug}` },
     openGraph: {
       title: `${project.meta.title} | Sumit Kr. Jaiswal`,
-      description: project.meta.summary,
+      description: project.meta.oneLiner,
       url: `https://www.sumitkumarjaiswal.in/projects/${slug}`,
     },
   };
@@ -49,15 +50,19 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
     p: (props: React.HTMLAttributes<HTMLParagraphElement>) => <p className="text-text-secondary leading-relaxed mb-6" {...props} />,
     ul: (props: React.HTMLAttributes<HTMLUListElement>) => <ul className="list-disc pl-5 mb-6 text-text-secondary space-y-2" {...props} />,
     strong: (props: React.HTMLAttributes<HTMLElement>) => <strong className="font-bold text-text-primary" {...props} />,
+    Notebook,
+    Cell,
+    Md,
   };
+  const isNotebook = project.meta.layout === "notebook";
 
   return (
     <>
       <ProjectJsonLd
         name={project.meta.title as string}
-        description={project.meta.summary as string}
+        description={project.meta.oneLiner as string}
         url={`https://www.sumitkumarjaiswal.in/projects/${slug}`}
-        datePublished={project.meta.date as string}
+        datePublished={project.meta.startDate as string}
         technologies={project.meta.tags as string[]}
       />
       <main className="container mx-auto px-5 md:px-20 py-32 min-h-screen">
@@ -103,12 +108,18 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
         </div>
       </header>
 
+      {isNotebook ? (
+        <article className="max-w-4xl mx-auto">
+          {/* Notebook MDX uses JSX expressions (cell props, tables); content is our own, so allow them. */}
+          <MDXRemote source={project.content} components={components} options={{ blockJS: false }} />
+        </article>
+      ) : (
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
         {/* Main Content */}
         <article className="col-span-1 lg:col-span-8">
           <MDXRemote source={project.content} components={components} />
         </article>
-        
+
         {/* Right Rail Table of Contents Placeholder */}
         <aside className="col-span-1 lg:col-span-4 hidden lg:block">
           <div className="sticky top-32 p-6 bg-bg-elevated border border-border-card rounded-2xl">
@@ -121,6 +132,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           </div>
         </aside>
       </div>
+      )}
     </main>
     </>
   );

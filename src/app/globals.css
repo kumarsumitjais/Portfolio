@@ -192,3 +192,15 @@
     @apply bg-bg-base text-text-primary font-sans antialiased selection:bg-electric-blue-500/30;
   }
 }
+/* Respect the OS "reduce motion" setting for CSS animations and smooth scrolling.
+   framer-motion animations are handled by <MotionConfig reducedMotion="user">. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

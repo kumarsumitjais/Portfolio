@@ -4,9 +4,9 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-
-import { CustomCursor } from "@/components/ui/CustomCursor";
 import { SahayikaAssistant } from "@/components/ui/SahayikaAssistant";
+import { CommandPalette } from "@/components/ui/CommandPalette";
+import { getAllProjects } from "@/lib/content/mdx";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -124,11 +124,18 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <CustomCursor />
           <Navbar />
           {children}
           <Footer />
           <SahayikaAssistant />
+          <CommandPalette
+            projects={getAllProjects().map((p) => ({
+              slug: p.slug,
+              title: p.meta.title,
+              category: p.meta.category ?? "",
+              tags: p.meta.tags ?? [],
+            }))}
+          />
         </ThemeProvider>
       </body>
     </html>

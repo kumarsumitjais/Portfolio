@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, Download } from "lucide-react";
-import { BackgroundEquations } from "@/components/ui/BackgroundEquations";
+import { SkillsRadar } from "@/components/ui/SkillsRadar";
+import { GitHubActivity } from "@/components/sections/GitHubActivity";
 import { ExperienceSection } from "@/components/sections/Experience";
 import { SkillsSection } from "@/components/sections/Skills";
 import { StickyParallaxStack } from "@/components/ui/StickyParallaxStack";
@@ -18,14 +19,13 @@ export default function Home() {
         <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
           <div className="absolute -top-[30%] -left-[10%] w-[70%] h-[70%] rounded-full bg-electric-blue-500/10 blur-[120px] mix-blend-screen" />
           <div className="absolute top-[20%] -right-[10%] w-[60%] h-[60%] rounded-full bg-indigo-500/10 blur-[120px] mix-blend-screen" />
-          <BackgroundEquations />
         </div>
 
         <div className="container mx-auto px-5 md:px-20 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           
           {/* Left Column (Content) */}
           <div className="col-span-1 lg:col-span-7 flex flex-col items-start z-10">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-electric-blue-500/30 bg-electric-blue-500/10 text-electric-blue-500 text-sm font-medium mb-6">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-electric-blue-500/30 bg-electric-blue-500/10 text-electric-blue-500 dark:text-electric-blue-400 text-sm font-medium mb-6">
               AI / ML Engineer &middot; Data Scientist
             </div>
             
@@ -55,35 +55,9 @@ export default function Home() {
             </div>
           </div>
           
-          {/* Right Column (Three.js Placeholder) */}
-          <div className="col-span-1 lg:col-span-5 hidden lg:block relative h-[500px] w-full">
-            <div className="absolute inset-0 bg-bg-elevated/50 border border-border-card rounded-3xl backdrop-blur-sm flex flex-col items-center justify-center">
-              <div className="w-24 h-24 rounded-full border border-dashed border-electric-blue-500/50 flex items-center justify-center mb-6 animate-[spin_10s_linear_infinite]">
-                <div className="w-16 h-16 rounded-full border border-cyan-400/50 flex items-center justify-center animate-[spin_5s_linear_infinite_reverse]">
-                  <div className="w-2 h-2 rounded-full bg-indigo-500 shadow-[0_0_10px_rgba(91,76,255,0.8)]" />
-                </div>
-              </div>
-              <p className="text-sm font-mono text-text-secondary text-center max-w-[200px]">
-                [ Neural Network Canvas rendering here ]
-              </p>
-            </div>
-            
-            {/* Stat Chips Placeholder */}
-            <div className="absolute top-10 -left-6 bg-bg-card border border-border-card shadow-level-3 rounded-xl px-4 py-3 backdrop-blur-md flex items-center gap-3">
-              <div className="w-2 h-2 rounded-full bg-emerald-400" />
-              <div className="flex flex-col">
-                <span className="text-xs font-medium text-text-secondary uppercase tracking-wider">Avg. Model Accuracy</span>
-                <span className="text-lg font-mono font-bold text-text-primary">94.2%</span>
-              </div>
-            </div>
-            
-            <div className="absolute bottom-20 -right-6 bg-bg-card border border-border-card shadow-level-3 rounded-xl px-4 py-3 backdrop-blur-md flex items-center gap-3">
-              <div className="w-2 h-2 rounded-full bg-cyan-400" />
-              <div className="flex flex-col">
-                <span className="text-xs font-medium text-text-secondary uppercase tracking-wider">Models Shipped</span>
-                <span className="text-lg font-mono font-bold text-text-primary">12+</span>
-              </div>
-            </div>
+          {/* Right Column: the site's signature visual, a live skills neural network */}
+          <div className="col-span-1 lg:col-span-5 hidden lg:block relative w-full">
+            <SkillsRadar compact />
           </div>
           
         </div>
@@ -123,7 +97,11 @@ export default function Home() {
       <ScrollReveal delay={0.3}>
         <ExperienceSection />
       </ScrollReveal>
-      
+
+      <ScrollReveal>
+        <GitHubActivity />
+      </ScrollReveal>
+
     </div>
   );
 }

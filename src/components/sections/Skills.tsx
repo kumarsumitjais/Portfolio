@@ -44,7 +44,7 @@ export function SkillsSection({ teaser = false }: { teaser?: boolean }) {
         
         {!teaser && (
           <div className="mb-16">
-            <SkillsRadar activeFilter={activeFilter} setActiveFilter={setActiveFilter} isScanning={isScanning} />
+            <SkillsRadar />
           </div>
         )}
         

@@ -2,7 +2,6 @@ import { education } from "@/content/education";
 import { certifications } from "@/content/certifications";
 import { achievements } from "@/content/achievements";
 import Image from "next/image";
-import { OrbitalInfographic } from "@/components/ui/OrbitalInfographic";
 import { ComputingPipeline } from "@/components/ui/ComputingPipeline";
 import { FeatureMatrix } from "@/components/ui/FeatureMatrix";
 import type { Metadata } from "next";

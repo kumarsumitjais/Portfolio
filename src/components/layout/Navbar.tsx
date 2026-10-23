@@ -4,8 +4,10 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ThemeToggle } from "./ThemeToggle";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Terminal } from "lucide-react";
 import { motion } from "framer-motion";
+
+const openPalette = () => window.dispatchEvent(new Event("palette:open"));
 import { cn } from "@/lib/utils";
 
 const NAV_LINKS = [
@@ -84,6 +86,14 @@ export function Navbar() {
         </nav>
 
         <div className="hidden md:flex items-center gap-4">
+          <button
+            onClick={openPalette}
+            className="flex items-center gap-2 px-2.5 py-1.5 text-xs font-mono text-text-secondary border border-border-card rounded-lg hover:text-text-primary hover:border-electric-blue-500/50 transition-colors focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:outline-none"
+            aria-label="Ctrl K: open command palette"
+          >
+            <Terminal className="w-3.5 h-3.5" />
+            <kbd className="font-mono">Ctrl K</kbd>
+          </button>
           <ThemeToggle />
           <Link
             href="/contact"
@@ -103,6 +113,13 @@ export function Navbar() {
 
         {/* Mobile Toggle */}
         <div className="md:hidden flex items-center gap-4 z-50">
+          <button
+            onClick={openPalette}
+            className="p-2 text-text-secondary hover:text-text-primary focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:outline-none rounded-md"
+            aria-label="Open command palette"
+          >
+            <Terminal className="w-5 h-5" />
+          </button>
           <ThemeToggle />
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}

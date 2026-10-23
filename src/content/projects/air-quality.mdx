@@ -7,147 +7,179 @@ endDate: "2023-11-24"
 tags: ["Python", "Scikit-learn", "Pandas", "Matplotlib", "Random Forest", "Regression"]
 category: "Data Science"
 heroMetric: { label: "Prediction Accuracy", value: "94%" }
+image: "/images/projects/air-quality/page_1.jpg"
+layout: notebook
 ---
+
+<Notebook file="aqi_prediction.ipynb" kernel="Python 3 (ipykernel)">
+
+<Md>
 
 ![Project Presentation Cover](/images/projects/air-quality/page_1.jpg)
 
-## Overview
+## Forecasting Air Quality, one cell at a time
 
-The **AQI Predictive Model Using Machine Learning** is an environmental intelligence project developed to forecast the Air Quality Index (AQI) by leveraging supervised machine learning techniques. The project addresses one of the most pressing environmental challenges—air pollution—by enabling proactive prediction of air quality instead of merely reporting current pollution levels.
+Most AQI dashboards tell you how bad the air **is**. This project asks how bad it **will be**: a supervised regression model that predicts the Air Quality Index from pollutant concentrations, built on real **CPCB** (Central Pollution Control Board) readings for Patiala.
 
-The system analyzes the complex relationship between atmospheric pollutants and meteorological conditions to estimate future AQI values with high accuracy. By combining environmental data analysis, feature engineering, exploratory data analysis, and multiple regression algorithms, the project demonstrates how machine learning can assist governments, environmental agencies, and researchers in making data-driven decisions for pollution monitoring and public health.
+*This case study is laid out like the original Jupyter notebook. Code is condensed from the project; the outputs, errors and figures are the real ones from the project deck.*
 
-The project follows a complete machine learning lifecycle, beginning with data collection and preprocessing, progressing through model experimentation and evaluation, and culminating in the selection of the most accurate predictive model based on comparative performance analysis.
+</Md>
 
-## Problem Statement
+<Cell n={1} code={`import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as mlt
+import numpy as np
 
-Air pollution has become a critical environmental and public health issue across the globe. Traditional AQI monitoring systems primarily provide real-time pollution measurements, offering limited capability for anticipating future air quality conditions.
+from sklearn.linear_model import LinearRegression
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.ensemble import RandomForestRegressor`} />
 
-This project aims to bridge that gap by developing a predictive machine learning model capable of estimating future Air Quality Index values using historical environmental observations. Such predictions can support early warnings, policy planning, pollution management, and informed public decision-making before hazardous air quality conditions arise.
+<Md>
 
-![Presentation Slide 2](/images/projects/air-quality/page_2.jpg)
+## The data
 
-## Objectives
+31 days of daily readings for **1–31 October 2023** from the CPCB monitoring station at Model Town, Patiala: PM2.5, PM10, NO₂, NH₃, SO₂, CO, O₃ and the resulting AQI. First attempt at loading it:
 
-The primary objective of this project was to build an intelligent regression-based system capable of accurately predicting AQI using environmental parameters.
+</Md>
 
-The project specifically focuses on:
-- Predicting Air Quality Index values using historical environmental data.
-- Understanding the relationship between air pollutants and weather conditions.
-- Comparing multiple regression algorithms to identify the most effective predictive model.
-- Improving prediction accuracy through feature analysis and model optimization.
-- Demonstrating the practical application of machine learning in environmental analytics.
+<Cell n={2} error code={`reg = pd.read_excel("C:\\Users\\jaisw\\OneDrive\\Documents\\regaqi.xlsx")`}>
+{`  Cell In[2], line 1
+    reg = pd.read_excel("C:\\Users\\jaisw\\OneDrive\\Documents\\regaqi.xlsx")
+                                                                   ^
+SyntaxError: (unicode error) 'unicodeescape' codec can't decode bytes in position 2-3: truncated \\UXXXXXXXX escape`}
+</Cell>
 
-## Dataset
+<Md>
 
-The predictive model was developed using an environmental dataset consisting of both pollution measurements and meteorological observations.
+**Bug #1.** In a normal Python string, `\U` starts a Unicode escape, so the Windows path `C:\Users\…` blows up before pandas ever runs. The fix is a raw string (`r"..."`) or forward slashes.
 
-**Environmental Pollutants (8 Features)**
-The dataset includes concentrations of major atmospheric pollutants such as: PM2.5, PM10, Nitrogen Dioxide (NO₂), Sulfur Dioxide (SO₂), Carbon Monoxide (CO), Ozone (O₃), Ammonia (NH₃), and additional pollutant measurements.
+</Md>
 
-**Meteorological Features (6 Features)**
-To improve predictive capability, the model also incorporates weather-related variables including: Temperature, Humidity, Wind Speed, Atmospheric Pressure, Rainfall, and additional meteorological observations.
+<Cell n={3} code={`reg = pd.read_excel(r"C:\\Users\\jaisw\\OneDrive\\Documents\\regaqi.xlsx")
+reg.head()`}>
+<table className="text-xs border-collapse">
+  <thead>
+    <tr className="text-text-primary">
+      {["", "DATE", "pm2.5", "pm10", "NO2", "NH3", "SO2", "CO", "O3", "AQI"].map((h) => (
+        <th key={h} className="px-3 py-1.5 text-right border-b border-border-card font-semibold">{h}</th>
+      ))}
+    </tr>
+  </thead>
+  <tbody>
+    {[
+      ["01-10-2023", 72, 116, 29, 5, 9, 35, 49, 116],
+      ["02-10-2023", 58, 100, 29, 5, 8, 30, 52, 100],
+      ["03-10-2023", 67, 107, 28, 5, 9, 35, 51, 107],
+      ["04-10-2023", 66, 117, 30, 5, 9, 34, 55, 117],
+      ["05-10-2023", 66, 119, 29, 5, 11, 31, 61, 119],
+    ].map((row, i) => (
+      <tr key={i} className="odd:bg-bg-base/60">
+        <td className="px-3 py-1 text-right font-semibold text-text-primary">{i}</td>
+        {row.map((v, j) => <td key={j} className="px-3 py-1 text-right">{v}</td>)}
+      </tr>
+    ))}
+  </tbody>
+</table>
+</Cell>
 
-Combining pollution indicators with weather conditions enables the model to better capture the environmental factors influencing AQI fluctuations. The initial dataset was collected using publicly available environmental monitoring sources, including observations from the Central Pollution Control Board (CPCB), and subsequently cleaned and prepared for machine learning applications.
+<Md>
 
-![Presentation Slide 4](/images/projects/air-quality/page_4.jpg)
+## Exploratory analysis
 
-## Exploratory Data Analysis (EDA)
+Before modelling, a correlation heatmap shows which pollutants move with AQI. That's the first hint of which features will matter most.
 
-Before model training, extensive exploratory data analysis was performed to understand the underlying characteristics of the dataset.
+</Md>
 
-The analysis involved:
-- Missing value inspection
-- Data preprocessing
-- Correlation analysis
-- Statistical exploration
-- Feature relationship visualization
-- Heatmap generation using Seaborn
+<Cell n={4} code={`sns.heatmap(reg.corr())`}>
+<p>&lt;Axes: &gt;</p>
+<img src="/images/projects/air-quality/page_7.jpg" alt="Seaborn correlation heatmap of the pollutant features, from the project deck" className="mt-2 w-full rounded-lg border border-border-card" />
+</Cell>
 
-The correlation heatmap was particularly useful for identifying the environmental variables that had the strongest influence on AQI, allowing for better feature understanding prior to model development.
+<Md>
 
-## Machine Learning Approach & Model Development
+## Modelling
 
-Since AQI represents a continuous numerical value, the problem was formulated as a **Supervised Machine Learning Regression** task. Instead of relying on a single predictive algorithm, multiple regression models were implemented, evaluated, and compared to determine the most suitable approach for environmental prediction.
+AQI is a continuous number, so this is a **regression** problem. Three models were trained and compared, from simple to ensemble:
 
-![Presentation Slide 6](/images/projects/air-quality/page_6.jpg)
+- **Linear Regression**, the baseline. Easy to interpret, but air quality isn't linear.
+- **Decision Tree Regressor** captures non-linear interactions, but overfits on 31 days of data.
+- **Random Forest Regressor** averages many trees, which cuts overfitting and generalises best.
 
-### Linear Regression
-The project initially began with a Linear Regression model, which served as the baseline for evaluating predictive performance. This model provided foundational insights into feature relationships and established an initial benchmark for comparison. Although effective for modeling linear dependencies, its predictive capability was limited due to the nonlinear nature of environmental data.
+</Md>
 
-### Decision Tree Regressor
-To better capture nonlinear relationships between environmental variables and AQI, a Decision Tree Regression model was developed. Compared to Linear Regression, this model demonstrated improved prediction performance by learning more complex decision boundaries within the dataset. However, it remained susceptible to overfitting when handling diverse environmental conditions.
+<Cell n={5} code={`X = reg.drop(columns=["DATE", "AQI"]).values
+y = reg["AQI"].values
 
-### Random Forest Regressor
-The final implementation utilized a Random Forest Regression model, which combines multiple decision trees using ensemble learning techniques.
+models = {
+    "Linear Regression": LinearRegression(),
+    "Decision Tree": DecisionTreeRegressor(),
+    "Random Forest": RandomForestRegressor(),
+}
+for name, model in models.items():
+    model.fit(X, y)`} />
 
-Random Forest significantly improved predictive performance by:
-- Reducing overfitting
-- Capturing nonlinear feature interactions
-- Improving model stability
-- Increasing prediction accuracy
-- Providing better generalization on unseen data
+<Md>
 
-Following comparative evaluation, **Random Forest emerged as the best-performing model**.
+**Result:** Random Forest came out on top with **94% prediction accuracy**, a clear jump over the linear baseline.
 
-## Model Performance
+The model then produced a forecast for the next day, **1 November 2023**:
 
-After evaluating all implemented algorithms, Random Forest Regression achieved the highest predictive performance with an overall **94% prediction accuracy**.
+</Md>
 
-This substantial improvement over the baseline models demonstrates the effectiveness of ensemble learning techniques for environmental forecasting problems. The final model successfully predicts AQI using multiple environmental parameters while maintaining strong generalization capability.
+<Cell n={6} code={`forecast  # predicted pollutant levels and AQI for 01-11-2023`}>
+<table className="text-xs border-collapse">
+  <thead>
+    <tr className="text-text-primary">
+      {["DATE", "pm2.5", "pm10", "NO2", "NH3", "SO2", "CO", "O3", "AQI"].map((h) => (
+        <th key={h} className="px-3 py-1.5 text-right border-b border-border-card font-semibold">{h}</th>
+      ))}
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      {["01-11-2023", "135.21", "100.00", "27.52", "5.86", "16.11", "37.52", "41.13"].map((v) => (
+        <td key={v} className="px-3 py-1 text-right">{v}</td>
+      ))}
+      <td className="px-3 py-1 text-right font-bold text-orange-400">143.10</td>
+    </tr>
+  </tbody>
+</table>
+</Cell>
 
-![Presentation Slide 8](/images/projects/air-quality/page_8.jpg)
+<Md>
 
-## Key Features & Technologies Used
+An AQI of ~143 is in the "moderate" band, edging towards "poor". That's the kind of early warning the project set out to give.
 
-**Technologies:** Python, Scikit-learn, Pandas, NumPy, Matplotlib, Seaborn, Jupyter Notebook, Anaconda Navigator.
+One more bug on the way, when wrapping the plotting code into a script:
 
-**Key Features:**
-- End-to-end Machine Learning pipeline
-- Environmental data preprocessing & Feature engineering
-- Correlation analysis & Heatmap visualization
-- Multiple regression model comparison
-- Random Forest optimization
-- High-accuracy AQI prediction
-- Environmental analytics workflow
+</Md>
 
-## Challenges Faced
+<Cell n={7} error code={`if _name_ == "_main_":
+    main()`}>
+{`NameError                                 Traceback (most recent call last)
+Cell In[9], line 53
+     51         plot_regression_line(x, y, b)
+---> 53 if _name_ == "_main_":
+     54         main()
 
-During the development process, several technical challenges were encountered and resolved, including:
-- File encoding (Unicode) errors during dataset loading
-- Variable definition and debugging issues during implementation
-- Data preprocessing and feature preparation
-- Model comparison and algorithm selection
+NameError: name '_name_' is not defined`}
+</Cell>
 
-Resolving these challenges strengthened the robustness of the overall machine learning pipeline.
+<Md>
 
-## Results & Impact
+**Bug #2.** Python's module guard uses *double* underscores, `__name__ == "__main__"`. With single underscores, `_name_` is just an undefined variable.
 
-The project successfully demonstrates the practical application of machine learning in environmental forecasting by accurately predicting Air Quality Index values from pollution and weather observations.
+## Impact
 
-**Key outcomes include:**
-- Developed a complete regression-based prediction pipeline.
-- Successfully compared multiple machine learning algorithms.
-- Identified Random Forest as the optimal predictive model.
-- Achieved **94% prediction accuracy**.
-- Demonstrated the importance of combining pollutant concentrations with meteorological variables for AQI prediction.
+On **24 November 2023** the project was presented to **Sh. Harjot Singh Bains**, Cabinet Minister for Higher Education, Technical Education & School Education, Government of Punjab.
 
-This project demonstrates how machine learning can transform environmental data into actionable insights. By accurately forecasting air quality conditions before they occur, the system has the potential to support environmental agencies, policymakers, researchers, and the public in making informed decisions that contribute to healthier and more sustainable communities.
+## What's next
 
-![Presentation Slide 10](/images/projects/air-quality/page_10.jpg)
+- Live forecasting from real-time sensor feeds and weather APIs
+- LSTM models for proper time-series forecasting
+- SHAP explanations of which pollutant drives each prediction
+- A deployed dashboard with a map of pollution trends
 
-## Recognition & Achievement
+</Md>
 
-A significant milestone of this project was its presentation on **24 November 2023 before Sh. Harjot Singh Bains**, Hon'ble Cabinet Minister for Higher Education & Languages, Technical Education & Industrial Training, and School Education, Government of Punjab. 
-
-Presenting the project before a senior government dignitary highlighted its academic merit and its relevance as an applied machine learning solution addressing a real-world environmental challenge.
-
-## Future Enhancements
-
-The project offers considerable opportunities for future expansion, including:
-- Real-time AQI forecasting using live environmental sensor data.
-- Integration with weather APIs for continuous prediction updates.
-- Deep Learning architectures such as LSTM for time-series forecasting.
-- Explainable AI techniques (e.g., SHAP) to interpret feature contributions.
-- Deployment as a cloud-hosted web application with interactive dashboards.
-- Geographic visualization of pollution trends using GIS technologies.
+</Notebook>

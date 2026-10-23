@@ -62,15 +62,8 @@ for (let li = 0; li < LAYERS.length-1; li++) {
   }
 }
 
-export function SkillsRadar({ 
-  activeFilter = "All", 
-  setActiveFilter = () => {},
-  isScanning = false
-}: { 
-  activeFilter?: string, 
-  setActiveFilter?: (domain: string) => void,
-  isScanning?: boolean
-} = {}) {
+// `compact` drops the card chrome so the network can sit in the home hero.
+export function SkillsRadar({ compact = false }: { compact?: boolean } = {}) {
   const [hoveredNode, setHoveredNode] = useState<any>(null);
   const requestRef = useRef<number>(0);
   const lastTimeRef = useRef<number>(0);
@@ -88,6 +81,10 @@ export function SkillsRadar({
   };
 
   useEffect(() => {
+    // Static network for people who asked the OS to reduce motion.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    // Hidden (e.g. the hero copy on phones): don't burn CPU animating it.
+    if (wrapRef.current?.offsetParent === null) return;
     let parts: any[] = [];
     const initWave = () => {
       parts = conns.map((c, i) => ({
@@ -189,20 +186,24 @@ export function SkillsRadar({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.8, ease: "easeOut" }}
-      className="w-full max-w-5xl mx-auto min-h-[500px] md:min-h-[600px] bg-bg-card border border-border-card rounded-2xl shadow-level-2 p-4 md:p-8 flex flex-col relative overflow-hidden group"
+      className={
+        compact
+          ? "w-full flex flex-col relative"
+          : "w-full max-w-5xl mx-auto min-h-[500px] md:min-h-[600px] bg-bg-card border border-border-card rounded-2xl shadow-level-2 p-4 md:p-8 flex flex-col relative overflow-hidden group"
+      }
     >
       {/* Background glowing effects */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-electric-blue-500/5 rounded-full blur-3xl pointer-events-none" />
-      
+
       <div className="flex items-center gap-3 mb-4 flex-wrap z-20">
-        <span className="text-[11px] text-text-secondary">model: skj-skills-v2.0 &nbsp;·&nbsp; avg accuracy: 94.2% &nbsp;·&nbsp; depth: 5 layers</span>
+        <span className="text-[11px] font-mono text-text-secondary">skill-net · 5 layers · {allNodes.length} nodes · hover a node</span>
         <span className="text-[11px] text-cyan-400 ml-auto flex items-center gap-2 font-mono">
           <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse inline-block" />
           forward pass running
         </span>
       </div>
 
-      <div id="wrap" ref={wrapRef} className="relative flex-1 flex flex-col items-center justify-center w-full min-h-[400px] z-10">
+      <div id="wrap" ref={wrapRef} className={`relative flex-1 flex flex-col items-center justify-center w-full z-10 ${compact ? "" : "min-h-[400px]"}`}>
         <svg ref={svgRef} width="100%" viewBox="0 0 680 430" className="block overflow-visible w-full h-auto max-h-[500px]">
           {/* Label Layer */}
           <g id="label-layer">
@@ -317,7 +318,7 @@ export function SkillsRadar({
       </div>
 
       {/* Legend */}
-      <div className="flex flex-wrap justify-center gap-4 mt-6 z-20">
+      <div className={`flex flex-wrap justify-center gap-4 z-20 ${compact ? "mt-2" : "mt-6"}`}>
         {LAYERS.map(layer => (
           <div key={layer.name} className="flex items-center gap-1.5 text-[11px] text-text-secondary">
             <div className="w-2 h-2 rounded-full" style={{ backgroundColor: layer.color }} />

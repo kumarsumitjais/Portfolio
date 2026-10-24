@@ -1,7 +1,6 @@
 import { getAllBlogs } from "@/lib/content/mdx";
 import { PageTransition } from "@/components/layout/PageTransition";
 import Link from "next/link";
-import { ViewTransition } from "react";
 import { ArrowRight, Calendar, Tag } from "lucide-react";
 import type { Metadata } from "next";
 
@@ -42,12 +41,16 @@ export default function BlogPage() {
         ) : (
           <div className="space-y-8">
             {blogs.map((blog, i) => (
-              <Link 
-                key={blog.slug} 
+              // The clicked card expands into the article (same view-transition-name as the
+              // post column); the other cards fall away / gather back, staggered by index.
+              <Link
+                key={blog.slug}
                 href={`/blog/${blog.slug}`}
-               
-                style={{ animationDelay: `${i * 70}ms` }}
-                className="rise-in block group bg-bg-card hover:bg-bg-elevated border border-border-card hover:border-electric-blue-500/50 rounded-2xl p-6 md:p-8 transition-all duration-300"
+                style={{
+                  viewTransitionName: `blog-card-${blog.slug}`,
+                  viewTransitionClass: `card-morph vt-stag-${Math.min(i, 7)}`,
+                } as React.CSSProperties}
+                className="block group bg-bg-card hover:bg-bg-elevated border border-border-card hover:border-electric-blue-500/50 rounded-2xl p-6 md:p-8 transition-all duration-300"
               >
                 <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
                   <div className="flex-1">
@@ -64,11 +67,12 @@ export default function BlogPage() {
                       )}
                     </div>
                     
-                    <ViewTransition name={`blog-title-${blog.slug}`} share="morph">
-                      <h2 className="text-2xl font-bold text-text-primary mb-3 group-hover:text-electric-blue-400 transition-colors">
-                        {blog.meta.title}
-                      </h2>
-                    </ViewTransition>
+                    <h2
+                      className="text-2xl font-bold text-text-primary mb-3 group-hover:text-electric-blue-400 transition-colors"
+                      style={{ viewTransitionName: `blog-title-${blog.slug}`, viewTransitionClass: "morph" } as React.CSSProperties}
+                    >
+                      {blog.meta.title}
+                    </h2>
                     
                     <p className="text-text-secondary leading-relaxed mb-6">
                       {blog.meta.oneLiner}

@@ -3,7 +3,6 @@ import { PageTransition } from "@/components/layout/PageTransition";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import Link from "next/link";
-import { ViewTransition } from "react";
 import { ArrowLeft, Calendar, Tag } from "lucide-react";
 import type { Metadata } from "next";
 import { BlogPostingJsonLd } from "@/components/JsonLd";
@@ -63,7 +62,11 @@ export default async function BlogPage({ params }: { params: Promise<{ slug: str
       datePublished={blog.meta.date}
     />
     <main className="container mx-auto px-5 md:px-20 pt-8 pb-20 md:py-32 min-h-screen">
-      <div className="max-w-3xl mx-auto">
+      {/* Same view-transition-name as the card on /blog: the card expands into this column. */}
+      <div
+        className="max-w-3xl mx-auto"
+        style={{ viewTransitionName: `blog-card-${slug}`, viewTransitionClass: "card-morph" } as React.CSSProperties}
+      >
         <Link href="/blog" className="inline-flex items-center text-sm font-medium text-text-secondary hover:text-electric-blue-500 dark:hover:text-electric-blue-400 mb-8 transition-colors">
           <ArrowLeft className="w-4 h-4 mr-2" /> Back to Blog
         </Link>
@@ -82,11 +85,12 @@ export default async function BlogPage({ params }: { params: Promise<{ slug: str
             )}
           </div>
           
-          <ViewTransition name={`blog-title-${slug}`} share="morph">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-6 text-text-primary tracking-tight leading-tight">
-              {blog.meta.title}
-            </h1>
-          </ViewTransition>
+          <h1
+            className="text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-6 text-text-primary tracking-tight leading-tight"
+            style={{ viewTransitionName: `blog-title-${slug}`, viewTransitionClass: "morph" } as React.CSSProperties}
+          >
+            {blog.meta.title}
+          </h1>
           
           <p className="text-xl md:text-2xl text-text-secondary leading-relaxed">
             {blog.meta.oneLiner}

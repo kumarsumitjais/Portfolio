@@ -3,7 +3,6 @@ import { PageTransition } from "@/components/layout/PageTransition";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import Link from "next/link";
-import { ViewTransition } from "react";
 import { ArrowLeft } from "lucide-react";
 import { ProjectJsonLd } from "@/components/JsonLd";
 import { Notebook, Cell, Md } from "@/components/notebook/Notebook";
@@ -85,11 +84,9 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           ))}
         </div>
         
-        <ViewTransition name={`project-title-${slug}`} share="morph">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-6 text-text-primary tracking-tight">
             {project.meta.title}
           </h1>
-        </ViewTransition>
         
         <p className="text-xl md:text-2xl text-text-secondary max-w-3xl mb-8 leading-relaxed">
           {project.meta.oneLiner}

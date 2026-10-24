@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, ViewTransition } from "react";
+import { useRef } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
@@ -70,11 +70,9 @@ function StickyProjectCard({ project, index }: { project: any, index: number }) 
             ))}
           </div>
 
-          <ViewTransition name={`project-title-${project.slug}`} share="morph">
             <h2 className="text-2xl sm:text-3xl xl:text-4xl font-display font-bold text-text-primary mb-3 md:mb-4 leading-tight group-hover:text-electric-blue-400 transition-colors">
               {project.meta.title}
             </h2>
-          </ViewTransition>
           
           <p className="text-sm sm:text-base xl:text-lg text-text-secondary mb-5 xl:mb-8 leading-relaxed max-w-xl line-clamp-3 md:line-clamp-none">
             {project.meta.oneLiner}

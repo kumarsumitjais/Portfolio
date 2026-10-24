@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { Terminal, CornerDownLeft } from "lucide-react";
 
@@ -79,7 +78,6 @@ function Palette({ projects, onClose }: { projects: PaletteProject[]; onClose: (
   const [active, setActive] = useState(0);
   const [log, setLog] = useState<string[]>([]);
   const timer = useRef<ReturnType<typeof setInterval> | null>(null);
-  const router = useRouter();
   const { resolvedTheme, setTheme } = useTheme();
 
   useEffect(() => () => {
@@ -167,10 +165,7 @@ function Palette({ projects, onClose }: { projects: PaletteProject[]; onClose: (
     if (item.action === "ask") window.dispatchEvent(new CustomEvent("sahayika:open", { detail: { question: item.question } }));
     if (item.action === "theme") setTheme(resolvedTheme === "dark" ? "light" : "dark");
     if (item.url) window.open(item.url, "_blank", "noopener");
-    if (item.href) {
-      window.dispatchEvent(new CustomEvent("nav:intent", { detail: item.href }));
-      router.push(item.href);
-    }
+    if (item.href) window.dispatchEvent(new CustomEvent("nav:go", { detail: { href: item.href } }));
     close();
   };
 

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { PageTransition } from "@/components/layout/PageTransition";
 import { ArrowRight, Download } from "lucide-react";
 import { SkillsRadar } from "@/components/ui/SkillsRadar";
 import { GitHubActivity } from "@/components/sections/GitHubActivity";
@@ -12,6 +13,7 @@ export default function Home() {
   const featuredProjects = getAllProjects().slice(0, 3);
 
   return (
+    <PageTransition kind="home">
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
       <section className="relative pt-10 pb-16 md:pt-32 md:pb-24 lg:pt-28 lg:pb-24 xl:pt-40 xl:pb-32 overflow-hidden md:min-h-[720px] flex items-center">
@@ -103,5 +105,6 @@ export default function Home() {
       </ScrollReveal>
 
     </div>
+    </PageTransition>
   );
 }

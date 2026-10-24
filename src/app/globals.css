@@ -222,92 +222,168 @@
   }
 }
 
-/* ───────── Page transitions (React <ViewTransition>, see app/template.tsx) ───────── */
+/* ═════════════ Page transitions ═════════════
+   Each page has its own enter (vt-<page>-in) and exit (vt-<page>-out) animation
+   (see components/layout/PageTransition.tsx). html[data-nav="back"] (set by
+   NavEffects for the back button and "Back to ..." links) swaps in a different
+   variant. Only transform and opacity are animated, so they run on the compositor
+   and stay smooth even while the new page is busy rendering, and
+   old and new pages animate at the same time so nothing waits. */
+
 :root {
-  --vt-exit: 160ms;
-  --vt-enter: 320ms;
+  --vt-out: 200ms;
+  --vt-in: 420ms;
+  --vt-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --vt-ease-io: cubic-bezier(0.65, 0, 0.35, 1);
 }
 
-/* Any page change: old page fades out fast, new page rises in. */
-::view-transition-old(.page-exit) {
-  animation: var(--vt-exit) ease-in both vt-fade reverse;
-}
-::view-transition-new(.page-enter) {
-  animation:
-    var(--vt-enter) cubic-bezier(0.16, 1, 0.3, 1) var(--vt-exit) both vt-fade,
-    var(--vt-enter) cubic-bezier(0.16, 1, 0.3, 1) var(--vt-exit) both vt-rise;
-}
-
-/* Opening a post/project slides forward; "Back to …" links slide back. */
-::view-transition-old(.nav-forward) {
-  --vt-offset: -48px;
-  animation:
-    var(--vt-exit) ease-in both vt-fade reverse,
-    360ms cubic-bezier(0.65, 0, 0.35, 1) both vt-slide reverse;
-}
-::view-transition-new(.nav-forward) {
-  --vt-offset: 48px;
-  animation:
-    260ms ease-out var(--vt-exit) both vt-fade,
-    360ms cubic-bezier(0.65, 0, 0.35, 1) both vt-slide;
-}
-::view-transition-old(.nav-back) {
-  --vt-offset: 48px;
-  animation:
-    var(--vt-exit) ease-in both vt-fade reverse,
-    360ms cubic-bezier(0.65, 0, 0.35, 1) both vt-slide reverse;
-}
-::view-transition-new(.nav-back) {
-  --vt-offset: -48px;
-  animation:
-    260ms ease-out var(--vt-exit) both vt-fade,
-    360ms cubic-bezier(0.65, 0, 0.35, 1) both vt-slide;
+/* Arriving page draws above the leaving one. */
+::view-transition-group(.vt-home-in),
+::view-transition-group(.vt-about-in),
+::view-transition-group(.vt-projects-in),
+::view-transition-group(.vt-project-in),
+::view-transition-group(.vt-skills-in),
+::view-transition-group(.vt-blog-in),
+::view-transition-group(.vt-post-in),
+::view-transition-group(.vt-experience-in),
+::view-transition-group(.vt-contact-in),
+::view-transition-group(.vt-research-in) {
+  z-index: 2;
 }
 
-/* The clicked card title glides into the page heading. */
+/* Leaving a page */
+::view-transition-old(.vt-home-out)       { animation: var(--vt-out) ease-in both vt-out-shrink; }
+::view-transition-old(.vt-about-out)      { animation: var(--vt-out) ease-in both vt-out-down; }
+::view-transition-old(.vt-projects-out)   { animation: var(--vt-out) ease-in both vt-out-shrink; }
+::view-transition-old(.vt-project-out)    { animation: var(--vt-out) ease-in both vt-out-grow; }
+::view-transition-old(.vt-skills-out)     { animation: var(--vt-out) ease-in both vt-out-left; }
+::view-transition-old(.vt-blog-out)       { animation: var(--vt-out) ease-in both vt-out-turn; }
+::view-transition-old(.vt-post-out)       { animation: var(--vt-out) ease-in both vt-out-up; }
+::view-transition-old(.vt-experience-out) { animation: var(--vt-out) ease-in both vt-out-left; }
+::view-transition-old(.vt-contact-out)    { animation: var(--vt-out) ease-in both vt-out-shrink; }
+::view-transition-old(.vt-research-out)   { animation: var(--vt-out) ease-in both vt-fade-out; }
+
+/* Arriving at a page (forward) */
+/* Home: focus pull (zooms in from slightly larger) */
+::view-transition-new(.vt-home-in)       { animation: 480ms var(--vt-ease) both vt-focus; }
+/* About: flips down from the top edge */
+::view-transition-new(.vt-about-in)      { transform-origin: 50% 0; animation: 460ms var(--vt-ease) both vt-flip-down; }
+/* Projects: the card stack lifts into place */
+::view-transition-new(.vt-projects-in)   { animation: var(--vt-in) var(--vt-ease) both vt-lift; }
+/* A project: dive in (zoom from slightly larger) */
+::view-transition-new(.vt-project-in)    { animation: var(--vt-in) var(--vt-ease) both vt-dive; }
+/* Skills: swish in from the right with a lean */
+::view-transition-new(.vt-skills-in)     { animation: var(--vt-in) var(--vt-ease) both vt-swish-right; }
+/* Blog: 3D page turn */
+::view-transition-new(.vt-blog-in)       { animation: 460ms var(--vt-ease) both vt-turn-in; }
+/* A post: opens like a sheet */
+::view-transition-new(.vt-post-in)       { animation: var(--vt-in) var(--vt-ease) both vt-sheet; }
+/* Experience: slides along the timeline */
+::view-transition-new(.vt-experience-in) { animation: var(--vt-in) var(--vt-ease) both vt-from-left; }
+/* Contact: springy pop */
+::view-transition-new(.vt-contact-in)    { animation: 460ms cubic-bezier(0.34, 1.56, 0.64, 1) both vt-pop; }
+/* Research: soft rise */
+::view-transition-new(.vt-research-in)   { animation: var(--vt-in) var(--vt-ease) both vt-rise; }
+
+/* Arriving by going back: a different motion for each page */
+html[data-nav="back"]::view-transition-new(.vt-home-in)       { animation: var(--vt-in) var(--vt-ease) both vt-drop; }
+html[data-nav="back"]::view-transition-new(.vt-about-in)      { transform-origin: 50% 100%; animation: 460ms var(--vt-ease) both vt-flip-up; }
+html[data-nav="back"]::view-transition-new(.vt-projects-in)   { animation: var(--vt-in) var(--vt-ease) both vt-settle; }
+html[data-nav="back"]::view-transition-new(.vt-project-in)    { animation: var(--vt-in) var(--vt-ease) both vt-surface; }
+html[data-nav="back"]::view-transition-new(.vt-skills-in)     { animation: var(--vt-in) var(--vt-ease) both vt-swish-left; }
+html[data-nav="back"]::view-transition-new(.vt-blog-in)       { animation: 460ms var(--vt-ease) both vt-turn-back; }
+html[data-nav="back"]::view-transition-new(.vt-post-in)       { animation: var(--vt-in) var(--vt-ease) both vt-from-left; }
+html[data-nav="back"]::view-transition-new(.vt-experience-in) { animation: var(--vt-in) var(--vt-ease) both vt-from-right; }
+html[data-nav="back"]::view-transition-new(.vt-contact-in)    { animation: var(--vt-in) var(--vt-ease) both vt-zoom-out; }
+html[data-nav="back"]::view-transition-new(.vt-research-in)   { animation: var(--vt-in) var(--vt-ease) both vt-sink; }
+
+/* Leaving a post/project by going back: it drops away / shrinks back */
+html[data-nav="back"]::view-transition-old(.vt-post-out)    { animation: var(--vt-out) ease-in both vt-out-right; }
+html[data-nav="back"]::view-transition-old(.vt-project-out) { animation: var(--vt-out) ease-in both vt-out-shrink; }
+
+/* Clicked card title glides into the page heading (and back) */
 ::view-transition-group(.morph) {
-  animation-duration: 420ms;
-  animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
-}
-::view-transition-image-pair(.morph) {
-  animation-name: vt-via-blur;
+  animation-duration: 360ms;
+  animation-timing-function: var(--vt-ease-io);
+  z-index: 3;
 }
 
-/* The header stays put while content moves underneath it. */
-::view-transition-group(site-header) {
-  animation: none;
-  z-index: 100;
-}
-::view-transition-old(site-header) {
-  display: none;
-}
-::view-transition-new(site-header) {
-  animation: none;
-}
+/* Header stays still while pages move underneath */
+::view-transition-group(site-header) { animation: none; z-index: 100; }
+::view-transition-old(site-header)   { display: none; }
+::view-transition-new(site-header)   { animation: none; }
 
-@keyframes vt-fade {
-  from { opacity: 0; filter: blur(4px); }
-  to { opacity: 1; filter: blur(0); }
+/* Light streak under the header: sweeps on every page change */
+.nav-streak {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 64px;
+  height: 2px;
+  opacity: 0; /* invisible on the page; drawn only by the transition below */
+  pointer-events: none;
+  view-transition-name: nav-streak;
 }
-@keyframes vt-rise {
-  from { transform: translateY(14px); }
-  to { transform: translateY(0); }
+@media (min-width: 768px) {
+  .nav-streak { top: 72px; }
 }
-@keyframes vt-slide {
-  from { translate: var(--vt-offset); }
-  to { translate: 0; }
+::view-transition-group(nav-streak) { z-index: 101; animation: none; }
+::view-transition-old(nav-streak)   { display: none; }
+::view-transition-new(nav-streak) {
+  --streak: linear-gradient(90deg, transparent, #33d6e0, #2e6bff, transparent);
+  background: var(--streak);
+  box-shadow: 0 0 12px 1px rgba(46, 107, 255, 0.55);
+  transform-origin: left center;
+  animation: 520ms var(--vt-ease) both vt-streak;
 }
-@keyframes vt-via-blur {
-  35% { filter: blur(3px); }
-}
+html[data-nav="back"]::view-transition-new(nav-streak) { transform-origin: right center; }
+/* Each destination has its own streak colour */
+html[data-nav-to="about"]::view-transition-new(nav-streak)      { --streak: linear-gradient(90deg, transparent, #a78bfa, #6366f1, transparent); }
+html[data-nav-to="projects"]::view-transition-new(nav-streak),
+html[data-nav-to="project"]::view-transition-new(nav-streak)    { --streak: linear-gradient(90deg, transparent, #34d399, #0ea5e9, transparent); }
+html[data-nav-to="skills"]::view-transition-new(nav-streak)     { --streak: linear-gradient(90deg, transparent, #f5b84d, #f97316, transparent); }
+html[data-nav-to="blog"]::view-transition-new(nav-streak),
+html[data-nav-to="post"]::view-transition-new(nav-streak)       { --streak: linear-gradient(90deg, transparent, #f472b6, #a855f7, transparent); }
+html[data-nav-to="experience"]::view-transition-new(nav-streak) { --streak: linear-gradient(90deg, transparent, #2dd4bf, #22c55e, transparent); }
+html[data-nav-to="contact"]::view-transition-new(nav-streak)    { --streak: linear-gradient(90deg, transparent, #fb7185, #f59e0b, transparent); }
+
+/* Keyframes */
+@keyframes vt-fade-out    { to { opacity: 0; } }
+@keyframes vt-out-shrink  { to { opacity: 0; transform: scale(0.96); } }
+@keyframes vt-out-grow    { to { opacity: 0; transform: scale(1.04); } }
+@keyframes vt-out-down    { to { opacity: 0; transform: translateY(24px); } }
+@keyframes vt-out-up      { to { opacity: 0; transform: translateY(-24px); } }
+@keyframes vt-out-left    { to { opacity: 0; transform: translateX(-40px); } }
+@keyframes vt-out-right   { to { opacity: 0; transform: translateX(40px); } }
+@keyframes vt-out-turn    { to { opacity: 0; transform: perspective(1400px) rotateY(-12deg) translateX(-40px); } }
+
+@keyframes vt-focus        { from { opacity: 0; transform: scale(1.12); } }
+@keyframes vt-drop         { from { opacity: 0; transform: translateY(-40px); } }
+@keyframes vt-zoom-out     { from { opacity: 0; transform: scale(1.06); } }
+@keyframes vt-flip-down    { from { opacity: 0; transform: perspective(1400px) rotateX(-16deg) translateY(-16px); } }
+@keyframes vt-flip-up      { from { opacity: 0; transform: perspective(1400px) rotateX(16deg) translateY(16px); } }
+@keyframes vt-lift         { from { opacity: 0; transform: translateY(56px) scale(0.97); } }
+@keyframes vt-settle       { from { opacity: 0; transform: translateY(-36px) scale(1.02); } }
+@keyframes vt-dive         { from { opacity: 0; transform: scale(1.08); } }
+@keyframes vt-surface      { from { opacity: 0; transform: scale(0.92) translateY(24px); } }
+@keyframes vt-swish-right  { from { opacity: 0; transform: translateX(90px) skewX(-8deg); } }
+@keyframes vt-swish-left   { from { opacity: 0; transform: translateX(-90px) skewX(8deg); } }
+@keyframes vt-turn-in      { from { opacity: 0; transform: perspective(1400px) rotateY(14deg) translateX(60px); } }
+@keyframes vt-turn-back    { from { opacity: 0; transform: perspective(1400px) rotateY(-14deg) translateX(-60px); } }
+@keyframes vt-sheet        { from { opacity: 0; transform: translateY(64px) scale(0.98); } }
+@keyframes vt-from-left    { from { opacity: 0; transform: translateX(-56px); } }
+@keyframes vt-from-right   { from { opacity: 0; transform: translateX(56px); } }
+@keyframes vt-pop          { from { opacity: 0; transform: scale(0.9); } }
+@keyframes vt-rise         { from { opacity: 0; transform: translateY(28px); } }
+@keyframes vt-sink         { from { opacity: 0; transform: translateY(-28px); } }
+@keyframes vt-streak       { 0% { transform: scaleX(0); opacity: 1; } 70% { transform: scaleX(1); opacity: 1; } 100% { transform: scaleX(1); opacity: 0; } }
 
 /* Staggered entrance for list items (pure CSS, set animationDelay per item). */
 .rise-in {
-  animation: rise-in 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: rise-in 520ms var(--vt-ease) both;
 }
 @keyframes rise-in {
   from { opacity: 0; transform: translateY(18px); }
-  to { opacity: 1; transform: translateY(0); }
 }
 
 @media (prefers-reduced-motion: reduce) {

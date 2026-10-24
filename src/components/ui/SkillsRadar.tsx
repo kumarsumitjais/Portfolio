@@ -159,9 +159,14 @@ export function SkillsRadar({ compact = false }: { compact?: boolean } = {}) {
     };
     
     document.addEventListener("visibilitychange", handleVisibility);
-    requestRef.current = requestAnimationFrame(animate);
+    // Start after any page transition has finished, so the particle loop doesn't
+    // compete with it for the main thread.
+    const startTimer = setTimeout(() => {
+      requestRef.current = requestAnimationFrame(animate);
+    }, 700);
     
     return () => {
+      clearTimeout(startTimer);
       document.removeEventListener("visibilitychange", handleVisibility);
       if (requestRef.current) cancelAnimationFrame(requestRef.current);
     };

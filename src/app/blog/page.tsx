@@ -1,4 +1,5 @@
 import { getAllBlogs } from "@/lib/content/mdx";
+import { PageTransition } from "@/components/layout/PageTransition";
 import Link from "next/link";
 import { ViewTransition } from "react";
 import { ArrowRight, Calendar, Tag } from "lucide-react";
@@ -23,6 +24,7 @@ export default function BlogPage() {
   const blogs = getAllBlogs();
 
   return (
+    <PageTransition kind="blog">
     <main className="container mx-auto px-5 md:px-20 pt-8 pb-20 md:py-32 min-h-screen">
       <div className="max-w-4xl mx-auto">
         <header className="mb-16">
@@ -43,7 +45,7 @@ export default function BlogPage() {
               <Link 
                 key={blog.slug} 
                 href={`/blog/${blog.slug}`}
-                transitionTypes={["nav-forward"]}
+               
                 style={{ animationDelay: `${i * 70}ms` }}
                 className="rise-in block group bg-bg-card hover:bg-bg-elevated border border-border-card hover:border-electric-blue-500/50 rounded-2xl p-6 md:p-8 transition-all duration-300"
               >
@@ -98,5 +100,6 @@ export default function BlogPage() {
         )}
       </div>
     </main>
+    </PageTransition>
   );
 }

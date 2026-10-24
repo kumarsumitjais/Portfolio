@@ -1,4 +1,5 @@
 import { education } from "@/content/education";
+import { PageTransition } from "@/components/layout/PageTransition";
 import { certifications } from "@/content/certifications";
 import { achievements } from "@/content/achievements";
 import Image from "next/image";
@@ -23,6 +24,7 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
+    <PageTransition kind="about">
     <main className="container mx-auto px-5 md:px-20 pt-8 pb-20 md:py-32 min-h-screen">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
 
@@ -93,5 +95,6 @@ export default function AboutPage() {
         </div>
       </div>
     </main>
+    </PageTransition>
   );
 }

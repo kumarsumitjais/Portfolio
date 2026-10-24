@@ -1,4 +1,5 @@
 import { getProjectBySlug, getAllProjects } from "@/lib/content/mdx";
+import { PageTransition } from "@/components/layout/PageTransition";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import Link from "next/link";
@@ -58,6 +59,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
   const isNotebook = project.meta.layout === "notebook";
 
   return (
+    <PageTransition kind="project">
     <>
       <ProjectJsonLd
         name={project.meta.title as string}
@@ -67,7 +69,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
         technologies={project.meta.tags as string[]}
       />
       <main className="container mx-auto px-5 md:px-20 pt-8 pb-20 md:py-32 min-h-screen">
-      <Link href="/projects" transitionTypes={["nav-back"]} className="inline-flex items-center text-sm font-medium text-text-secondary hover:text-electric-blue-500 dark:hover:text-electric-blue-400 mb-8 transition-colors">
+      <Link href="/projects" className="inline-flex items-center text-sm font-medium text-text-secondary hover:text-electric-blue-500 dark:hover:text-electric-blue-400 mb-8 transition-colors">
         <ArrowLeft className="w-4 h-4 mr-2" /> Back to Projects
       </Link>
       
@@ -138,5 +140,6 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
       )}
     </main>
     </>
+    </PageTransition>
   );
 }

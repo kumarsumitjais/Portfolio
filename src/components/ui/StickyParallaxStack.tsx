@@ -83,7 +83,6 @@ function StickyProjectCard({ project, index }: { project: any, index: number }) 
           <div className="mt-auto">
             <Link 
               href={`/projects/${project.slug}`}
-              transitionTypes={["nav-forward"]}
               className="inline-flex items-center justify-center px-6 py-3 md:px-8 md:py-4 bg-electric-blue-500 hover:bg-electric-blue-400 text-white font-medium rounded-xl transition-all shadow-lg shadow-electric-blue-500/25 group/btn w-full sm:w-auto"
             >
               Access Case Study 

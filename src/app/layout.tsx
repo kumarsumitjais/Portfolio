@@ -6,6 +6,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { SahayikaAssistant } from "@/components/ui/SahayikaAssistant";
 import { CommandPalette } from "@/components/ui/CommandPalette";
+import { NavEffects } from "@/components/layout/NavEffects";
 import { getAllProjects } from "@/lib/content/mdx";
 
 const inter = Inter({
@@ -104,6 +105,30 @@ export const metadata: Metadata = {
   category: "technology",
 };
 
+// React skips view-transition animations for updates made during a browser
+// back/forward (popstate) event. This runs before Next.js's own popstate handler,
+// stops it, and hands the navigation to NavEffects, which replays it as a normal
+// (animated) router navigation. If nothing handles it, the original event is
+// re-dispatched to Next.js unchanged, so the back button can never break.
+const BACK_NAV_SCRIPT = `(function () {
+  var replaying = false;
+  window.addEventListener("popstate", function (e) {
+    if (replaying || !e.state || !e.state.__NA || !document.startViewTransition) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    e.stopImmediatePropagation();
+    var state = e.state;
+    setTimeout(function () {
+      var detail = { handled: false };
+      window.dispatchEvent(new CustomEvent("nav:back", { detail: detail }));
+      if (!detail.handled) {
+        replaying = true;
+        window.dispatchEvent(new PopStateEvent("popstate", { state: state }));
+        replaying = false;
+      }
+    }, 0);
+  });
+})();`;
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -115,6 +140,10 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${inter.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
+      <head>
+        {/* Must run before Next.js registers its popstate handler; see BACK_NAV_SCRIPT. */}
+        <script dangerouslySetInnerHTML={{ __html: BACK_NAV_SCRIPT }} />
+      </head>
       <body className="min-h-full flex flex-col bg-bg-base text-text-primary font-sans">
         <PersonJsonLd />
         <WebSiteJsonLd />
@@ -125,7 +154,9 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Navbar />
-          {children}
+          <NavEffects />
+          {/* Pages render their own <main>; each page wraps itself in a <PageTransition>. */}
+          <div className="flex-grow pt-24">{children}</div>
           <Footer />
           <SahayikaAssistant />
           <CommandPalette

@@ -1,4 +1,5 @@
 import { SkillsSection } from "@/components/sections/Skills";
+import { PageTransition } from "@/components/layout/PageTransition";
 import { SkillMap } from "@/components/sections/SkillMap";
 import { buildSkillMap, DESKTOP_LAYOUT, TABLET_LAYOUT, MOBILE_LAYOUT } from "@/lib/content/skillMap";
 import type { Metadata } from "next";
@@ -20,6 +21,7 @@ export const metadata: Metadata = {
 
 export default function SkillsPage() {
   return (
+    <PageTransition kind="skills">
     <main className="pt-0 pb-05 min-h-screen">
       <SkillsSection
         chart={
@@ -31,5 +33,6 @@ export default function SkillsPage() {
         }
       />
     </main>
+    </PageTransition>
   );
 }

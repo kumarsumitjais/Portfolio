@@ -1,4 +1,5 @@
 import { Mail, MapPin } from "lucide-react";
+import { PageTransition } from "@/components/layout/PageTransition";
 import { FaLinkedin, FaGithub } from "react-icons/fa";
 import type { Metadata } from "next";
 
@@ -19,6 +20,7 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
+    <PageTransition kind="contact">
     <main className="container mx-auto px-5 md:px-20 pt-8 pb-20 md:py-32 min-h-screen flex items-center justify-center">
       <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 bg-bg-elevated border border-border-card rounded-3xl p-5 sm:p-8 md:p-12 shadow-level-2">
         <div>
@@ -74,5 +76,6 @@ export default function ContactPage() {
         </div>
       </div>
     </main>
+    </PageTransition>
   );
 }

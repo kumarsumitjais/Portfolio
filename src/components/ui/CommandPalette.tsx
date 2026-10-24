@@ -167,7 +167,10 @@ function Palette({ projects, onClose }: { projects: PaletteProject[]; onClose: (
     if (item.action === "ask") window.dispatchEvent(new CustomEvent("sahayika:open", { detail: { question: item.question } }));
     if (item.action === "theme") setTheme(resolvedTheme === "dark" ? "light" : "dark");
     if (item.url) window.open(item.url, "_blank", "noopener");
-    if (item.href) router.push(item.href);
+    if (item.href) {
+      window.dispatchEvent(new CustomEvent("nav:intent", { detail: item.href }));
+      router.push(item.href);
+    }
     close();
   };
 

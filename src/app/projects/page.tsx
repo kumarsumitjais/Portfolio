@@ -1,4 +1,5 @@
 import { getAllProjects } from "@/lib/content/mdx";
+import { PageTransition } from "@/components/layout/PageTransition";
 import { StickyParallaxStack } from "@/components/ui/StickyParallaxStack";
 import type { Metadata } from "next";
 
@@ -21,6 +22,7 @@ export default function ProjectsPage() {
   const projects = getAllProjects().filter((p): p is NonNullable<typeof p> => p !== null);
 
   return (
+    <PageTransition kind="projects">
     <main className="container mx-auto px-5 md:px-20 pt-8 pb-20 md:py-32 min-h-screen">
       <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-6 text-text-primary">
         Projects & Models
@@ -33,5 +35,6 @@ export default function ProjectsPage() {
       <StickyParallaxStack projects={projects} />
       
     </main>
+    </PageTransition>
   );
 }

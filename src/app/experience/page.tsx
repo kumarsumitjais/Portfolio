@@ -1,4 +1,5 @@
 import { experiences } from "@/content/experience";
+import { PageTransition } from "@/components/layout/PageTransition";
 import { ArrowRight } from "lucide-react";
 import type { Metadata } from "next";
 
@@ -18,6 +19,7 @@ export const metadata: Metadata = {
 
 export default function ExperiencePage() {
   return (
+    <PageTransition kind="experience">
     <main className="container mx-auto px-5 md:px-20 pt-8 pb-20 md:py-32 min-h-screen">
       <h1 className="text-4xl md:text-5xl font-display font-bold mb-6 text-text-primary">
         Experience
@@ -74,5 +76,6 @@ export default function ExperiencePage() {
         ))}
       </div>
     </main>
+    </PageTransition>
   );
 }

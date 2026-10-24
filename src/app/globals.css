@@ -222,6 +222,114 @@
   }
 }
 
+/* ═════════════ Section neon palettes ═════════════
+   html[data-section] (set before first paint in app/layout.tsx and kept in sync by
+   NavEffects) re-maps the three brand accent colours used by every component:
+     --color-electric-blue-500  deep shade: button fills (white text), light-mode text
+     --color-electric-blue-400  neon shade: dark-mode text, chips, links
+     --color-cyan-400           second neon: gradient ends, focus rings, details
+   plus --accent / --accent-2 for the glow effects below. Each section matches the
+   colour of its page-change transition (components/layout/NavEffects.tsx).
+   Light mode uses deeper shades so text keeps WCAG AA contrast on white. */
+
+:root {
+  --accent: #5c8cff;
+  --accent-2: #33d6e0;
+  --glow: 0.16;
+}
+html.light { --glow: 0.09; }
+
+/* About: violet / magenta */
+html[data-section="about"] {
+  --color-electric-blue-500: #7c3aed; --color-electric-blue-400: #a78bfa; --color-cyan-400: #e879f9;
+  --color-indigo-500: #c026d3; --accent: #a78bfa; --accent-2: #e879f9;
+}
+html.light[data-section="about"] { --color-electric-blue-500: #6d28d9; --color-electric-blue-400: #6d28d9; --color-cyan-400: #a21caf; }
+
+/* Projects: emerald / teal */
+html[data-section="projects"] {
+  --color-electric-blue-500: #047857; --color-electric-blue-400: #34d399; --color-cyan-400: #2dd4bf;
+  --color-indigo-500: #10b981; --accent: #34d399; --accent-2: #2dd4bf;
+}
+html.light[data-section="projects"] { --color-electric-blue-500: #047857; --color-electric-blue-400: #065f46; --color-cyan-400: #0f766e; }
+
+/* Skills: amber / orange */
+html[data-section="skills"] {
+  --color-electric-blue-500: #b45309; --color-electric-blue-400: #fbbf24; --color-cyan-400: #fb923c;
+  --color-indigo-500: #f59e0b; --accent: #fbbf24; --accent-2: #fb923c;
+}
+html.light[data-section="skills"] { --color-electric-blue-500: #b45309; --color-electric-blue-400: #92400e; --color-cyan-400: #c2410c; }
+
+/* Blog: pink / purple */
+html[data-section="blog"] {
+  --color-electric-blue-500: #be185d; --color-electric-blue-400: #f472b6; --color-cyan-400: #c084fc;
+  --color-indigo-500: #db2777; --accent: #f472b6; --accent-2: #c084fc;
+}
+html.light[data-section="blog"] { --color-electric-blue-500: #be185d; --color-electric-blue-400: #be185d; --color-cyan-400: #7e22ce; }
+
+/* Experience: teal / green */
+html[data-section="experience"] {
+  --color-electric-blue-500: #0f766e; --color-electric-blue-400: #2dd4bf; --color-cyan-400: #4ade80;
+  --color-indigo-500: #14b8a6; --accent: #2dd4bf; --accent-2: #4ade80;
+}
+html.light[data-section="experience"] { --color-electric-blue-500: #0f766e; --color-electric-blue-400: #0f766e; --color-cyan-400: #15803d; }
+
+/* Contact: rose / gold */
+html[data-section="contact"] {
+  --color-electric-blue-500: #be123c; --color-electric-blue-400: #fb7185; --color-cyan-400: #fbbf24;
+  --color-indigo-500: #e11d48; --accent: #fb7185; --accent-2: #fbbf24;
+}
+html.light[data-section="contact"] { --color-electric-blue-500: #be123c; --color-electric-blue-400: #be123c; --color-cyan-400: #b45309; }
+
+/* ── Neon touches (all driven by the section accent) ── */
+
+/* Soft accent glow behind each page */
+.page-shell { position: relative; isolation: isolate; }
+.page-shell::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(55% 45% at 10% 0%, color-mix(in srgb, var(--accent) calc(var(--glow) * 100%), transparent), transparent 70%),
+    radial-gradient(45% 40% at 100% 18%, color-mix(in srgb, var(--accent-2) calc(var(--glow) * 75%), transparent), transparent 70%);
+}
+
+/* Gradient headings get a neon halo (dark mode) */
+html:not(.light) .bg-clip-text.text-transparent {
+  filter: drop-shadow(0 0 22px color-mix(in srgb, var(--accent) 40%, transparent));
+}
+
+/* Gradient text starts from the bright neon shade in dark mode (the deep shade is for fills) */
+html:not(.light) .bg-clip-text.from-electric-blue-500 { --tw-gradient-from: var(--color-electric-blue-400); }
+html:not(.light) .bg-clip-text.to-electric-blue-500 { --tw-gradient-to: var(--color-electric-blue-400); }
+
+/* Primary buttons / active indicators glow */
+html:not(.light) .bg-electric-blue-500 {
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 35%, transparent),
+              0 8px 28px -8px color-mix(in srgb, var(--accent) 65%, transparent);
+}
+/* Hovering a button lightens it a little without losing white-text contrast
+   (the neon 400 shade is too light behind white text). */
+.hover\:bg-electric-blue-400:hover {
+  background-color: color-mix(in srgb, var(--color-electric-blue-500) 88%, #fff) !important;
+}
+
+/* Cards pick up an accent glow on hover */
+[class*="hover:border-electric-blue"]:hover {
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 30%, transparent),
+              0 12px 40px -14px color-mix(in srgb, var(--accent) 55%, transparent);
+}
+html.light [class*="hover:border-electric-blue"]:hover {
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 25%, transparent),
+              0 12px 32px -16px color-mix(in srgb, var(--accent) 45%, transparent);
+}
+
+/* Text selection and scrollbar follow the section colour */
+::selection { background: color-mix(in srgb, var(--accent) 35%, transparent); }
+html { scrollbar-color: color-mix(in srgb, var(--accent) 45%, transparent) transparent; }
+
 /* ═════════════ Navigation effects (components/layout/NavEffects.tsx) ═════════════
    1. Blog list <-> post: React <ViewTransition> card expansion (below).
    2. Projects: "data matrix" tile ripple cover.

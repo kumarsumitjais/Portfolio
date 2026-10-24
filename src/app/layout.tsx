@@ -111,6 +111,11 @@ export const metadata: Metadata = {
 // stops it, and hands the navigation to NavEffects, which replays it as a normal
 // (animated) router navigation. If nothing handles it, the original event is
 // re-dispatched to Next.js unchanged, so the back button can never break.
+// Sets html[data-section] (which neon palette the page uses, see globals.css)
+// before first paint, so a page never flashes in the default blue first.
+// NavEffects keeps it in sync on client-side navigation.
+const SECTION_SCRIPT = `document.documentElement.dataset.section = (location.pathname.split("/")[1] || "home");`;
+
 const BACK_NAV_SCRIPT = `(function () {
   var replaying = false;
   window.addEventListener("popstate", function (e) {
@@ -143,6 +148,7 @@ export default function RootLayout({
     >
       <head>
         {/* Must run before Next.js registers its popstate handler; see BACK_NAV_SCRIPT. */}
+        <script dangerouslySetInnerHTML={{ __html: SECTION_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BACK_NAV_SCRIPT }} />
       </head>
       <body className="min-h-full flex flex-col bg-bg-base text-text-primary font-sans">

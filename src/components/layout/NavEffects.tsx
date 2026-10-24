@@ -205,6 +205,9 @@ export function NavEffects() {
   // (location already points at the destination when popstate fires).
   useEffect(() => {
     document.documentElement.dataset.route = pathname;
+    // Neon palette for this section (globals.css). Changes while a cover is up,
+    // so the colours switch together with the transition.
+    document.documentElement.dataset.section = pathname.split("/")[1] || "home";
   }, [pathname]);
 
   if (!run) return null;

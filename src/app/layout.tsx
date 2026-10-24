@@ -7,6 +7,7 @@ import { Footer } from "@/components/layout/Footer";
 import { SahayikaAssistant } from "@/components/ui/SahayikaAssistant";
 import { CommandPalette } from "@/components/ui/CommandPalette";
 import { NavEffects } from "@/components/layout/NavEffects";
+import { INTRO_SCRIPT } from "@/components/layout/introScript";
 import { getAllProjects } from "@/lib/content/mdx";
 
 const inter = Inter({
@@ -145,6 +146,10 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: BACK_NAV_SCRIPT }} />
       </head>
       <body className="min-h-full flex flex-col bg-bg-base text-text-primary font-sans">
+        {/* Startup intro: an empty placeholder filled by the inline script below,
+            which runs before hydration so the page never flashes first. */}
+        <div id="site-intro" aria-hidden="true" suppressHydrationWarning dangerouslySetInnerHTML={{ __html: "" }} />
+        <script dangerouslySetInnerHTML={{ __html: INTRO_SCRIPT }} />
         <PersonJsonLd />
         <WebSiteJsonLd />
         <ThemeProvider
@@ -156,7 +161,7 @@ export default function RootLayout({
           <Navbar />
           <NavEffects />
           {/* Pages render their own <main>; each page wraps itself in a <PageTransition>. */}
-          <div className="flex-grow pt-24">{children}</div>
+          <div className="page-shell flex-grow pt-24">{children}</div>
           <Footer />
           <SahayikaAssistant />
           <CommandPalette

@@ -395,3 +395,39 @@ html[data-nav-to="contact"]::view-transition-new(nav-streak)    { --streak: line
     animation-delay: 0s !important;
   }
 }
+
+
+/* ═════════════ Startup intro (components/layout/introScript.ts) ═════════════ */
+#site-intro { display: none; }
+html.intro-playing #site-intro {
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: #05070a;
+  cursor: pointer;
+}
+html.intro-playing body { overflow: hidden; }
+#site-intro canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+/* The blow-out: a hole grows from the centre (--hole) and reveals the page */
+#site-intro.site-intro-blowout {
+  -webkit-mask: radial-gradient(circle at 50% 50%, transparent var(--hole, 0%), #000 calc(var(--hole, 0%) + 2%));
+          mask: radial-gradient(circle at 50% 50%, transparent var(--hole, 0%), #000 calc(var(--hole, 0%) + 2%));
+}
+.site-intro-hud {
+  position: absolute; left: 20px; bottom: 18px;
+  font: 12px/1.6 var(--font-jetbrains-mono), ui-monospace, monospace;
+  color: rgba(138, 147, 163, 0.85); white-space: pre; pointer-events: none;
+}
+.site-intro-skip {
+  position: absolute; right: 20px; bottom: 16px;
+  font: 12px var(--font-jetbrains-mono), ui-monospace, monospace;
+  color: rgba(138, 147, 163, 0.8); background: none;
+  border: 1px solid rgba(138, 147, 163, 0.3); border-radius: 8px; padding: 6px 10px; cursor: pointer;
+}
+/* The page settles in out of the light as it is revealed */
+html.intro-reveal .page-shell { animation: intro-page-in 900ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+@keyframes intro-page-in {
+  from { transform: scale(0.95); filter: brightness(1.7); }
+  to { transform: none; filter: none; }
+}

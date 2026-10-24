@@ -2,6 +2,7 @@ import { getProjectBySlug, getAllProjects } from "@/lib/content/mdx";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import Link from "next/link";
+import { ViewTransition } from "react";
 import { ArrowLeft } from "lucide-react";
 import { ProjectJsonLd } from "@/components/JsonLd";
 import { Notebook, Cell, Md } from "@/components/notebook/Notebook";
@@ -66,7 +67,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
         technologies={project.meta.tags as string[]}
       />
       <main className="container mx-auto px-5 md:px-20 pt-8 pb-20 md:py-32 min-h-screen">
-      <Link href="/projects" className="inline-flex items-center text-sm font-medium text-text-secondary hover:text-electric-blue-500 dark:hover:text-electric-blue-400 mb-8 transition-colors">
+      <Link href="/projects" transitionTypes={["nav-back"]} className="inline-flex items-center text-sm font-medium text-text-secondary hover:text-electric-blue-500 dark:hover:text-electric-blue-400 mb-8 transition-colors">
         <ArrowLeft className="w-4 h-4 mr-2" /> Back to Projects
       </Link>
       
@@ -82,9 +83,11 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           ))}
         </div>
         
-        <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-6 text-text-primary tracking-tight">
-          {project.meta.title}
-        </h1>
+        <ViewTransition name={`project-title-${slug}`} share="morph">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-6 text-text-primary tracking-tight">
+            {project.meta.title}
+          </h1>
+        </ViewTransition>
         
         <p className="text-xl md:text-2xl text-text-secondary max-w-3xl mb-8 leading-relaxed">
           {project.meta.oneLiner}

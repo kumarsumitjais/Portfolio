@@ -46,6 +46,7 @@ export function Navbar() {
   return (
     <>
       <header
+        style={{ viewTransitionName: "site-header" }}
         className={cn(
           "fixed top-0 left-0 right-0 z-50 flex h-16 md:h-[72px] items-center transition-all duration-300",
         isScrolled || isMobileMenuOpen

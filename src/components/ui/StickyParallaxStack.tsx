@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, ViewTransition } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
@@ -70,9 +70,11 @@ function StickyProjectCard({ project, index }: { project: any, index: number }) 
             ))}
           </div>
 
-          <h2 className="text-2xl sm:text-3xl xl:text-4xl font-display font-bold text-text-primary mb-3 md:mb-4 leading-tight group-hover:text-electric-blue-400 transition-colors">
-            {project.meta.title}
-          </h2>
+          <ViewTransition name={`project-title-${project.slug}`} share="morph">
+            <h2 className="text-2xl sm:text-3xl xl:text-4xl font-display font-bold text-text-primary mb-3 md:mb-4 leading-tight group-hover:text-electric-blue-400 transition-colors">
+              {project.meta.title}
+            </h2>
+          </ViewTransition>
           
           <p className="text-sm sm:text-base xl:text-lg text-text-secondary mb-5 xl:mb-8 leading-relaxed max-w-xl line-clamp-3 md:line-clamp-none">
             {project.meta.oneLiner}
@@ -81,6 +83,7 @@ function StickyProjectCard({ project, index }: { project: any, index: number }) 
           <div className="mt-auto">
             <Link 
               href={`/projects/${project.slug}`}
+              transitionTypes={["nav-forward"]}
               className="inline-flex items-center justify-center px-6 py-3 md:px-8 md:py-4 bg-electric-blue-500 hover:bg-electric-blue-400 text-white font-medium rounded-xl transition-all shadow-lg shadow-electric-blue-500/25 group/btn w-full sm:w-auto"
             >
               Access Case Study 

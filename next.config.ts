@@ -1,7 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  experimental: {
+    // Animated page changes via React <ViewTransition> + the browser View Transitions API
+    viewTransition: true,
+  },
 };
 
 export default nextConfig;

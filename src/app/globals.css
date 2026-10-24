@@ -235,9 +235,9 @@
 :root {
   --accent: #5c8cff;
   --accent-2: #33d6e0;
-  --glow: 0.16;
+  --glow: 0.34;
 }
-html.light { --glow: 0.09; }
+html.light { --glow: 0.2; }
 
 /* About: violet / magenta */
 html[data-section="about"] {
@@ -283,18 +283,70 @@ html.light[data-section="contact"] { --color-electric-blue-500: #be123c; --color
 
 /* ── Neon touches (all driven by the section accent) ── */
 
-/* Soft accent glow behind each page */
+/* Accent glow behind each page: three slowly drifting colour pools… */
 .page-shell { position: relative; isolation: isolate; }
 .page-shell::before {
+  content: "";
+  position: fixed;
+  inset: -15%;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(40% 35% at 15% 10%, color-mix(in srgb, var(--accent) calc(var(--glow) * 100%), transparent), transparent 70%),
+    radial-gradient(35% 32% at 90% 25%, color-mix(in srgb, var(--accent-2) calc(var(--glow) * 85%), transparent), transparent 70%),
+    radial-gradient(38% 30% at 30% 95%, color-mix(in srgb, var(--accent-2) calc(var(--glow) * 60%), transparent), transparent 70%);
+  animation: neon-drift 22s ease-in-out infinite alternate;
+}
+/* …over a faint accent dot grid that fades out down the page */
+.page-shell::after {
   content: "";
   position: fixed;
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  background:
-    radial-gradient(55% 45% at 10% 0%, color-mix(in srgb, var(--accent) calc(var(--glow) * 100%), transparent), transparent 70%),
-    radial-gradient(45% 40% at 100% 18%, color-mix(in srgb, var(--accent-2) calc(var(--glow) * 75%), transparent), transparent 70%);
+  background-image: radial-gradient(color-mix(in srgb, var(--accent) 30%, transparent) 1px, transparent 1.5px);
+  background-size: 28px 28px;
+  mask-image: linear-gradient(180deg, #000 0%, transparent 75%);
 }
+html.light .page-shell::after {
+  background-image: radial-gradient(color-mix(in srgb, var(--accent) 38%, transparent) 1px, transparent 1.5px);
+}
+@keyframes neon-drift {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to   { transform: translate3d(4%, 3%, 0) scale(1.08); }
+}
+@media (prefers-reduced-motion: reduce) { .page-shell::before { animation: none; } }
+
+/* Cards, panels and dividers take on the section tint */
+html:not(.light) {
+  --border-card: color-mix(in srgb, var(--accent) 26%, var(--color-slate-700));
+  --bg-card: color-mix(in srgb, var(--accent) 6%, var(--color-slate-800));
+  --bg-elevated: color-mix(in srgb, var(--accent) 6%, var(--color-slate-900));
+}
+html.light {
+  --border-card: color-mix(in srgb, var(--accent) 34%, #e4e8ef);
+  --bg-card: color-mix(in srgb, var(--accent) 5%, var(--color-frost-50));
+  --bg-elevated: color-mix(in srgb, var(--accent) 4%, var(--color-frost-50));
+}
+
+/* Neon line under the header */
+header[style*="site-header"]::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, var(--accent) 25%, var(--accent-2) 75%, transparent);
+  box-shadow: 0 0 14px 1px color-mix(in srgb, var(--accent) 60%, transparent);
+  opacity: 0.9;
+}
+
+/* Page titles glow */
+html:not(.light) h1 { text-shadow: 0 0 42px color-mix(in srgb, var(--accent) 55%, transparent); }
+html:not(.light) h2 { text-shadow: 0 0 28px color-mix(in srgb, var(--accent) 35%, transparent); }
+html.light h1 { text-shadow: 0 4px 26px color-mix(in srgb, var(--accent) 35%, transparent); }
 
 /* Gradient headings get a neon halo (dark mode) */
 html:not(.light) .bg-clip-text.text-transparent {
@@ -318,12 +370,12 @@ html:not(.light) .bg-electric-blue-500 {
 
 /* Cards pick up an accent glow on hover */
 [class*="hover:border-electric-blue"]:hover {
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 30%, transparent),
-              0 12px 40px -14px color-mix(in srgb, var(--accent) 55%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 55%, transparent),
+              0 14px 48px -10px color-mix(in srgb, var(--accent) 70%, transparent);
 }
 html.light [class*="hover:border-electric-blue"]:hover {
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 25%, transparent),
-              0 12px 32px -16px color-mix(in srgb, var(--accent) 45%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 45%, transparent),
+              0 14px 40px -12px color-mix(in srgb, var(--accent) 55%, transparent);
 }
 
 /* Text selection and scrollbar follow the section colour */

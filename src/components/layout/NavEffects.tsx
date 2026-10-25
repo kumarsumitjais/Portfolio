@@ -24,10 +24,11 @@ type Dir = "forward" | "back";
 // Longest stagger + transition (see globals.css), plus a small margin, so the
 // route never swaps before the screen is fully covered and the overlay is never
 // removed before the last panel/tile has left.
-const STAGGER_MS = 240;
-const COVER_MS: Record<Style, number> = { shutter: 6 * 28 + 300 + 50, tiles: STAGGER_MS + 260 + 50 };
-const REVEAL_MS: Record<Style, number> = { shutter: 6 * 28 + 300 + 50, tiles: STAGGER_MS + 300 + 50 };
-const MIN_HOLD_MS = 180; // keep the label readable at least this long
+const STAGGER_MS = 170;
+// keep in sync with .nav-bar / .nav-tile transitions in globals.css
+const COVER_MS: Record<Style, number> = { shutter: 6 * 18 + 220 + 40, tiles: STAGGER_MS + 200 + 40 };
+const REVEAL_MS: Record<Style, number> = { shutter: 6 * 18 + 220 + 40, tiles: STAGGER_MS + 220 + 40 };
+const MIN_HOLD_MS = 100; // keep the label readable at least this long
 const MAX_WAIT_MS = 8000; // never stay covered longer than this
 
 const ACCENT: Record<string, string> = {
@@ -151,7 +152,9 @@ export function NavEffects() {
   }, [run, phase]);
 
   useEffect(() => {
-    const reduce = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // Reduced motion and lite mode (low-end devices, see app/layout.tsx) navigate without a cover.
+    const reduce = () =>
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches || "lite" in document.documentElement.dataset;
 
     const onClick = (e: MouseEvent) => {
       if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;

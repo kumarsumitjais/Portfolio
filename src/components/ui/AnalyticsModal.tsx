@@ -69,7 +69,7 @@ export function AnalyticsModal({ isOpen, onClose }: { isOpen: boolean; onClose: 
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+          className="absolute inset-0 bg-black/60"
         />
         
         <motion.div
@@ -79,7 +79,7 @@ export function AnalyticsModal({ isOpen, onClose }: { isOpen: boolean; onClose: 
           className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto custom-scrollbar bg-white dark:bg-[#0d1117] border border-border-card rounded-2xl shadow-2xl"
         >
           {/* Header */}
-          <div className="sticky top-0 z-10 flex items-center justify-between p-4 border-b border-border-card bg-white/80 dark:bg-[#0d1117]/80 backdrop-blur-md">
+          <div className="sticky top-0 z-10 flex items-center justify-between p-4 border-b border-border-card bg-white/80 dark:bg-[#0d1117]/80">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-electric-blue-500/10 rounded-lg border border-electric-blue-500/20">
                 <BrainCircuit className="w-5 h-5 text-electric-blue-500 dark:text-electric-blue-400" />

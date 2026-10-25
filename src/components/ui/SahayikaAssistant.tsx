@@ -252,8 +252,9 @@ const WELCOME_MESSAGE: DisplayMessage = {
     "Who do I have the pleasure of speaking with today?",
 };
 
-export function SahayikaAssistant() {
-  const [isOpen, setIsOpen] = useState(false);
+// Mounted on first use by AssistantDock (components/layout/LazyOverlays.tsx), already open.
+export function SahayikaAssistant({ initialOpen = false, initialQuestion }: { initialOpen?: boolean; initialQuestion?: string } = {}) {
+  const [isOpen, setIsOpen] = useState(initialOpen);
   const [failed, setFailed] = useState(false); // corgi avatar shows "error" briefly after a failed reply
 
   // history is the Gemini conversation history sent to the backend.
@@ -365,7 +366,7 @@ export function SahayikaAssistant() {
 
   // Let other components (e.g. the command palette) open the chat,
   // optionally with a question to send right away.
-  const pendingQuestion = useRef<string | null>(null);
+  const pendingQuestion = useRef<string | null>(initialQuestion?.trim() || null);
   useEffect(() => {
     const open = (e: Event) => {
       const q = (e as CustomEvent<{ question?: string }>).detail?.question?.trim();
@@ -502,12 +503,12 @@ export function SahayikaAssistant() {
             transition={{ duration: 0.3, type: "spring", bounce: 0.3 }}
             className={cn(
               "corgi-chat fixed z-50 inset-x-2 bottom-2 h-[85dvh] sm:inset-x-auto sm:bottom-6 sm:right-6 sm:w-[400px] sm:h-[600px] sm:max-h-[85vh]",
-              "bg-bg-elevated/95 backdrop-blur-2xl border border-border-card rounded-2xl shadow-2xl",
+              "bg-bg-elevated border border-border-card rounded-2xl shadow-2xl",
               "flex flex-col overflow-hidden ring-1 ring-black/5"
             )}
           >
             {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b border-white/20 dark:border-white/10 bg-white/40 dark:bg-black/40 backdrop-blur-md relative z-10">
+            <div className="flex items-center justify-between p-4 border-b border-white/20 dark:border-white/10 bg-white/40 dark:bg-black/40 relative z-10">
               <div className="flex items-center space-x-3">
                 <div className="relative">
                   <div className="w-10 h-10 rounded-full overflow-hidden bg-amber-50 ring-2 ring-electric-blue-400/60 shadow-lg shadow-electric-blue-500/20">
@@ -588,7 +589,7 @@ export function SahayikaAssistant() {
                         "max-w-[85%] rounded-2xl p-4 shadow-sm",
                         msg.role === "user"
                           ? "bg-electric-blue-500 text-white rounded-br-none border border-electric-blue-400/30 shadow-electric-blue-500/20"
-                          : "bg-white/60 dark:bg-white/10 backdrop-blur-md text-gray-800 dark:text-gray-100 rounded-bl-none border border-white/40 dark:border-white/10"
+                          : "bg-white/60 dark:bg-white/10 text-gray-800 dark:text-gray-100 rounded-bl-none border border-white/40 dark:border-white/10"
                       )}
                     >
                       {msg.role === "model" ? (
@@ -640,7 +641,7 @@ export function SahayikaAssistant() {
                     exit={{ opacity: 0, scale: 0.9 }}
                     className="flex justify-start"
                   >
-                    <div className="bg-white/60 dark:bg-white/10 backdrop-blur-md border border-white/40 dark:border-white/10 rounded-2xl rounded-bl-none p-4 max-w-[80%] shadow-sm">
+                    <div className="bg-white/60 dark:bg-white/10 border border-white/40 dark:border-white/10 rounded-2xl rounded-bl-none p-4 max-w-[80%] shadow-sm">
                       <div className="flex space-x-1.5 items-center h-4">
                         <motion.div animate={{ y: [0, -5, 0] }} transition={{ repeat: Infinity, duration: 0.6, delay: 0 }} className="w-1.5 h-1.5 bg-electric-blue-500 rounded-full" />
                         <motion.div animate={{ y: [0, -5, 0] }} transition={{ repeat: Infinity, duration: 0.6, delay: 0.2 }} className="w-1.5 h-1.5 bg-electric-blue-500 rounded-full" />
@@ -668,7 +669,7 @@ export function SahayikaAssistant() {
             </div>
 
             {/* Input */}
-            <div className="p-4 border-t border-white/20 dark:border-white/10 bg-white/40 dark:bg-black/40 backdrop-blur-md">
+            <div className="p-4 border-t border-white/20 dark:border-white/10 bg-white/40 dark:bg-black/40">
               <div className="relative flex items-center group">
                 <input
                   type="text"
@@ -682,7 +683,7 @@ export function SahayikaAssistant() {
                   }}
                   placeholder="Ask me about Sumit..."
                   aria-label="Message Corgi"
-                  className="w-full bg-white/60 dark:bg-black/40 backdrop-blur-sm border border-white/40 dark:border-white/10 rounded-full pl-5 pr-24 py-3.5 text-sm text-gray-800 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-electric-blue-500/50 focus:border-transparent transition-all shadow-inner"
+                  className="w-full bg-white/60 dark:bg-black/40 border border-white/40 dark:border-white/10 rounded-full pl-5 pr-24 py-3.5 text-sm text-gray-800 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-electric-blue-500/50 focus:border-transparent transition-all shadow-inner"
                 />
                 <div className="absolute right-2 flex items-center space-x-1">
                   <button

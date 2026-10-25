@@ -88,7 +88,21 @@ export function SkillsRadar({ compact = false }: { compact?: boolean } = {}) {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     // Hidden (e.g. the hero copy on phones): don't burn CPU animating it.
     if (wrapRef.current?.offsetParent === null) return;
+    // Lite mode (low-end devices, see app/layout.tsx): keep the network static.
+    if ("lite" in document.documentElement.dataset) return;
     let parts: any[] = [];
+    let onScreen = true;
+    let waveTimer: ReturnType<typeof setTimeout> | undefined;
+    // Animate only while the network is on screen and the tab is visible.
+    const run = () => {
+      if (!onScreen || document.visibilityState !== "visible" || requestRef.current) return;
+      lastTimeRef.current = 0;
+      requestRef.current = requestAnimationFrame(animate);
+    };
+    const pause = () => {
+      cancelAnimationFrame(requestRef.current);
+      requestRef.current = 0;
+    };
     const initWave = () => {
       parts = conns.map((c, i) => ({
         c,
@@ -102,6 +116,7 @@ export function SkillsRadar({ compact = false }: { compact?: boolean } = {}) {
     initWave();
 
     const animate = (time: number) => {
+      requestRef.current = 0;
       const dt = time - (lastTimeRef.current || time);
       lastTimeRef.current = time;
       
@@ -135,40 +150,35 @@ export function SkillsRadar({ compact = false }: { compact?: boolean } = {}) {
       }
       
       if (!allDone) {
-        requestRef.current = requestAnimationFrame(animate);
+        if (onScreen) requestRef.current = requestAnimationFrame(animate);
       } else {
-        lastTimeRef.current = 0;
-        setTimeout(() => {
+        waveTimer = setTimeout(() => {
           initWave();
-          lastTimeRef.current = 0;
-          if (document.visibilityState === 'visible') {
-            requestRef.current = requestAnimationFrame(animate);
-          }
+          run();
         }, 1800);
       }
     };
     
     // Setup visibility handler to pause animation when tab is inactive
-    const handleVisibility = () => {
-      if (document.visibilityState === 'visible') {
-        lastTimeRef.current = 0;
-        requestRef.current = requestAnimationFrame(animate);
-      } else if (requestRef.current) {
-        cancelAnimationFrame(requestRef.current);
-      }
-    };
+    const handleVisibility = () => (document.visibilityState === "visible" ? run() : pause());
+    const io = new IntersectionObserver(([entry]) => {
+      onScreen = entry.isIntersecting;
+      if (onScreen) run();
+      else pause();
+    });
+    if (wrapRef.current) io.observe(wrapRef.current);
     
     document.addEventListener("visibilitychange", handleVisibility);
     // Start after any page transition has finished, so the particle loop doesn't
     // compete with it for the main thread.
-    const startTimer = setTimeout(() => {
-      requestRef.current = requestAnimationFrame(animate);
-    }, 700);
+    const startTimer = setTimeout(run, 700);
     
     return () => {
       clearTimeout(startTimer);
+      clearTimeout(waveTimer);
+      io.disconnect();
       document.removeEventListener("visibilitychange", handleVisibility);
-      if (requestRef.current) cancelAnimationFrame(requestRef.current);
+      pause();
     };
   }, []);
 

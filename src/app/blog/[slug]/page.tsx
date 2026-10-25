@@ -48,7 +48,7 @@ export default async function BlogPage({ params }: { params: Promise<{ slug: str
     p: (props: React.HTMLAttributes<HTMLParagraphElement>) => <p className="text-text-secondary text-lg leading-relaxed mb-6" {...props} />,
     ul: (props: React.HTMLAttributes<HTMLUListElement>) => <ul className="list-disc pl-5 mb-6 text-text-secondary text-lg space-y-2" {...props} />,
     strong: (props: React.HTMLAttributes<HTMLElement>) => <strong className="font-bold text-text-primary" {...props} />,
-    img: (props: React.ImgHTMLAttributes<HTMLImageElement>) => <img className="w-full rounded-2xl mb-4 mt-8 shadow-level-1 border border-border-card" {...props} />,
+    img: (props: React.ImgHTMLAttributes<HTMLImageElement>) => <img className="w-full rounded-2xl mb-4 mt-8 shadow-level-1 border border-border-card" loading="lazy" decoding="async" {...props} />,
     a: (props: React.AnchorHTMLAttributes<HTMLAnchorElement>) => <a className="text-electric-blue-400 hover:text-electric-blue-300 underline underline-offset-4" {...props} />,
   };
 

@@ -5,13 +5,16 @@
 // It is an inline script (rendered at the start of <body>, after its placeholder) rather than a React component,
 // so it starts drawing before React hydrates and the page never flashes first.
 // The real page renders underneath the whole time (no effect on LCP).
-// Plays on every full page load / refresh; skipped with a click, tap or key,
-// for prefers-reduced-motion, and for automated browsers (crawlers, Lighthouse).
+// Plays once per browser session (the first page opened); skipped with a click, tap or key,
+// for prefers-reduced-motion, lite mode (low-end devices, see app/layout.tsx) and
+// automated browsers (crawlers, Lighthouse).
 // Styles: #site-intro in app/globals.css.
 
 export const INTRO_SCRIPT = `(function () {
   try {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || navigator.webdriver) return;
+    if ("lite" in document.documentElement.dataset || sessionStorage.getItem("intro-seen")) return;
+    sessionStorage.setItem("intro-seen", "1");
   } catch (e) { return; }
 
   var TERMS = ["∇J(θ)", "θ − η∇J(θ)", "σ(Wx + b)", "softmax(z)", "Σ yᵢ log ŷᵢ", "‖w‖²", "λ‖θ‖₁", "KL(P ‖ Q)",

@@ -4,8 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { SahayikaAssistant } from "@/components/ui/SahayikaAssistant";
-import { CommandPalette } from "@/components/ui/CommandPalette";
+import { AssistantDock, PaletteLoader } from "@/components/layout/LazyOverlays";
 import { NavEffects } from "@/components/layout/NavEffects";
 import { INTRO_SCRIPT } from "@/components/layout/introScript";
 import { getAllProjects } from "@/lib/content/mdx";
@@ -116,6 +115,14 @@ export const metadata: Metadata = {
 // NavEffects keeps it in sync on client-side navigation.
 const SECTION_SCRIPT = `document.documentElement.dataset.section = (location.pathname.split("/")[1] || "home");`;
 
+// Lite mode (html[data-lite]) for low-end devices, slow connections and data saver:
+// no startup intro, no page-change covers, no glow layers. See globals.css / NavEffects.
+const LITE_SCRIPT = `(function () { try {
+  var n = navigator, c = n.connection || {};
+  if ((n.deviceMemory && n.deviceMemory <= 4) || (n.hardwareConcurrency && n.hardwareConcurrency <= 4) ||
+      c.saveData || /(^|-)(2g|3g)$/.test(c.effectiveType || "")) document.documentElement.dataset.lite = "";
+} catch (e) {} })();`;
+
 const BACK_NAV_SCRIPT = `(function () {
   var replaying = false;
   window.addEventListener("popstate", function (e) {
@@ -149,6 +156,7 @@ export default function RootLayout({
       <head>
         {/* Must run before Next.js registers its popstate handler; see BACK_NAV_SCRIPT. */}
         <script dangerouslySetInnerHTML={{ __html: SECTION_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: LITE_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: BACK_NAV_SCRIPT }} />
       </head>
       <body className="min-h-full flex flex-col bg-bg-base text-text-primary font-sans">
@@ -169,8 +177,8 @@ export default function RootLayout({
           {/* Pages render their own <main>; each page wraps itself in a <PageTransition>. */}
           <div className="page-shell flex-grow pt-24">{children}</div>
           <Footer />
-          <SahayikaAssistant />
-          <CommandPalette
+          <AssistantDock />
+          <PaletteLoader
             projects={getAllProjects().map((p) => ({
               slug: p.slug,
               title: p.meta.title,

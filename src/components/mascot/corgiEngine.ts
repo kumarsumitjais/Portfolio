@@ -1,7 +1,9 @@
 import { ANIM, CFG, CORE_ANIMS, FRAME_SIZE, frameSrc, type CorgiSnapshot, type Reaction } from "./corgiConfig";
 
 // Frame player + behaviour for the corgi, outside React: one requestAnimationFrame loop
-// draws preloaded frames to a canvas, so nothing re-renders per frame.
+// draws preloaded frames to a canvas, so nothing re-renders per frame. The loop rests
+// while the corgi sits idle (or sleeps) with no cursor nearby, and a timer resumes it
+// for the next blink / sleep frame, so an idle page costs next to nothing.
 //
 // States: idle → notice (curious, scrubbed by proximity) → warm (happier, scrubbed)
 //         → lift → wave → hold → relax → idle.   Also sleep / wake and one-off reactions.
@@ -37,12 +39,14 @@ export class CorgiEngine {
   private manual = false;
   private holdStart = 0;
   private lastActivity = performance.now();
-  private nextBlink = 0;
+  private nextBlink = Infinity;
   private override: number | null = null;
   private centre = { x: 0, y: 0 };
   private measuredAt = 0;
 
   private raf = 0;
+  private dead = false;
+  private restTimer: ReturnType<typeof setTimeout> | undefined;
   private last = 0;
   private lastEmit = 0;
   private timers: ReturnType<typeof setTimeout>[] = [];
@@ -56,8 +60,7 @@ export class CorgiEngine {
     const core = new Set(CORE_ANIMS.flatMap((a) => ANIM[a].frames));
     const rest = new Set(Object.values(ANIM).flatMap((a) => a.frames).filter((f) => !core.has(f)));
     Promise.all([...core].map((f) => this.load(f))).then(() => {
-      if (!this.raf) return; // destroyed while loading
-      this.goIdle();
+      if (!this.dead) this.goIdle();
     });
     this.later(() => rest.forEach((f) => this.load(f)), 2500);
 
@@ -69,6 +72,7 @@ export class CorgiEngine {
       this.touch = e.pointerType === "touch";
       this.ptr = { x: e.clientX, y: e.clientY };
       this.activity();
+      if (this.prox > 0 || Math.hypot(e.clientX - this.centre.x, e.clientY - this.centre.y) < CFG.radius * 1.1) this.resume();
     });
     on("pointerdown", (e) => {
       this.touch = e.pointerType === "touch";
@@ -86,7 +90,9 @@ export class CorgiEngine {
   }
 
   destroy() {
+    this.dead = true;
     cancelAnimationFrame(this.raf);
+    clearTimeout(this.restTimer);
     this.raf = 0;
     this.timers.forEach(clearTimeout);
     this.off.forEach((fn) => fn());
@@ -157,6 +163,7 @@ export class CorgiEngine {
   setOverride(v: number | null) {
     this.override = v;
     if (v !== null) this.activity();
+    this.resume();
   }
 
   /** Taps: the first greets (no hover on touch screens); a tap within 8 s of a greeting opens the chat. */
@@ -175,6 +182,7 @@ export class CorgiEngine {
   }
   private activity() {
     this.lastActivity = performance.now();
+    if (this.state === "sleep") this.resume();
   }
   private measure(now = performance.now()) {
     this.measuredAt = now;
@@ -187,6 +195,7 @@ export class CorgiEngine {
   }
   private setState(s: State) {
     this.state = s;
+    this.resume();
     this.host.classList.toggle("corgi-breathe", (s === "idle" || s === "sleep") && !this.reduced());
     this.emit(true);
   }
@@ -218,6 +227,7 @@ export class CorgiEngine {
   }
 
   private play(name: string, onEnd?: () => void) {
+    this.resume();
     this.anim = name;
     this.i = 0;
     this.t0 = performance.now();
@@ -230,6 +240,7 @@ export class CorgiEngine {
     if (this.drawn === frame) return;
     const img = this.imgs.get(frame);
     if (!img?.complete || !img.naturalWidth) return; // not loaded (yet): keep the previous frame
+    if (!this.drawn) this.canvas.style.backgroundImage = "none"; // drop the static placeholder
     this.ctx.clearRect(0, 0, FRAME_SIZE, FRAME_SIZE);
     this.ctx.drawImage(img, 0, 0, FRAME_SIZE, FRAME_SIZE);
     this.drawn = frame;
@@ -289,11 +300,33 @@ export class CorgiEngine {
     this.hooks.change({ state: this.state, anim: this.anim, frame: this.drawn ?? "", prox: this.prox, source: this.source });
   }
 
+  private resume = () => {
+    if (this.raf || this.dead) return;
+    clearTimeout(this.restTimer);
+    this.raf = requestAnimationFrame(this.loop);
+  };
+
+  /** When the loop may pause, and until when (null: keep running every frame). */
+  private restUntil(now: number): number | null {
+    if (this.override !== null || this.raw > 0 || this.prox > 0.005) return null;
+    if (this.state === "idle" && this.anim === "idle") return Math.min(this.nextBlink, this.lastActivity + CFG.sleepAfterMs);
+    if (this.state === "sleep") return now + 1000 / (ANIM[this.anim].fps ?? 1);
+    return null;
+  }
+
   private loop = (now: number) => {
     const dt = Math.min(100, now - (this.last || now));
     this.last = now;
-    this.tick(now, dt);
-    this.raf = requestAnimationFrame(this.loop);
+    this.tick(now, dt); // this.raf is still set here, so resume() calls from tick are no-ops
+    if (this.dead) return;
+    const until = this.restUntil(now);
+    if (until === null) {
+      this.raf = requestAnimationFrame(this.loop);
+      return;
+    }
+    this.raf = 0;
+    this.last = 0;
+    this.restTimer = setTimeout(this.resume, Math.max(16, until - now));
   };
 
   private tick(now: number, dt: number) {

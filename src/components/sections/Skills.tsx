@@ -1,7 +1,7 @@
 "use client";
 
 import { ReactNode } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { skills } from "@/content/skills";
 
 import Link from "next/link";
@@ -27,7 +27,6 @@ export function SkillsSection({ teaser = false, chart }: { teaser?: boolean; cha
         {chart && <div className="mb-16">{chart}</div>}
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 min-h-[400px]">
-          <AnimatePresence mode="popLayout">
             {allDisplayedSkills.map(([key, category], idx) => {
               const displayedItems = teaser ? category.items.slice(0, 3) : category.items;
             const remainingCount = category.items.length - displayedItems.length;
@@ -38,9 +37,7 @@ export function SkillsSection({ teaser = false, chart }: { teaser?: boolean; cha
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
-                key={key} 
-                layout
-                exit={{ opacity: 0, scale: 0.9 }}
+                key={key}
                 className="bg-bg-card border border-border-card rounded-2xl p-6 md:p-8 shadow-level-1 hover:border-electric-blue-500/30 transition-colors group flex flex-col"
               >
                 <div className="mb-6">
@@ -71,7 +68,6 @@ export function SkillsSection({ teaser = false, chart }: { teaser?: boolean; cha
               </motion.div>
             );
           })}
-          </AnimatePresence>
         </div>
         
         {teaser && (

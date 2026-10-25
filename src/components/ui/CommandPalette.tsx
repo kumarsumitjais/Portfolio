@@ -50,8 +50,8 @@ function* trainLogReg(epochs = 60, lr = 0.5) {
   }
 }
 
-export function CommandPalette({ projects }: { projects: PaletteProject[] }) {
-  const [open, setOpen] = useState(false);
+export function CommandPalette({ projects, initialOpen = false }: { projects: PaletteProject[]; initialOpen?: boolean }) {
+  const [open, setOpen] = useState(initialOpen);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -177,7 +177,7 @@ function Palette({ projects, onClose }: { projects: PaletteProject[]; onClose: (
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-start justify-center bg-black/50 backdrop-blur-sm px-4 pt-[15vh]" onMouseDown={close}>
+    <div className="fixed inset-0 z-[100] flex items-start justify-center bg-black/50 px-4 pt-[15vh]" onMouseDown={close}>
       <div
         role="dialog"
         aria-modal="true"

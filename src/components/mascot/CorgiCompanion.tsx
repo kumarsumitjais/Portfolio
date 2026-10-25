@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { X } from "lucide-react";
-import { CFG, type CorgiCommand, type CorgiSnapshot } from "./corgiConfig";
+import { CFG, frameSrc, type CorgiCommand, type CorgiSnapshot } from "./corgiConfig";
 import { CorgiEngine } from "./corgiEngine";
 
 // The floating corgi that opens the Corgi chat assistant. Behaviour lives in corgiEngine.ts;
@@ -17,6 +17,10 @@ export function CorgiCompanion({ onOpen }: { onOpen: () => void }) {
   const engineRef = useRef<CorgiEngine | null>(null);
 
   useEffect(() => {
+    // Start once the page has loaded and gone idle, so the corgi never competes with
+    // the page's own first render (a static first frame shows until then).
+    let cleanup = () => {};
+    const start = () => {
     const bubble = bubbleRef.current!;
     let bubbleOn = true;
     let hideTimer: ReturnType<typeof setTimeout>;
@@ -48,11 +52,24 @@ export function CorgiCompanion({ onOpen }: { onOpen: () => void }) {
       }
     };
     window.addEventListener("corgi:cmd", onCmd);
-    return () => {
+    cleanup = () => {
       window.removeEventListener("corgi:cmd", onCmd);
       clearTimeout(hideTimer);
       engine.destroy();
       engineRef.current = null;
+    };
+    };
+    const idle = (fn: () => void) =>
+      "requestIdleCallback" in window ? requestIdleCallback(fn, { timeout: 2500 }) : setTimeout(fn, 1200);
+    let handle: number | ReturnType<typeof setTimeout> | undefined;
+    const schedule = () => (handle = idle(start));
+    if (document.readyState === "complete") schedule();
+    else window.addEventListener("load", schedule, { once: true });
+    return () => {
+      window.removeEventListener("load", schedule);
+      if ("cancelIdleCallback" in window && typeof handle === "number") cancelIdleCallback(handle);
+      clearTimeout(handle as ReturnType<typeof setTimeout>);
+      cleanup();
     };
   }, []);
 
@@ -72,7 +89,12 @@ export function CorgiCompanion({ onOpen }: { onOpen: () => void }) {
         className="corgi-btn pointer-events-auto relative w-[88px] h-[88px] sm:w-[108px] sm:h-[108px] rounded-3xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-400 [-webkit-tap-highlight-color:transparent]"
       >
         <span aria-hidden className="absolute left-[30%] right-[30%] bottom-2.5 h-2 rounded-[50%] bg-black/25 dark:bg-black/40 blur-[3px]" />
-        <canvas ref={canvasRef} aria-hidden className="relative block w-full h-full" />
+        <canvas
+          ref={canvasRef}
+          aria-hidden
+          className="relative block w-full h-full bg-contain bg-no-repeat"
+          style={{ backgroundImage: `url(${frameSrc("idle_001")})` }}
+        />
       </button>
       <div
         ref={bubbleRef}

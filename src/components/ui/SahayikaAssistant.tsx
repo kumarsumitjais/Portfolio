@@ -2,13 +2,15 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { Mic, Send, X, Sparkles, Volume2, VolumeX, Workflow, FileText } from "lucide-react";
+import { Mic, Send, X, Volume2, VolumeX, Workflow, FileText } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import dynamic from "next/dynamic";
 
 // Loaded on first reply so the markdown parser stays out of the initial page bundle.
 const ReactMarkdown = dynamic(() => import("react-markdown"));
 import { cn } from "@/lib/utils";
+import { CorgiCompanion } from "@/components/mascot/CorgiCompanion";
+import { frameSrc } from "@/components/mascot/corgiConfig";
 
 // ─── Type Definitions ──────────────────────────────────────────────────────
 
@@ -252,6 +254,7 @@ const WELCOME_MESSAGE: DisplayMessage = {
 
 export function SahayikaAssistant() {
   const [isOpen, setIsOpen] = useState(false);
+  const [failed, setFailed] = useState(false); // corgi avatar shows "error" briefly after a failed reply
 
   // history is the Gemini conversation history sent to the backend.
   // It starts empty. The welcome message is NOT added to history
@@ -467,6 +470,8 @@ export function SahayikaAssistant() {
         },
       ]);
       speakText(errorMsg);
+      setFailed(true);
+      setTimeout(() => setFailed(false), 3000);
     } finally {
       setIsTyping(false);
     }
@@ -476,22 +481,15 @@ export function SahayikaAssistant() {
     <>
       <AnimatePresence>
         {!isOpen && (
-          <motion.button
-            aria-label="Chat with Sahayika, Sumit's AI assistant"
-            initial={{ opacity: 0, y: 20, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 20, scale: 0.9 }}
+          <motion.div
+            key="corgi"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.3 }}
-            onClick={() => setIsOpen(true)}
-            className={cn(
-              "fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 flex items-center gap-3 p-3.5 sm:px-5 sm:py-3 rounded-full shadow-2xl",
-              "bg-gradient-to-r from-teal-500 to-emerald-400 hover:from-teal-400 hover:to-emerald-300",
-              "border border-white/20 hover:shadow-teal-500/30 transition-shadow"
-            )}
           >
-            <span className="hidden sm:inline text-sm font-medium text-white whitespace-nowrap tracking-wide drop-shadow-md">Need help from Sahayika?</span>
-            <Sparkles className="w-5 h-5 text-white animate-pulse" />
-          </motion.button>
+            <CorgiCompanion onOpen={() => setIsOpen(true)} />
+          </motion.div>
         )}
       </AnimatePresence>
 
@@ -512,8 +510,15 @@ export function SahayikaAssistant() {
             <div className="flex items-center justify-between p-4 border-b border-white/20 dark:border-white/10 bg-white/40 dark:bg-black/40 backdrop-blur-md relative z-10">
               <div className="flex items-center space-x-3">
                 <div className="relative">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-teal-500 to-emerald-400 flex items-center justify-center shadow-lg shadow-teal-500/20">
-                    <Sparkles className="w-5 h-5 text-white" />
+                  <div className="w-10 h-10 rounded-full overflow-hidden bg-amber-50 ring-2 ring-teal-400/60 shadow-lg shadow-teal-500/20">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={frameSrc(`emo:${isListening ? "listening" : isTyping ? "thinking" : failed ? "error" : "happy"}`)}
+                      alt=""
+                      width={40}
+                      height={40}
+                      className="w-full h-full object-cover scale-[1.55] translate-y-[14%]"
+                    />
                   </div>
                   <span className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-400 border-2 border-white dark:border-black rounded-full animate-pulse"></span>
                 </div>

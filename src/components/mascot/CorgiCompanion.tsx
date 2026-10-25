@@ -1,0 +1,102 @@
+"use client";
+
+import { useEffect, useRef } from "react";
+import { X } from "lucide-react";
+import { CFG, type CorgiCommand, type CorgiSnapshot } from "./corgiConfig";
+import { CorgiEngine } from "./corgiEngine";
+
+// The floating corgi that launches Sahayika. Behaviour lives in corgiEngine.ts;
+// other code can talk to it with corgi({ cmd }) / playReaction(name) from corgiConfig.ts,
+// and listen to "corgi:state" events (used by the /lab/corgi test page).
+
+export function CorgiCompanion({ onOpen }: { onOpen: () => void }) {
+  const hostRef = useRef<HTMLButtonElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const bubbleRef = useRef<HTMLDivElement>(null);
+  const textRef = useRef<HTMLSpanElement>(null);
+  const engineRef = useRef<CorgiEngine | null>(null);
+
+  useEffect(() => {
+    const bubble = bubbleRef.current!;
+    let bubbleOn = true;
+    let hideTimer: ReturnType<typeof setTimeout>;
+    const hide = () => bubble.removeAttribute("data-show");
+    const engine = new CorgiEngine(canvasRef.current!, hostRef.current!, {
+      say(text) {
+        if (!bubbleOn) return;
+        textRef.current!.textContent = text;
+        bubble.setAttribute("data-show", "true");
+        clearTimeout(hideTimer);
+        hideTimer = setTimeout(hide, CFG.bubbleMs);
+      },
+      hide,
+      change: (s: CorgiSnapshot) => window.dispatchEvent(new CustomEvent("corgi:state", { detail: s })),
+    });
+    engineRef.current = engine;
+
+    const onCmd = (e: Event) => {
+      const c = (e as CustomEvent<CorgiCommand>).detail;
+      if (c.cmd === "react") engine.playReaction(c.arg);
+      else if (c.cmd === "greet") engine.greet(true);
+      else if (c.cmd === "idle") engine.goIdle();
+      else if (c.cmd === "reset") engine.reset();
+      else if (c.cmd === "sleep") engine.sleep();
+      else if (c.cmd === "override") engine.setOverride(c.arg);
+      else if (c.cmd === "bubble") {
+        bubbleOn = c.arg;
+        if (!bubbleOn) hide();
+      }
+    };
+    window.addEventListener("corgi:cmd", onCmd);
+    return () => {
+      window.removeEventListener("corgi:cmd", onCmd);
+      clearTimeout(hideTimer);
+      engine.destroy();
+      engineRef.current = null;
+    };
+  }, []);
+
+  const onClick = (e: React.MouseEvent) => {
+    // keyboard activation (detail 0) always opens; touch: first tap greets
+    if (e.detail !== 0 && engineRef.current?.handleTap() === "greeted") return;
+    onOpen();
+  };
+
+  return (
+    <div className="corgi-dock fixed bottom-1 right-2 sm:bottom-2 sm:right-4 z-50 flex items-end pointer-events-none">
+      <button
+        type="button"
+        onClick={onOpen}
+        className="pointer-events-auto hidden sm:inline-flex mb-7 mr-1 px-4 py-2 rounded-full text-sm font-medium text-white whitespace-nowrap bg-gradient-to-r from-teal-500 to-emerald-400 hover:from-teal-400 hover:to-emerald-300 border border-white/20 shadow-lg shadow-teal-500/20 transition-colors"
+      >
+        Need help from Sahayika?
+      </button>
+      <button
+        ref={hostRef}
+        type="button"
+        onClick={onClick}
+        aria-label="Chat with Sahayika, Sumit's AI assistant"
+        className="corgi-btn pointer-events-auto relative w-[88px] h-[88px] sm:w-[108px] sm:h-[108px] rounded-3xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-400 [-webkit-tap-highlight-color:transparent]"
+      >
+        <span aria-hidden className="absolute left-[30%] right-[30%] bottom-2.5 h-2 rounded-[50%] bg-black/25 dark:bg-black/40 blur-[3px]" />
+        <canvas ref={canvasRef} aria-hidden className="relative block w-full h-full" />
+      </button>
+      <div
+        ref={bubbleRef}
+        role="status"
+        aria-live="polite"
+        className="corgi-bubble absolute right-9 bottom-[84px] sm:right-16 sm:bottom-[104px] w-max max-w-[min(240px,calc(100vw-48px))] pl-3.5 pr-8 py-2 rounded-2xl rounded-br-sm bg-bg-elevated text-text-primary border border-border-card shadow-xl text-[13px] leading-snug font-medium"
+      >
+        <span ref={textRef} />
+        <button
+          type="button"
+          aria-label="Dismiss"
+          onClick={() => bubbleRef.current?.removeAttribute("data-show")}
+          className="absolute top-1.5 right-1.5 p-0.5 rounded text-text-secondary hover:text-text-primary"
+        >
+          <X className="w-3.5 h-3.5" />
+        </button>
+      </div>
+    </div>
+  );
+}

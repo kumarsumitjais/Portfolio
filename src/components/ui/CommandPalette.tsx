@@ -142,7 +142,7 @@ function Palette({ projects, onClose }: { projects: PaletteProject[]; onClose: (
       {
         id: "ask",
         label: askMatch ? `>ask ${askMatch[1]}` : ">ask <question>",
-        hint: "ask Sahayika",
+        hint: "ask Corgi",
         action: "ask",
         question: askMatch?.[1],
       },

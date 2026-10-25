@@ -594,6 +594,19 @@ html.intro-reveal .page-shell { animation: intro-page-in 900ms cubic-bezier(0.22
    The frames carry the animation; these only add breathing while idle, a hop on
    reactions and the speech-bubble fade. */
 .corgi-btn canvas { transform-origin: 50% 90%; }
+/* The chat keeps the brand blue on every page instead of the section colour */
+.corgi-chat {
+  --color-electric-blue-500: #2e6bff; --color-electric-blue-400: #5c8cff;
+  --color-cyan-400: #33d6e0; --color-indigo-500: #5b4cff;
+  --accent: #5c8cff; --accent-2: #33d6e0;
+  --border-card: color-mix(in srgb, var(--accent) 26%, var(--color-slate-700));
+  --bg-elevated: color-mix(in srgb, var(--accent) 6%, var(--color-slate-900));
+}
+html.light .corgi-chat {
+  --color-electric-blue-500: #1f55d6; --color-electric-blue-400: #2a5dd8; --color-cyan-400: #0e7490;
+  --border-card: color-mix(in srgb, var(--accent) 34%, #e4e8ef);
+  --bg-elevated: color-mix(in srgb, var(--accent) 4%, var(--color-frost-50));
+}
 .corgi-breathe canvas { animation: corgi-breathe 3.2s ease-in-out infinite; }
 .corgi-hop canvas { animation: corgi-hop 320ms cubic-bezier(0.3, 1.6, 0.6, 1); }
 @keyframes corgi-breathe { 50% { transform: scale(1.012, 0.988); } }

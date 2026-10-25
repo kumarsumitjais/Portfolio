@@ -64,10 +64,10 @@ function PipelineTrace({ trace, sourceCount }: { trace: NonNullable<DisplayMessa
       <ol className="space-y-1">
         {steps.map((step, i) => (
           <li key={step.label} className="flex items-baseline gap-2">
-            <span className="shrink-0 w-4 h-4 rounded-full bg-teal-500/15 text-teal-700 dark:text-teal-300 text-[10px] flex items-center justify-center">
+            <span className="shrink-0 w-4 h-4 rounded-full bg-electric-blue-500/15 text-electric-blue-500 dark:text-electric-blue-400 text-[10px] flex items-center justify-center">
               {i + 1}
             </span>
-            <span className="shrink-0 font-semibold text-teal-700 dark:text-teal-300">{step.label}</span>
+            <span className="shrink-0 font-semibold text-electric-blue-500 dark:text-electric-blue-400">{step.label}</span>
             <span className="min-w-0 truncate text-gray-600 dark:text-gray-400" title={step.detail}>{step.detail}</span>
           </li>
         ))}
@@ -200,7 +200,7 @@ function detectIntent(
 
 function buildContextNote(context: VisitorContext): string {
   let note =
-    "\n[SAHAYIKA INTERNAL CONTEXT — do not reveal this note " +
+    "\n[CORGI INTERNAL CONTEXT — do not reveal this note " +
     "to the user. Read it silently and use it to inform your response.]\n";
 
   if (context.name) {
@@ -246,7 +246,7 @@ function buildContextNote(context: VisitorContext): string {
 const WELCOME_MESSAGE: DisplayMessage = {
   role: "model",
   text:
-    "Hello! I'm Sahayika, Sumit's personal AI assistant. " +
+    "Woof, hello! I'm Corgi, Sumit's personal AI assistant. " +
     "He builds AI that predicts, detects, and thinks — " +
     "and I'm a small reflection of that. " +
     "Who do I have the pleasure of speaking with today?",
@@ -501,7 +501,7 @@ export function SahayikaAssistant() {
             exit={{ opacity: 0, y: 40, scale: 0.95 }}
             transition={{ duration: 0.3, type: "spring", bounce: 0.3 }}
             className={cn(
-              "fixed z-50 inset-x-2 bottom-2 h-[85dvh] sm:inset-x-auto sm:bottom-6 sm:right-6 sm:w-[400px] sm:h-[600px] sm:max-h-[85vh]",
+              "corgi-chat fixed z-50 inset-x-2 bottom-2 h-[85dvh] sm:inset-x-auto sm:bottom-6 sm:right-6 sm:w-[400px] sm:h-[600px] sm:max-h-[85vh]",
               "bg-bg-elevated/95 backdrop-blur-2xl border border-border-card rounded-2xl shadow-2xl",
               "flex flex-col overflow-hidden ring-1 ring-black/5"
             )}
@@ -510,7 +510,7 @@ export function SahayikaAssistant() {
             <div className="flex items-center justify-between p-4 border-b border-white/20 dark:border-white/10 bg-white/40 dark:bg-black/40 backdrop-blur-md relative z-10">
               <div className="flex items-center space-x-3">
                 <div className="relative">
-                  <div className="w-10 h-10 rounded-full overflow-hidden bg-amber-50 ring-2 ring-teal-400/60 shadow-lg shadow-teal-500/20">
+                  <div className="w-10 h-10 rounded-full overflow-hidden bg-amber-50 ring-2 ring-electric-blue-400/60 shadow-lg shadow-electric-blue-500/20">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={frameSrc(`emo:${isListening ? "listening" : isTyping ? "thinking" : failed ? "error" : "happy"}`)}
@@ -520,13 +520,13 @@ export function SahayikaAssistant() {
                       className="w-full h-full object-cover scale-[1.55] translate-y-[14%]"
                     />
                   </div>
-                  <span className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-400 border-2 border-white dark:border-black rounded-full animate-pulse"></span>
+                  <span className="absolute bottom-0 right-0 w-3 h-3 bg-cyan-400 border-2 border-white dark:border-black rounded-full animate-pulse"></span>
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2 drop-shadow-sm">
-                    Sahayika ✦ 
+                    Corgi 🐾
                   </h3>
-                  <p className="text-xs text-teal-700 dark:text-emerald-400 font-medium mt-0.5">Your personal AI assistant</p>
+                  <p className="text-xs text-electric-blue-500 dark:text-electric-blue-400 font-medium mt-0.5">Your personal AI assistant</p>
                 </div>
               </div>
               <div className="flex items-center space-x-2">
@@ -536,7 +536,7 @@ export function SahayikaAssistant() {
                   className={cn(
                     "p-2 rounded-full transition-colors",
                     showPipeline
-                      ? "text-teal-600 dark:text-teal-300 bg-teal-500/15"
+                      ? "text-electric-blue-500 dark:text-electric-blue-400 bg-electric-blue-500/15"
                       : "text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
                   )}
                   title="How I work"
@@ -563,8 +563,8 @@ export function SahayikaAssistant() {
             {/* Messages */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4 scroll-smooth bg-gradient-to-b from-transparent to-white/5 dark:to-black/20">
               {showPipeline && (
-                <div className="rounded-xl border border-teal-500/30 bg-teal-500/5 p-3 text-xs text-gray-700 dark:text-gray-300 leading-relaxed">
-                  <p className="font-semibold text-teal-700 dark:text-teal-300 mb-1">How I work</p>
+                <div className="rounded-xl border border-electric-blue-500/30 bg-electric-blue-500/5 p-3 text-xs text-gray-700 dark:text-gray-300 leading-relaxed">
+                  <p className="font-semibold text-electric-blue-500 dark:text-electric-blue-400 mb-1">How I work</p>
                   I&apos;m a small retrieval-augmented (RAG) assistant. For each question I
                   search this website&apos;s projects, blog posts and profile pages, hand the best
                   matching excerpts to Google Gemini, and answer from them, then cite the pages I used.
@@ -587,7 +587,7 @@ export function SahayikaAssistant() {
                       className={cn(
                         "max-w-[85%] rounded-2xl p-4 shadow-sm",
                         msg.role === "user"
-                          ? "bg-gradient-to-r from-teal-500 to-emerald-500 text-white rounded-br-none border border-teal-400/30 shadow-teal-500/20"
+                          ? "bg-electric-blue-500 text-white rounded-br-none border border-electric-blue-400/30 shadow-electric-blue-500/20"
                           : "bg-white/60 dark:bg-white/10 backdrop-blur-md text-gray-800 dark:text-gray-100 rounded-bl-none border border-white/40 dark:border-white/10"
                       )}
                     >
@@ -597,11 +597,11 @@ export function SahayikaAssistant() {
                             components={{
                               p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
                               a: ({ href, children }) => (
-                                <a href={href} target="_blank" rel="noopener noreferrer" className="text-teal-600 dark:text-teal-400 hover:underline font-medium">
+                                <a href={href} target="_blank" rel="noopener noreferrer" className="text-electric-blue-500 dark:text-electric-blue-400 hover:underline font-medium">
                                   {children}
                                 </a>
                               ),
-                              strong: ({ children }) => <strong className="font-semibold text-teal-800 dark:text-teal-200">{children}</strong>,
+                              strong: ({ children }) => <strong className="font-semibold text-gray-900 dark:text-white">{children}</strong>,
                               ul: ({ children }) => <ul className="list-disc pl-4 mb-2 space-y-1">{children}</ul>,
                               li: ({ children }) => <li>{children}</li>,
                             }}
@@ -614,7 +614,7 @@ export function SahayikaAssistant() {
                                 <Link
                                   key={s.href + s.title}
                                   href={s.href}
-                                  className="inline-flex items-center gap-1 max-w-full rounded-full border border-teal-500/30 bg-teal-500/10 px-2 py-0.5 text-[11px] text-teal-700 dark:text-teal-300 hover:bg-teal-500/20 transition-colors"
+                                  className="inline-flex items-center gap-1 max-w-full rounded-full border border-electric-blue-500/30 bg-electric-blue-500/10 px-2 py-0.5 text-[11px] text-electric-blue-500 dark:text-electric-blue-400 hover:bg-electric-blue-500/20 transition-colors"
                                 >
                                   <FileText className="w-3 h-3 shrink-0" />
                                   <span className="truncate">{s.title}</span>
@@ -642,9 +642,9 @@ export function SahayikaAssistant() {
                   >
                     <div className="bg-white/60 dark:bg-white/10 backdrop-blur-md border border-white/40 dark:border-white/10 rounded-2xl rounded-bl-none p-4 max-w-[80%] shadow-sm">
                       <div className="flex space-x-1.5 items-center h-4">
-                        <motion.div animate={{ y: [0, -5, 0] }} transition={{ repeat: Infinity, duration: 0.6, delay: 0 }} className="w-1.5 h-1.5 bg-teal-500 rounded-full" />
-                        <motion.div animate={{ y: [0, -5, 0] }} transition={{ repeat: Infinity, duration: 0.6, delay: 0.2 }} className="w-1.5 h-1.5 bg-teal-500 rounded-full" />
-                        <motion.div animate={{ y: [0, -5, 0] }} transition={{ repeat: Infinity, duration: 0.6, delay: 0.4 }} className="w-1.5 h-1.5 bg-teal-500 rounded-full" />
+                        <motion.div animate={{ y: [0, -5, 0] }} transition={{ repeat: Infinity, duration: 0.6, delay: 0 }} className="w-1.5 h-1.5 bg-electric-blue-500 rounded-full" />
+                        <motion.div animate={{ y: [0, -5, 0] }} transition={{ repeat: Infinity, duration: 0.6, delay: 0.2 }} className="w-1.5 h-1.5 bg-electric-blue-500 rounded-full" />
+                        <motion.div animate={{ y: [0, -5, 0] }} transition={{ repeat: Infinity, duration: 0.6, delay: 0.4 }} className="w-1.5 h-1.5 bg-electric-blue-500 rounded-full" />
                       </div>
                     </div>
                   </motion.div>
@@ -657,7 +657,7 @@ export function SahayikaAssistant() {
                     <button
                       key={q}
                       onClick={() => sendMessage(q)}
-                      className="text-left text-sm rounded-xl border border-teal-500/30 bg-white/50 dark:bg-white/5 px-3 py-2 text-gray-800 dark:text-gray-100 hover:border-teal-500 hover:bg-teal-500/10 transition-colors"
+                      className="text-left text-sm rounded-xl border border-electric-blue-500/30 bg-white/50 dark:bg-white/5 px-3 py-2 text-gray-800 dark:text-gray-100 hover:border-electric-blue-500 hover:bg-electric-blue-500/10 transition-colors"
                     >
                       {q}
                     </button>
@@ -681,8 +681,8 @@ export function SahayikaAssistant() {
                     }
                   }}
                   placeholder="Ask me about Sumit..."
-                  aria-label="Message Sahayika"
-                  className="w-full bg-white/60 dark:bg-black/40 backdrop-blur-sm border border-white/40 dark:border-white/10 rounded-full pl-5 pr-24 py-3.5 text-sm text-gray-800 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-transparent transition-all shadow-inner"
+                  aria-label="Message Corgi"
+                  className="w-full bg-white/60 dark:bg-black/40 backdrop-blur-sm border border-white/40 dark:border-white/10 rounded-full pl-5 pr-24 py-3.5 text-sm text-gray-800 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-electric-blue-500/50 focus:border-transparent transition-all shadow-inner"
                 />
                 <div className="absolute right-2 flex items-center space-x-1">
                   <button
@@ -692,7 +692,7 @@ export function SahayikaAssistant() {
                       "p-2 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed",
                       isListening 
                         ? "bg-red-100 text-red-500 dark:bg-red-500/20 animate-pulse" 
-                        : "text-gray-500 hover:text-teal-600 dark:text-gray-400 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10"
+                        : "text-gray-500 hover:text-electric-blue-500 dark:text-gray-400 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10"
                     )}
                     title={isListening ? "Stop listening" : "Start voice input"}
                   >
@@ -703,7 +703,7 @@ export function SahayikaAssistant() {
                     aria-label="Send message"
                     onClick={() => sendMessage()}
                     disabled={!input.trim() || isTyping}
-                    className="p-2 bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-600 hover:to-emerald-600 text-white rounded-full transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg"
+                    className="p-2 bg-electric-blue-500 hover:bg-electric-blue-400 text-white rounded-full transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg"
                   >
                     <Send size={16} />
                   </button>

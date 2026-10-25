@@ -5,7 +5,7 @@ import { X } from "lucide-react";
 import { CFG, type CorgiCommand, type CorgiSnapshot } from "./corgiConfig";
 import { CorgiEngine } from "./corgiEngine";
 
-// The floating corgi that launches Sahayika. Behaviour lives in corgiEngine.ts;
+// The floating corgi that opens the Corgi chat assistant. Behaviour lives in corgiEngine.ts;
 // other code can talk to it with corgi({ cmd }) / playReaction(name) from corgiConfig.ts,
 // and listen to "corgi:state" events (used by the /lab/corgi test page).
 
@@ -65,17 +65,10 @@ export function CorgiCompanion({ onOpen }: { onOpen: () => void }) {
   return (
     <div className="corgi-dock fixed bottom-1 right-2 sm:bottom-2 sm:right-4 z-50 flex items-end pointer-events-none">
       <button
-        type="button"
-        onClick={onOpen}
-        className="pointer-events-auto hidden sm:inline-flex mb-7 mr-1 px-4 py-2 rounded-full text-sm font-medium text-white whitespace-nowrap bg-gradient-to-r from-teal-500 to-emerald-400 hover:from-teal-400 hover:to-emerald-300 border border-white/20 shadow-lg shadow-teal-500/20 transition-colors"
-      >
-        Need help from Sahayika?
-      </button>
-      <button
         ref={hostRef}
         type="button"
         onClick={onClick}
-        aria-label="Chat with Sahayika, Sumit's AI assistant"
+        aria-label="Chat with Corgi, Sumit's AI assistant"
         className="corgi-btn pointer-events-auto relative w-[88px] h-[88px] sm:w-[108px] sm:h-[108px] rounded-3xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-400 [-webkit-tap-highlight-color:transparent]"
       >
         <span aria-hidden className="absolute left-[30%] right-[30%] bottom-2.5 h-2 rounded-[50%] bg-black/25 dark:bg-black/40 blur-[3px]" />

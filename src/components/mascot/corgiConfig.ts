@@ -66,7 +66,7 @@ export const CFG = {
   fidgetChance: 0.25,
   scrubStepMs: 70,        // min time between proximity-driven frame changes
   greetings: ["Hey there! 👋", "Hello! 💛", "Hi, I'm happy you're here!"],
-  followUp: "Need a hand? Click me to chat with Sahayika ✨",
+  followUp: "Need a hand? Click me and ask me anything 🐾",
   bubbleMs: 4200,
 };
 

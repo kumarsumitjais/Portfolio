@@ -334,8 +334,69 @@ export function SahayikaAssistant({ initialOpen = false, initialQuestion }: { in
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [displayMessages, isTyping, isOpen]);
 
+  const isOpenRef = useRef(isOpen);
+  const voiceEnabledRef = useRef(voiceEnabled);
+
+  useEffect(() => {
+    isOpenRef.current = isOpen;
+  }, [isOpen]);
+
+  useEffect(() => {
+    voiceEnabledRef.current = voiceEnabled;
+  }, [voiceEnabled]);
+
+  const stopSpeaking = () => {
+    if (typeof window !== "undefined" && window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+    }
+  };
+
+  // Stop speaking and listening when chat is closed
+  useEffect(() => {
+    if (!isOpen) {
+      stopSpeaking();
+      if (recognitionRef.current && isListening) {
+        recognitionRef.current.stop();
+        setIsListening(false);
+      }
+    }
+  }, [isOpen]);
+
+  // Stop speaking immediately if voice is toggled off
+  useEffect(() => {
+    if (!voiceEnabled) {
+      stopSpeaking();
+    }
+  }, [voiceEnabled]);
+
+  // Stop speaking on unmount
+  useEffect(() => {
+    return () => {
+      stopSpeaking();
+    };
+  }, []);
+
+  const handleToggleVoice = () => {
+    setVoiceEnabled((prev) => {
+      const next = !prev;
+      if (!next) {
+        stopSpeaking();
+      }
+      return next;
+    });
+  };
+
+  const handleClose = () => {
+    stopSpeaking();
+    if (recognitionRef.current && isListening) {
+      recognitionRef.current.stop();
+      setIsListening(false);
+    }
+    setIsOpen(false);
+  };
+
   const speakText = (text: string) => {
-    if (!voiceEnabled || !window.speechSynthesis) return;
+    if (!isOpenRef.current || !voiceEnabledRef.current || typeof window === "undefined" || !window.speechSynthesis) return;
 
     window.speechSynthesis.cancel();
     
@@ -361,6 +422,7 @@ export function SahayikaAssistant({ initialOpen = false, initialQuestion }: { in
       utterance.voice = femaleVoice;
     }
 
+    if (!isOpenRef.current || !voiceEnabledRef.current) return;
     window.speechSynthesis.speak(utterance);
   };
 
@@ -417,13 +479,12 @@ export function SahayikaAssistant({ initialOpen = false, initialQuestion }: { in
     setIsTyping(true);
 
     try {
-      // Step 6: Send full history + finalMessage to backend.
-      // The backend is stateless — it needs everything here.
+      // Step 6: Send history (last 6 turns for optimal speed) + finalMessage to backend.
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          history: history,
+          history: history.slice(-6),
           message: finalMessage,
           query: userMessage,
           lead: {
@@ -439,37 +500,95 @@ export function SahayikaAssistant({ initialOpen = false, initialQuestion }: { in
         throw new Error(`HTTP error: ${response.status}`);
       }
 
-      const data = await response.json();
-      const reply: string = data.reply;
+      if (!response.body) {
+        throw new Error("No response body");
+      }
+
+      // Add a placeholder message for incoming streaming tokens
+      setDisplayMessages(prev => [
+        ...prev,
+        { role: "model", text: "" },
+      ]);
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let accumulatedReply = "";
+      let finalSources: { title: string; href: string }[] | undefined = undefined;
+      let finalTrace: any = undefined;
+      let buffer = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split("\n\n");
+        buffer = lines.pop() || "";
+
+        for (const line of lines) {
+          const trimmed = line.trim();
+          if (!trimmed.startsWith("data: ")) continue;
+          try {
+            const parsed = JSON.parse(trimmed.slice(6));
+            if (parsed.text) {
+              accumulatedReply += parsed.text;
+              setIsTyping(false); // First token arrived! Hide typing indicator immediately
+              const cleanText = accumulatedReply.replace(/\n?\s*SOURCES:.*$/i, "");
+              setDisplayMessages(prev => {
+                const next = [...prev];
+                const last = next[next.length - 1];
+                if (last && last.role === "model") {
+                  last.text = cleanText;
+                }
+                return next;
+              });
+            }
+            if (parsed.done) {
+              finalSources = parsed.sources;
+              finalTrace = parsed.trace;
+            }
+          } catch {
+            // Ignore incomplete chunks
+          }
+        }
+      }
+
+      const cleanReply = accumulatedReply.replace(/\n?\s*SOURCES:.*$/i, "").trim();
 
       // Step 7: Append this exchange to Gemini history.
-      // Use finalMessage (not userMessage) so future requests include
-      // the context note that was actually sent to Gemini.
       setHistory(prev => [
         ...prev,
         { role: "user", parts: [{ text: finalMessage }] },
-        { role: "model", parts: [{ text: reply }] },
+        { role: "model", parts: [{ text: cleanReply }] },
       ]);
 
-      // Step 8: Show Sahayika's reply in the UI.
-      setDisplayMessages(prev => [
-        ...prev,
-        { role: "model", text: reply, sources: data.sources, trace: data.trace },
-      ]);
-      
-      // Speak the reply
-      speakText(reply);
+      // Step 8: Finalize reply with verified sources and performance trace
+      setDisplayMessages(prev => {
+        const next = [...prev];
+        const last = next[next.length - 1];
+        if (last && last.role === "model") {
+          last.text = cleanReply;
+          last.sources = finalSources;
+          last.trace = finalTrace;
+        }
+        return next;
+      });
+
+      // Speak the final clean reply
+      speakText(cleanReply);
 
     } catch (error) {
       console.error("Sahayika frontend error:", error);
       const errorMsg = "Ah, something happened in the backend! I will catch you later with fresh energy.";
-      setDisplayMessages(prev => [
-        ...prev,
-        {
-          role: "model",
-          text: errorMsg,
-        },
-      ]);
+      setDisplayMessages(prev => {
+        const next = [...prev];
+        const last = next[next.length - 1];
+        if (last && last.role === "model" && !last.text) {
+          last.text = errorMsg;
+          return next;
+        }
+        return [...next, { role: "model", text: errorMsg }];
+      });
       speakText(errorMsg);
       setFailed(true);
       setTimeout(() => setFailed(false), 3000);
@@ -545,14 +664,14 @@ export function SahayikaAssistant({ initialOpen = false, initialQuestion }: { in
                   <Workflow size={18} />
                 </button>
                 <button
-                  onClick={() => setVoiceEnabled(!voiceEnabled)}
+                  onClick={handleToggleVoice}
                   className="p-2 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors"
                   title={voiceEnabled ? "Mute voice" : "Enable voice"}
                 >
                   {voiceEnabled ? <Volume2 size={18} /> : <VolumeX size={18} />}
                 </button>
                 <button
-                  onClick={() => setIsOpen(false)}
+                  onClick={handleClose}
                   aria-label="Close chat"
                   className="p-2 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors rounded-full hover:bg-black/5 dark:hover:bg-white/10"
                 >

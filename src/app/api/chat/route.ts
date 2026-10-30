@@ -35,9 +35,9 @@ Use natural sentences. Bring up facts in conversation, not as dumps.
 RULE 5 — Vary your language in every response.
 Never start two replies the same way. Mix sentence structure and tone.
 
-RULE 6 — Keep most replies between 60 and 100 words.
-Go longer only if visitor asks: "tell me more", "explain that", 
-"give me details", or similar explicit requests.
+RULE 6 — Be fast, direct, and concise. Keep most replies between 35 and 65 words (2 to 3 natural sentences).
+Answer the visitor's core question immediately without filler.
+Go longer only if the visitor explicitly asks: "tell me more", "explain that", "give me details", or for recruiter/project deep-dives.
 
 RULE 7 — Never say "Great question!" It sounds robotic.
 
@@ -287,14 +287,14 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Step 1: search the site's own content for this question.
+    // Step 1: search the site's own content for this question (top 2 hits for faster inference).
     const t0 = Date.now();
-    const { hits, searched } = retrieve(typeof query === "string" ? query : message);
+    const { hits, searched } = retrieve(typeof query === "string" ? query : message, 2);
     const retrievalMs = Date.now() - t0;
 
     const grounded = hits.length
       ? `${message}\n\n[RETRIEVED SITE CONTENT]\n${hits
-          .map((h, i) => `[${i + 1}] ${h.title} (${h.href})\n${h.text}`)
+          .map((h, i) => `[${i + 1}] ${h.title} (${h.href})\n${h.text.slice(0, 500)}`)
           .join("\n\n")}\n[END RETRIEVED SITE CONTENT]`
       : message;
 
@@ -305,42 +305,78 @@ export async function POST(req: NextRequest) {
       systemInstruction: SYSTEM_INSTRUCTION + CITATION_RULES,
     });
 
+    // Keep history focused on the latest turns to minimize latency
+    const trimmedHistory = Array.isArray(history) ? history.slice(-6) : [];
+
     // Create a temporary chat session for THIS request only.
     const chat = model.startChat({
-      history: Array.isArray(history) ? history : [],
+      history: trimmedHistory,
       generationConfig: {
-        maxOutputTokens: 350,
-        temperature: 0.85,
+        maxOutputTokens: 250,
+        temperature: 0.7,
       },
     });
 
-    // Step 2: generate.
+    // Step 2: Stream response directly to client for sub-second first-token latency
     const t1 = Date.now();
-    const result = await chat.sendMessage(grounded);
-    const generationMs = Date.now() - t1;
-    const raw = result.response.text();
+    const resultStream = await chat.sendMessageStream(grounded);
 
-    // Step 3: pull the SOURCES line off the reply and map it back to pages.
-    const match = raw.match(/\n?\s*SOURCES:\s*([^\n]*)\s*$/i);
-    const reply = (match ? raw.slice(0, match.index) : raw).trim();
-    const used = match
-      ? [...new Set((match[1].match(/\d+/g) ?? []).map(Number))].filter((n) => n >= 1 && n <= hits.length)
-      : []; // no SOURCES line means the model didn't rely on the excerpts
-    const sources: Source[] = [];
-    for (const n of used) {
-      const { title, href } = hits[n - 1];
-      if (!sources.some((s) => s.href === href && s.title === title)) sources.push({ title, href });
-    }
+    const encoder = new TextEncoder();
+    const stream = new ReadableStream({
+      async start(controller) {
+        let fullReply = "";
+        try {
+          for await (const chunk of resultStream.stream) {
+            const chunkText = chunk.text();
+            fullReply += chunkText;
+            controller.enqueue(
+              encoder.encode(`data: ${JSON.stringify({ text: chunkText })}\n\n`)
+            );
+          }
 
-    return NextResponse.json({
-      reply,
-      sources,
-      trace: {
-        searched,
-        retrieved: hits.map((h) => h.title),
-        retrievalMs,
-        generationMs,
-        model: MODEL,
+          // Step 3: pull the SOURCES line off the reply and map it back to pages.
+          const match = fullReply.match(/\n?\s*SOURCES:\s*([^\n]*)\s*$/i);
+          const used = match
+            ? [...new Set((match[1].match(/\d+/g) ?? []).map(Number))].filter(
+                (n) => n >= 1 && n <= hits.length
+              )
+            : [];
+          const sources: Source[] = [];
+          for (const n of used) {
+            const { title, href } = hits[n - 1];
+            if (!sources.some((s) => s.href === href && s.title === title)) {
+              sources.push({ title, href });
+            }
+          }
+
+          const generationMs = Date.now() - t1;
+          controller.enqueue(
+            encoder.encode(
+              `data: ${JSON.stringify({
+                done: true,
+                sources,
+                trace: {
+                  searched,
+                  retrieved: hits.map((h) => h.title),
+                  retrievalMs,
+                  generationMs,
+                  model: MODEL,
+                },
+              })}\n\n`
+            )
+          );
+          controller.close();
+        } catch (err) {
+          controller.error(err);
+        }
+      },
+    });
+
+    return new Response(stream, {
+      headers: {
+        "Content-Type": "text/event-stream; charset=utf-8",
+        "Cache-Control": "no-cache, no-transform",
+        "Connection": "keep-alive",
       },
     });
 

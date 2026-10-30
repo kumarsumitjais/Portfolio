@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "next-themes";
 import { X, TrendingUp, Target, BrainCircuit } from "lucide-react";
@@ -33,21 +34,28 @@ const masteryData = [
 ];
 
 export function AnalyticsModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   // Chart text/grid colours per theme (SVG attributes can't read CSS variables).
   const light = useTheme().resolvedTheme === "light";
   const axisColor = light ? "#4A5262" : "#8A93A3";
   const gridColor = light ? "#C9D0DB" : "#333";
   const trackColor = light ? "#E4E8EF" : "#2a2a2a";
   const legendText = (value: string) => <span style={{ color: axisColor }}>{value}</span>;
+
   // Prevent scrolling on body when modal is open
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
     }
     return () => {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
     };
   }, [isOpen]);
 
@@ -59,27 +67,32 @@ export function AnalyticsModal({ isOpen, onClose }: { isOpen: boolean; onClose: 
     return () => window.removeEventListener("keydown", onKey);
   }, [isOpen, onClose]);
 
-  if (!isOpen) return null;
+  if (!isOpen || !mounted) return null;
 
-  return (
+  return createPortal(
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6" role="dialog" aria-modal="true" aria-label="Skill analytics">
+      <div
+        className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Skill analytics"
+      >
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          className="absolute inset-0 bg-black/60"
+          className="absolute inset-0 bg-black/75 backdrop-blur-sm"
         />
         
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto custom-scrollbar bg-white dark:bg-[#0d1117] border border-border-card rounded-2xl shadow-2xl"
+          className="relative w-full max-w-4xl max-h-[85vh] overflow-y-auto custom-scrollbar bg-white dark:bg-[#0d1117] border border-border-card rounded-2xl shadow-2xl z-10"
         >
           {/* Header */}
-          <div className="sticky top-0 z-10 flex items-center justify-between p-4 border-b border-border-card bg-white/80 dark:bg-[#0d1117]/80">
+          <div className="sticky top-0 z-20 flex items-center justify-between p-4 sm:px-6 border-b border-border-card bg-white/95 dark:bg-[#0d1117]/95 backdrop-blur-md">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-electric-blue-500/10 rounded-lg border border-electric-blue-500/20">
                 <BrainCircuit className="w-5 h-5 text-electric-blue-500 dark:text-electric-blue-400" />
@@ -92,7 +105,7 @@ export function AnalyticsModal({ isOpen, onClose }: { isOpen: boolean; onClose: 
             <button
               onClick={onClose}
               aria-label="Close analytics"
-              className="p-2 text-text-secondary hover:text-text-primary hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+              className="p-2 text-text-secondary hover:text-text-primary hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
@@ -164,6 +177,7 @@ export function AnalyticsModal({ isOpen, onClose }: { isOpen: boolean; onClose: 
           </div>
         </motion.div>
       </div>
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }

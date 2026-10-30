@@ -169,11 +169,12 @@ export function FeatureMatrix({ items }: { items: Certification[] }) {
                             <Image src={cert.image} alt={cert.name} width={1200} height={850} sizes="600px" className="w-auto max-w-full h-auto max-h-32 sm:max-h-40 md:max-h-48 object-contain rounded-lg opacity-90 group-hover:opacity-100 transition-opacity" />
                           </div>
                           
-                          {/* Details below (matching columns style visually) */}
-                          <div className="flex flex-wrap items-center justify-between gap-6 w-full px-2">
-                            <div className="flex items-center gap-4 flex-1 min-w-[200px]">
+                          {/* Details below: 2 dedicated rows for every certificate */}
+                          <div className="flex flex-col gap-3 w-full px-2">
+                            {/* Row 1: Index + Certificate Name + Skills */}
+                            <div className="flex items-center gap-4 w-full">
                               <span className="text-text-secondary font-mono bg-gray-50 dark:bg-[#161b22] px-2 py-1 rounded border border-border-card shrink-0">{idx}</span>
-                              <div className="min-w-0">
+                              <div className="min-w-0 flex-1">
                                 <div className="text-text-primary font-sans font-semibold text-base truncate">{cert.name}</div>
                                 <div className="text-xs font-mono text-text-secondary mt-1 truncate">
                                   {cert.skills.slice(0, 4).join(", ")}{cert.skills.length > 4 ? "..." : ""}
@@ -181,7 +182,8 @@ export function FeatureMatrix({ items }: { items: Certification[] }) {
                               </div>
                             </div>
                             
-                            <div className="flex items-center gap-6 flex-wrap">
+                            {/* Row 2: Domain, Issuer, Verification status, and Action directly next to Verified */}
+                            <div className="flex items-center gap-6 flex-wrap w-full pt-1">
                               <span className={`px-2.5 py-1 rounded-md border text-xs whitespace-nowrap ${domainStyle}`}>
                                 {cert.domain}
                               </span>
@@ -201,12 +203,12 @@ export function FeatureMatrix({ items }: { items: Certification[] }) {
                                   href={cert.credentialUrl}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="ml-auto inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-blue-600/10 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400 hover:bg-blue-600/20 dark:hover:bg-blue-500/20 transition-colors text-sm font-medium"
+                                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-blue-600/10 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400 hover:bg-blue-600/20 dark:hover:bg-blue-500/20 transition-colors text-sm font-medium whitespace-nowrap"
                                 >
                                   View Badge <ExternalLink className="w-3.5 h-3.5" />
                                 </a>
                               ) : (
-                                <span className="ml-auto text-text-muted font-mono text-sm px-3 py-1.5">NaN</span>
+                                <span className="text-text-muted font-mono text-sm px-3 py-1.5">NaN</span>
                               )}
                             </div>
                           </div>
